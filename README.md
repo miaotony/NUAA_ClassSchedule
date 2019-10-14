@@ -1,0 +1,2 @@
+# NUAA_CourseSchedule
+NUAA_CourseSchedule 登录南京航空航天大学新版教务系统并获取课表
