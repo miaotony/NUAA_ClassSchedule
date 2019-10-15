@@ -40,7 +40,7 @@ headers = {
 }
 # 设置session的请求头信息
 session.headers = headers
-host = r'http://aao-eas.nuaa.edu.cn'  # 'http://miao.free.idcfengye.com'  #
+host = r'http://aao-eas.nuaa.edu.cn'
 
 
 def aao_login(stuID, stuPwd, retry_cnt=3):
@@ -122,7 +122,7 @@ def getCourseTable(choice=0):
         #     "startWeek": "",
         #     "project.id": "1",
         #     "semester.id": "62",
-        #     "ids": "68175"
+        #     "ids": "xxxxx"
         # }
 
         if choice == 1:  # 班级课表
@@ -152,7 +152,8 @@ def getCourseTable(choice=0):
 
 if __name__ == "__main__":
     # 学号及密码
-    stuID = r"0417"
+    # 请在双引号中输入
+    stuID = r""
     stuPwd = r""
     retry_cnt = 3  # 登录重试次数
 
