@@ -1,10 +1,12 @@
+#!/usr/bin/python3
 # -*- coding:utf-8 -*-
 """
-NUAA新教务系统模拟登录及课表获取
+模拟登录NUAA新版教务系统，获取课表，解析后生成iCal日历文件...
 
 @Author: miaotony
-@Version: V0.3.0.20191017
+@Version: V0.3.1.20191018
 @UpdateLog:
+    V0.3.1.20191018 增加解析课程所在周并优化课表输出格式，修复班级课表中班级解析bug，引入logging模块记录日志便于debug
     V0.3.0.20191017 增加 课表解析，增加 班级、实践周匹配，优化代码结构
     V0.2.1.20191012 增加UA列表，增加BeautifulSoup提取姓名学号，优化代码结构，为下一步解析课表做准备
     V0.2.0.20191010 成功登录教务系统，并成功获取个人或班级课表，但还未进行提取
@@ -13,14 +15,20 @@ NUAA新教务系统模拟登录及课表获取
 
 """
 
+_version_ = "V0.3.1.20191018"
+
 import requests
 import re
 from bs4 import BeautifulSoup
 from hashlib import sha1
 import time
 import random
-from requests_html import HTMLSession
+# from requests_html import HTMLSession
 import json
+import logging
+
+logging.basicConfig(level=logging.WARNING,
+                    format='%(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')  # 设置日志级别及格式
 
 # session = HTMLSession()
 session = requests.Session()
@@ -33,7 +41,7 @@ UAs = [
     "Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1"
 ]
 headers = {
-    "User-Agent": UAs[1],  # UAs[random.randint(0, len(UAs) - 1)],  # random UA
+    "User-Agent": UAs[0],  # UAs[random.randint(0, len(UAs) - 1)],  # random UA
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     # "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
     "Accept-Language": "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2",
@@ -59,38 +67,38 @@ def aao_login(stuID, stuPwd, retry_cnt=3):
     """
     while retry_cnt >= 0:
         r1 = session.get(host + '/eams/login.action')
-        # print(r1.text)
+        # logging.debug(r1.text)
 
         temp_token_match = re.compile(r"CryptoJS\.SHA1\(\'([0-9a-zA-Z\-]*)\'")
         # 搜索密钥
         if temp_token_match.search(r1.text):
-            print("Search token OK!\n")
+            print("Search token OK!")
             temp_token = temp_token_match.search(r1.text).group(1)
-            # print(temp_token)
+            logging.debug(temp_token)
             postPwd = temp_token + stuPwd
-            # print(postPwd)
+            # logging.debug(postPwd)
 
             # 开始进行SHA1加密
             s1 = sha1()  # 创建sha1对象
             s1.update(postPwd.encode())  # 对s1进行更新
             postPwd = s1.hexdigest()  # 加密处理
-            # print(postPwd)  # 结果是40位字符串
+            # logging.debug(postPwd)  # 结果是40位字符串
 
             # 开始登录啦
             # while retry_cnt >= 0:
             postData = {'username': stuID, 'password': postPwd}
             r2 = session.post(host + '/eams/login.action', data=postData)
             if r2.status_code == 200 or r2.status_code == 302:
-                # print(r2.text)
+                logging.debug(r2.text)
                 temp_key = temp_token_match.search(r2.text)
                 if temp_key:  # 找到密钥说明没有登录成功，需要重试
                     print("ID or Password ERROR! Login ERROR!\n")
                     temp_key = temp_key.group(1)
-                    print(temp_key)
+                    logging.debug(temp_key)
                     exit(2)
                 elif re.search(r"ui-state-error", r2.text):  # 过快点击
                     print("ERROR! 请不要过快点击!\n")
-                    time.sleep(3)
+                    time.sleep(2)
                     retry_cnt -= 1
                     # session.headers["User-Agent"] = UAs[1]  # random.randint(0, len(UAs)-1)  # 换UA也不行
                     exit(3)
@@ -114,13 +122,12 @@ def getCourseTable(choice=0):
     :return:courseTable: {Response} 课表html响应
     """
     courseTableResponse = session.get(host + '/eams/courseTableForStd.action')
-    # print(courseTableResponse.text)
-    # print(session.cookies.get_dict())
+    # logging.debug(courseTableResponse.text)
 
     temp_ids_match = re.compile(r"bg\.form\.addInput\(form,\"ids\",\"([0-9]*)\"")
     temp_ids = temp_ids_match.findall(courseTableResponse.text)
     if temp_ids:
-        # print(temp_ids)  # [0] for std, [1] for class.
+        logging.debug(temp_ids)  # [0] for std, [1] for class.
 
         # postData_course = {
         #     "ignoreHead": "1",
@@ -151,8 +158,8 @@ def getCourseTable(choice=0):
         # courseTable = session.post(host + '/eams/courseTableForStd!courseTable.action',
         #                            data=courseTable_postData)
 
-        # print(courseTable.text)
-        # print(session.cookies.get_dict())
+        # logging.debug(courseTable.text)
+        # logging.debug(session.cookies.get_dict())
         return courseTable
     else:
         print("Get ids ERROR!")
@@ -163,21 +170,21 @@ def parseCourseTable(courseTable):
     """
     解析课表
     :param courseTable: {Response} 课表html响应
-    :return:
+    :return: None
     """
     soup = BeautifulSoup(courseTable.text.encode('utf-8'), 'lxml')
 
     """personal info"""
     personalInfo = soup.select('div#ExportA > div')[0].get_text()
-    # print(personalInfo)  # DEBUG
-    stuClass = re.findall(r'所属班级:\s*([A-Za-z\d]*)', personalInfo)[0]
-    print('班级:' + stuClass)
+    logging.debug(personalInfo)  # DEBUG
+    stuClass = re.findall(r'(所属班级|班级名称):\s*([A-Za-z\d]*)', personalInfo)[0]  # 个人课表为`所属班级`，班级课表为`班级名称`
+    print('班级:' + stuClass[1])
     practiceWeek = re.findall(r'实践周：\s*(.*)', personalInfo, re.DOTALL)[0]
     practiceWeek = "".join(practiceWeek.split())
     print('实践周:' + practiceWeek)
 
     courseTable_JS = soup.select('div#ExportA > script')[0].get_text()
-    # print(courseTable_JS)
+    # logging.debug(courseTable_JS)
     list_courses = courseTable_JS.split('var teachers =')
 
     """Regex"""
@@ -191,10 +198,10 @@ def parseCourseTable(courseTable):
     course_cnt = 1
     for singleCourse in list_courses[1:]:
         print('No.{} course: '.format(course_cnt))
+
+        logging.info('Parsing teacher(s)...')
         list_teacher = []
         teachers = re_teachers.findall(singleCourse)
-        # print(teachers)
-        # print('Parsing teacher(s)...')  # DEBUG
         teacher = re_singleTeacher.findall(teachers[0])
         if len(teacher) > 1:  # More than 1 teachers
             for teacher_i in teacher:
@@ -203,20 +210,26 @@ def parseCourseTable(courseTable):
         else:  # Single teacher
             teacher = teacher[0].replace('id', '\"id\"').replace('name', '\"name\"').replace('lab', '\"lab\"')
             list_teacher.append(json.loads(teacher))
-        # print(list_teacher)
-        print([list_teacher[i]['name'] for i in range(len(list_teacher))])
+        logging.info(list_teacher)
 
-        # print('Parsing course info...')  # DEBUG
+        logging.info('Parsing course info...')
         courseInfo = re_courseInfo.search(singleCourse, re.DOTALL | re.MULTILINE)
-        # print(courseInfo)
-        courseName = re.sub(r'<sup .*?>', '', courseInfo[2]).replace('</sup>', '')  # 去除sup标签
-        print(courseName)  # courseName
-        print(courseInfo[4])  # roomName
-        print(courseInfo[5])  # vaildWeeks
+        logging.debug(courseInfo)
+        courseName = re.sub(r'<sup .*?>', '', courseInfo[2]).replace('</sup>', '').replace('"', '')  # 去除sup标签及自带的`"`
+        roomName = courseInfo[4].replace('"', '')
+        vaildWeeks = courseInfo[5].replace('"', '')
 
-        # print('Parsing course time...')  # DEBUG
+        logging.info('Parsing course time...')  # DEBUG
         courseTime = re_courseTime.findall(singleCourse)
-        # print(courseTime)
+        logging.info(courseTime)
+
+        """Print info"""
+        print(','.join([list_teacher[i]['name'] for i in range(len(list_teacher))]))  # teachers
+        print(courseName)  # courseName
+        print(roomName)  # roomName
+        vaildWeeks_str = ','.join(
+            [str(Week_i) for Week_i in range(1, len(vaildWeeks)) if vaildWeeks[Week_i] == '1'])  # So cool!
+        print('第' + vaildWeeks_str + '周')
         day_of_week = str(int(courseTime[0][0]) + 1)
         course_unit = ','.join([str(int(courseTime[i][1]) + 1) for i in range(len(courseTime))])
         print("星期" + {
@@ -237,13 +250,17 @@ if __name__ == "__main__":
     # 学号及密码
     stuID = r""
     stuPwd = r""
+    choice = 0  # 0 for std, 1 for class.个人课表or班级课表
     retry_cnt = 3  # 登录重试次数
 
+    print("Welcome to use this script.")
+    print("Author: MiaoTony\nGitHub: https://github.com/miaotony/NUAA_ClassSchedule")
+    print("Version:" + _version_ + '\n')
     temp_time = time.time()
     try:
         name = aao_login(stuID, stuPwd, retry_cnt)
-        print('\nMiao~下面开始获取课表啦！\n')
-        courseTable = getCourseTable(choice=0)
+        print('\nMeow~下面开始获取课表啦！\n')
+        courseTable = getCourseTable(choice=choice)
         parseCourseTable(courseTable)
     except Exception as e:
         print("ERROR!")
