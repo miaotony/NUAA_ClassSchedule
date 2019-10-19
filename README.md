@@ -4,8 +4,6 @@
 
 [点此访问本项目GitHub仓库](https://github.com/miaotony/NUAA_ClassSchedule)  
 
-[TOC]
-
 
 
 ## Description
@@ -23,7 +21,7 @@ NUAA_ClassSchedule
 感兴趣的一起来干呗！   
 **欢迎提issue & PR！**  
 
-**==Important!! 免责条款==**  
+### **Important!! 免责条款**  
 
 本项目课表由官方教务系统导出，但使用时建议**仔细对照教务系统核对是否所有课程均正常导出**！  
 
@@ -171,11 +169,11 @@ P.S.:
 
 > 打开支付宝首页搜“**522869066**”领红包
 
-<img src="img/Sponsorship.jpg" style="max-width:20%;" />
+<img src="img/Sponsorship.jpg" style="max-width:50%;" />
 
 `WeChat`:   
 
-<img src="img/Sponsorship2.png" style="max-width:50%;" />
+<img src="img/Sponsorship2.png" style="max-width:40%;" />
 
 
 非常感谢啦！  
