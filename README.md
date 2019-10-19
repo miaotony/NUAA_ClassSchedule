@@ -81,12 +81,12 @@ Linux 环境下：
 运行后即可得到解析好的课表  
 使用截图：  
 
-![V3.1.20191018](_img/V3.1.20191018.png)
+![V3.1.20191018](img/V3.1.20191018.png)
 
 P.S.:  
 课表解析部分原始JavaScript数据片段：   
 
-![Code_JS](_img/Code_JavaScript.png)
+![Code_JS](img/Code_JavaScript.png)
 
 ---
 ## Known Issues
@@ -95,7 +95,7 @@ P.S.:
 
 * 登录时提示 **`ERROR! 请不要过快点击!`**  
   
-    ![过快点击](_img/bug_TooQuickClick.png)
+    ![过快点击](img/bug_TooQuickClick.png)
     
     貌似教务系统存在访问时间间隔的限制，比如不能频繁刷新，短时间内不能多次登录之类的。  
     
@@ -171,11 +171,11 @@ P.S.:
 
 > 打开支付宝首页搜“**522869066**”领红包
 
-<img src="_img/Sponsorship.jpg" style="zoom:20%;" />
+<img src="img/Sponsorship.jpg" style="max-width:20%;" />
 
 `WeChat`:   
 
-<img src="_img/Sponsorship2.png" style="zoom:50%;" />
+<img src="img/Sponsorship2.png" style="max-width:50%;" />
 
 
 非常感谢啦！  
