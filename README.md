@@ -44,6 +44,8 @@ time
 random  
 json  
 logging   
+argparse  
+getpass  
 
 ### **Step:**  
 
@@ -54,7 +56,7 @@ logging
 **使用时先修改程序里的`stuID`为学号，`stuPwd`为教务处密码**  
    请在`r""`两个引号之间输入，即变量类型为字符串str。  
   
-   *（习惯命令行参数的，后面会加的啦）*  
+   *（习惯命令行参数的，~~后面会加的啦~~）* **已经实现了命令行参数，具体往下看！**   
   
     密码仅在本地保存，访问官方教务系统，请放心使用。   
   
@@ -73,6 +75,32 @@ Linux 环境下：
 ```
     python3 ./aaoLogin.py
 ```
+
+从 V0.4.0.20191026 版本起开始支持命令行参数啦！  
+**命令行参数说明：**  
+```
+usage: aaoLogin.py [-h] [-i ID] [-p PWD] [-c {0,1}]  
+
+Get NUAA class schedule at ease! 一个小jio本，让你获取课表更加便捷而实在~  
+
+optional arguments:  
+  -h, --help            show this help message and exit  
+  -i ID, --id ID        Student ID 学号  
+  -p PWD, --pwd PWD     Student password 教务处密码  
+  -c {0,1}, --choice {0,1}  
+                        Input `0` for personal curriculum(default), `1` for  
+                        class curriculum. 输入`0`获取个人课表(无此参数默认为个人课表)，输入`1`获取班级课表   
+```  
+
+示例：  
+```
+    python aaoLogin.py -i 0417xxxxx -p <your password> 
+```
+
+同时也支持在控制台输入学号密码啦，且为了保护，密码不带回显，输完之后<ENTER>就好啦！  
+
+当然，和上面的初始参数也是互相兼容的，解析的优先级由高到低为：  
+命令行参数->上面的初始设置->控制台输入  
 
 
 - Step 3  
@@ -110,9 +138,11 @@ P.S.:
 ---
 ## Version
 
-@Version:  V0.3.1.20191018  
+@Version:  V0.4.0.20191026 
 
 @Update Log:  
+>    V0.4.0.20191026 增加命令行参数解析，增加控制台输入学号密码（不回显处理），并与初始设置兼容；修复班级课表中教师为空时解析异常bug  
+
 >    V0.3.1.20191018 增加解析课程所在周并优化课表输出格式，修复班级课表中班级解析bug，引入logging模块记录日志便于debug  
 
 >    V0.3.0.20191017 增加 课表解析，增加 班级、实践周匹配，优化代码结构   
@@ -132,9 +162,9 @@ P.S.:
 - [x] 获取课表  Get class schedule data   
 - [x] 解析课表  Parse class schedule data  
 - [ ] 导出课表  Export class schedule data  
+- [x] 命令行参数  Get args from terminal  
 - [ ] 基于对象重构  Refactor based on object  
 - [ ] 生成.ics日历文件 :calendar:  Generate .ics file  
-- [ ] 命令行参数  Get args from terminal  
 - [ ] 打包为.exe可执行程序 Packing  
 - [ ] 图形化界面  GUI  
 - [ ] 搭建网络服务，在线导出日历文件  Web service  

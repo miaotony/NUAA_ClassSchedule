@@ -4,8 +4,9 @@
 模拟登录NUAA新版教务系统，获取课表，解析后生成iCal日历文件...
 
 @Author: miaotony
-@Version: V0.3.1.20191018
+@Version: V0.4.0.20191026
 @UpdateLog:
+    V0.4.0.20191026 增加命令行参数解析，增加控制台输入学号密码（不回显处理），并与初始设置兼容；修复班级课表中教师为空时解析异常bug
     V0.3.1.20191018 增加解析课程所在周并优化课表输出格式，修复班级课表中班级解析bug，引入logging模块记录日志便于debug
     V0.3.0.20191017 增加 课表解析，增加 班级、实践周匹配，优化代码结构
     V0.2.1.20191012 增加UA列表，增加BeautifulSoup提取姓名学号，优化代码结构，为下一步解析课表做准备
@@ -15,22 +16,23 @@
 
 """
 
-_version_ = "V0.3.1.20191018"
-
 import requests
 import re
 from bs4 import BeautifulSoup
 from hashlib import sha1
 import time
 import random
-# from requests_html import HTMLSession
 import json
 import logging
+import argparse
+import getpass
+
+_version_ = "V0.4.0.20191026"
 
 logging.basicConfig(level=logging.WARNING,
                     format='%(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')  # 设置日志级别及格式
 
-# session = HTMLSession()
+
 session = requests.Session()
 UAs = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36",
@@ -202,14 +204,17 @@ def parseCourseTable(courseTable):
         logging.info('Parsing teacher(s)...')
         list_teacher = []
         teachers = re_teachers.findall(singleCourse)
-        teacher = re_singleTeacher.findall(teachers[0])
-        if len(teacher) > 1:  # More than 1 teachers
-            for teacher_i in teacher:
-                teacher_i = teacher_i.replace('id', '\"id\"').replace('name', '\"name\"').replace('lab', '\"lab\"')
-                list_teacher.append(json.loads(teacher_i))
-        else:  # Single teacher
-            teacher = teacher[0].replace('id', '\"id\"').replace('name', '\"name\"').replace('lab', '\"lab\"')
-            list_teacher.append(json.loads(teacher))
+        if len(teachers) == 0:  # fix teacher not specified bug
+            list_teacher = []
+        else:
+            teacher = re_singleTeacher.findall(teachers[0])
+            if len(teacher) > 1:  # More than 1 teachers
+                for teacher_i in teacher:
+                    teacher_i = teacher_i.replace('id', '\"id\"').replace('name', '\"name\"').replace('lab', '\"lab\"')
+                    list_teacher.append(json.loads(teacher_i))
+            else:  # Single teacher
+                teacher = teacher[0].replace('id', '\"id\"').replace('name', '\"name\"').replace('lab', '\"lab\"')
+                list_teacher.append(json.loads(teacher))
         logging.info(list_teacher)
 
         logging.info('Parsing course info...')
@@ -253,16 +258,51 @@ if __name__ == "__main__":
     choice = 0  # 0 for std, 1 for class.个人课表or班级课表
     retry_cnt = 3  # 登录重试次数
 
-    print("Welcome to use this script.")
+    print("Welcome to use the NUAA_ClassSchedule script.")
     print("Author: MiaoTony\nGitHub: https://github.com/miaotony/NUAA_ClassSchedule")
-    print("Version:" + _version_ + '\n')
-    temp_time = time.time()
+    print("Version: " + _version_ + '\n')
+
+    # Parse args 命令行参数解析
+    parser = argparse.ArgumentParser()
+    parser.description = 'Get NUAA class schedule at ease! 一个小jio本，让你获取课表更加便捷而实在~'
+    parser.add_argument("-i", "--id", help="Student ID 学号", type=str)
+    parser.add_argument("-p", "--pwd", help="Student password 教务处密码", type=str)
+    parser.add_argument("-c", "--choice", help="Input `0` for personal curriculum(default), `1` for class curriculum.\
+                        输入`0`获取个人课表(无此参数默认为个人课表)，输入`1`获取班级课表", type=int, choices=[0, 1])  # , default=0
+
     try:
+        # 解析优先级高到低：命令行参数->上面的初始设置->控制台输入
+        args = parser.parse_args()
+        logging.info(args)
+
+        if args.id is not None:  # 命令行参数优先
+            stuID = args.id
+        if args.pwd is not None:
+            stuPwd = args.pwd
+        if args.choice is not None:
+            choice = args.choice
+
+        if stuID == '' or stuPwd == '':  # 若学号密码为空则在控制台获取
+            print('Please login!')
+            stuID = input('Please input your student ID:')
+            # stuPwd = input('Please input your password:')
+            stuPwd = getpass.getpass('Please input your password:(不会回显，输入完成<ENTER>即可)')
+            while True:
+                choice = int(input('Please input your choice (`0`: personal, `1`: class):'))
+                if choice in [0, 1]:
+                    break
+                else:
+                    print('ERROR! Choice shoule be `0` or `1`!')
+
+        temp_time = time.time()  # 计个时看看
         name = aao_login(stuID, stuPwd, retry_cnt)
-        print('\nMeow~下面开始获取课表啦！\n')
+        print('\nMeow~下面开始获取{}课表啦！\n'.format({0: '个人', 1: '班级'}.get(choice)))
         courseTable = getCourseTable(choice=choice)
         parseCourseTable(courseTable)
+        print('累计用时：', time.time() - temp_time, 's')
+        print("Thanks for your use!")
     except Exception as e:
-        print("ERROR!")
+        print("ERROR! 欢迎在GitHub上提出issue & Pull Request!")
         print(e)
-    print('累计用时：', time.time() - temp_time, 's')
+    finally:
+        print()
