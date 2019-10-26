@@ -47,7 +47,7 @@ logging
 argparse  
 getpass  
 
-### **Step:**  
+### **Step**  
 
 - Step 1   
  将本仓库clone到本地，或直接下载`*.py`文件   
@@ -56,7 +56,8 @@ getpass
 **使用时先修改程序里的`stuID`为学号，`stuPwd`为教务处密码**  
    请在`r""`两个引号之间输入，即变量类型为字符串str。  
   
-   *（习惯命令行参数的，~~后面会加的啦~~）* **已经实现了命令行参数，具体往下看！**   
+   *习惯命令行参数的，~~后面会加的啦~~*   
+   **已经实现了命令行参数，具体往下看！**   
   
     密码仅在本地保存，访问官方教务系统，请放心使用。   
   
@@ -88,31 +89,37 @@ optional arguments:
   -i ID, --id ID        Student ID 学号  
   -p PWD, --pwd PWD     Student password 教务处密码  
   -c {0,1}, --choice {0,1}  
-                        Input `0` for personal curriculum(default), `1` for  
-                        class curriculum. 输入`0`获取个人课表(无此参数默认为个人课表)，输入`1`获取班级课表   
+                        Input `0` for personal curriculum(default), `1` for class curriculum.   
+                        输入`0`获取个人课表(无此参数默认为个人课表)，输入`1`获取班级课表   
 ```  
 
 示例：  
 ```
-    python aaoLogin.py -i 0417xxxxx -p <your password> 
+    python aaoLogin.py -i <your ID> -p <your password> 
 ```
 
-同时也支持在控制台输入学号密码啦，且为了保护，密码不带回显，输完之后<ENTER>就好啦！  
+同时也支持在控制台输入学号密码啦，且为了保护，密码不带回显，输完之后`<ENTER>`就好啦！  
 
 当然，和上面的初始参数也是互相兼容的，解析的优先级由高到低为：  
 命令行参数->上面的初始设置->控制台输入  
 
 
 - Step 3  
-运行后即可得到解析好的课表  
-使用截图：  
+运行后即可得到解析好的课表啦~   
 
-![V3.1.20191018](img/V3.1.20191018.png)
+
+### **Screenshots 使用截图**    
+**控制台输入：**  
+![V0.4.0.20191026-1](img/V0.4.0.20191026-1.png)  
+
+**使用命令行参数：**  
+![V0.4.0.20191026-2](img/V0.4.0.20191026-2.png)  
+
 
 P.S.:  
 课表解析部分原始JavaScript数据片段：   
 
-![Code_JS](img/Code_JavaScript.png)
+![Code_JS](img/Code_JavaScript.png)  
 
 ---
 ## Known Issues
@@ -144,9 +151,11 @@ P.S.:
 >    V0.4.0.20191026 增加命令行参数解析，增加控制台输入学号密码（不回显处理），并与初始设置兼容；修复班级课表中教师为空时解析异常bug  
 
 >    V0.3.1.20191018 增加解析课程所在周并优化课表输出格式，修复班级课表中班级解析bug，引入logging模块记录日志便于debug  
+     ![V0.3.1.20191018](img/V0.3.1.20191018.png)
 
 >    V0.3.0.20191017 增加 课表解析，增加 班级、实践周匹配，优化代码结构   
-
+     ![V0.3.0.20191017](img/V0.3.0.20191017.png)  
+        
 >    V0.2.1.20191012 增加UA列表，增加BeautifulSoup提取姓名学号，优化代码结构，为下一步解析课表做准备  
 
 >    V0.2.0.20191010 成功登录教务系统，并成功获取个人或班级课表，但还未进行提取  
@@ -225,5 +234,5 @@ Non-commercial use!
 The final interpretation right belongs to the developer of the project.  
 
 
-Copyright © 2019 [miaoTony](https://github.com/miaotony)  
+Copyright © 2019 [MiaoTony](https://github.com/miaotony)  
 
