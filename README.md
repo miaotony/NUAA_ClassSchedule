@@ -227,9 +227,11 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 ---
 ## Version
 
-@Version:  V0.5.0.20191107 
+@Version:  V0.5.1.20191107 
 
 @Update Log:  
+>    V0.5.1.20191107 优化代码结构，便于下一步重构及生成iCal文件  
+
 >    V0.5.0.20191107 修复因教务系统JS代码变更而无法解析课表的重大bug，增加requirement.txt
 
 >    V0.4.0.20191026 增加命令行参数解析，增加控制台输入学号密码（不回显处理），并与初始设置兼容；修复班级课表中教师为空时解析异常bug  

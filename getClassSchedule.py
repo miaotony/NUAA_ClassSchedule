@@ -4,8 +4,9 @@
 模拟登录NUAA新版教务系统，获取课表，解析后生成iCal日历文件...
 
 @Author: miaotony
-@Version: V0.5.0.20191107
+@Version: V0.5.1.20191107
 @UpdateLog:
+    V0.5.1.20191107 优化代码结构，便于下一步重构及生成iCal文件
     V0.5.0.20191107 修复因教务系统JS代码变更而无法解析课表的重大bug，增加requirement.txt
     V0.4.0.20191026 增加命令行参数解析，增加控制台输入学号密码（不回显处理），并与初始设置兼容；修复班级课表中教师为空时解析异常bug
     V0.3.1.20191018 增加解析课程所在周并优化课表输出格式，修复班级课表中班级解析bug，引入logging模块记录日志便于debug
@@ -28,12 +29,11 @@ import logging
 import argparse
 import getpass
 
-_version_ = "V0.5.0.20191107"
+_version_ = "V0.5.1.20191107"
 
 logging.basicConfig(level=logging.WARNING,
                     format='%(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')  # 设置日志级别及格式
 
-# session = HTMLSession()
 session = requests.Session()
 UAs = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36",
@@ -195,7 +195,7 @@ def parseCourseTable(courseTable):
     re_singleTeacher = re.compile(r'({.+?})')
     re_courseInfo = re.compile(
         r'actTeacherName\.join\(\',\'\),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*)\s*,\s*(.*)\s*\)')
-    # courseId,courseName,roomId,roomName,vaildWeeks,taskId,remark,assistantName,experiItemName,schGroupNo
+    # courseId,courseName,roomId,roomName,vaildWeeks,taskId,remark,assistantName,experiItemName,schGroupNo,teachClassName
     re_courseTime = re.compile(r'index\s*=\s*(\d+)\s*\*\s*unitCount\s*\+\s*(\d+);')
 
     course_cnt = 1
@@ -217,27 +217,32 @@ def parseCourseTable(courseTable):
                 teacher = teacher[0].replace('id', '\"id\"').replace('name', '\"name\"').replace('lab', '\"lab\"')
                 list_teacher.append(json.loads(teacher))
         logging.info(list_teacher)
+        teacherName = [list_teacher[i]['name'] for i in range(len(list_teacher))]
 
-        logging.info('Parsing course info...')
+        logging.info('Parsing course info...')  # DEBUG
         courseInfo = re_courseInfo.search(singleCourse, re.DOTALL | re.MULTILINE)
         logging.debug(courseInfo)
+        courseId = courseInfo[1].replace('"', '')
         courseName = re.sub(r'<sup .*?>', '', courseInfo[2]).replace('</sup>', '').replace('"', '')  # 去除sup标签及自带的`"`
+        roomId = courseInfo[3].replace('"', '')
         roomName = courseInfo[4].replace('"', '')
         vaildWeeks = courseInfo[5].replace('"', '')
+        str_vaildWeeks = ','.join(
+            [str(Week_i) for Week_i in range(1, len(vaildWeeks)) if vaildWeeks[Week_i] == '1'])  # So cool!
 
         logging.info('Parsing course time...')  # DEBUG
         courseTime = re_courseTime.findall(singleCourse)
         logging.info(courseTime)
+        day_of_week = str(int(courseTime[0][0]) + 1)
+        course_unit = [str(int(courseTime[i][1]) + 1) for i in range(len(courseTime))]
 
         """Print info"""
-        print(','.join([list_teacher[i]['name'] for i in range(len(list_teacher))]))  # teachers
+        print(','.join(teacherName))  # teachers
         print(courseName)  # courseName
         print(roomName)  # roomName
-        vaildWeeks_str = ','.join(
-            [str(Week_i) for Week_i in range(1, len(vaildWeeks)) if vaildWeeks[Week_i] == '1'])  # So cool!
-        print('第' + vaildWeeks_str + '周')
-        day_of_week = str(int(courseTime[0][0]) + 1)
-        course_unit = ','.join([str(int(courseTime[i][1]) + 1) for i in range(len(courseTime))])
+        print('第' + str_vaildWeeks + '周')
+
+        str_courseUnit = ','.join(course_unit)
         print("星期" + {
             '1': '一',
             '2': '二',
@@ -246,7 +251,7 @@ def parseCourseTable(courseTable):
             '5': '五',
             '6': '六',
             '7': '日',
-        }.get(day_of_week) + " 第" + course_unit + "节")
+        }.get(day_of_week) + " 第" + str_courseUnit + "节")
 
         course_cnt += 1
         print()
