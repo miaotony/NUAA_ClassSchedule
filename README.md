@@ -51,8 +51,14 @@ getpass
 
 - Step 1   
  将本仓库clone到本地，或直接下载`*.py`文件   
-
+ 
 - Step 2  
+ 安装所需的库（Linux下使用pip3，Windows下使用pip）  
+```
+ pip3 install -r requirement.txt
+```
+
+- Step 3  
 **使用时先修改程序里的`stuID`为学号，`stuPwd`为教务处密码**  
    请在`r""`两个引号之间输入，即变量类型为字符串str。  
   
@@ -68,19 +74,19 @@ getpass
 Windows 环境下：  
 
 ```
-    python ./aaoLogin.py
+    python getClassSchedule.py
 ```
 
 Linux 环境下：  
 
 ```
-    python3 ./aaoLogin.py
+    python3 getClassSchedule.py
 ```
 
 从 V0.4.0.20191026 版本起开始支持命令行参数啦！  
 **命令行参数说明：**  
 ```
-usage: aaoLogin.py [-h] [-i ID] [-p PWD] [-c {0,1}]  
+usage: getClassSchedule.py [-h] [-i ID] [-p PWD] [-c {0,1}]  
 
 Get NUAA class schedule at ease! 一个小jio本，让你获取课表更加便捷而实在~  
 
@@ -95,7 +101,7 @@ optional arguments:
 
 示例：  
 ```
-    python aaoLogin.py -i <your ID> -p <your password> 
+    python getClassSchedule.py -i <your ID> -p <your password> 
 ```
 
 同时也支持在控制台输入学号密码啦，且为了保护，密码不带回显，输完之后`<ENTER>`就好啦！  
@@ -104,7 +110,7 @@ optional arguments:
 命令行参数->上面的初始设置->控制台输入  
 
 
-- Step 3  
+- Step 4  
 运行后即可得到解析好的课表啦~   
 
 
@@ -119,7 +125,83 @@ optional arguments:
 P.S.:  
 课表解析部分原始JavaScript数据片段：   
 
+> 20191107更新：  
+教务系统中`TaskActivity`函数新增了一个`teachClassName`参数，导致之前的版本匹配出现问题，
+在 V0.5.0.20191107 版本中已经修复。  
+
+```javascript
+var teachers = [{id:2270,name:"任艳芳",lab:false}];
+var actTeachers = [{id:2270,name:"任艳芳",lab:false}];
+var assistant = _.filter(actTeachers, function(actTeacher) {
+    return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+});
+var assistantName = "";
+if (assistant.length > 0) {
+    assistantName = assistant[0].name;
+    actTeachers = _.reject(actTeachers, function(actTeacher) {
+        return _.where(assistant, {id:actTeacher.id}).length > 0;
+    });
+}
+var actTeacherId = [];
+var actTeacherName = [];
+for (var i = 0; i < actTeachers.length; i++) {
+    actTeacherId.push(actTeachers[i].id);
+    actTeacherName.push(actTeachers[i].name);
+}
+
+    activity = new TaskActivity(
+        actTeacherId.join(','),
+            actTeacherName.join(','),
+            "8340",
+            "信息检索与利用",
+            "548",
+            "10302(将军路)",
+            "00000011111110000000000000000000000000000000000000000",
+            "",
+            null,
+            assistantName,
+            "",
+            "",
+            "");
+    index =0*unitCount+8;
+    table0.activities[index][table0.activities[index].length]=activity;
+    index =0*unitCount+9;
+    table0.activities[index][table0.activities[index].length]=activity;
+    
+```
+
+其中的`TaskActivity`函数如下：  
+```javascript
+// new taskAcitvity
+function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,vaildWeeks,taskId,remark,assistantName,experiItemName,schGroupNo, teachClassName){
+    this.teacherId=teacherId;
+    this.teacherName=teacherName;
+    this.courseId=courseId;
+    this.courseName=courseName;
+    this.roomId = roomId;
+    this.roomName = roomName;
+    this.vaildWeeks = vaildWeeks;	// 53个01组成的字符串，代表了一年的53周
+    this.taskId=taskId;
+    this.marshal=marshalValidWeeks;
+    this.addAbbreviate=addAbbreviate;
+    this.clone=cloneTaskActivity;
+    this.canMergeWith=canMergeWith;
+    this.isSame=isSameActivity;
+    this.toString=activityInfo;
+    this.adjustClone=adjustClone;
+    this.leftShift=leftShift;
+    this.needLeftShift=needLeftShift;
+    this.remark = remark;
+    this.assistantName=assistantName;
+    this.experiItemName=experiItemName;
+    this.schGroupNo=schGroupNo;
+    this.teachClassName = teachClassName;
+}
+```
 ![Code_JS](img/Code_JavaScript.png)  
+
+下面这个是原来的：  
+![Code_JS_old](img/Code_JavaScript_old.png)  
 
 ---
 ## Known Issues
@@ -145,9 +227,11 @@ P.S.:
 ---
 ## Version
 
-@Version:  V0.4.0.20191026 
+@Version:  V0.5.0.20191107 
 
 @Update Log:  
+>    V0.5.0.20191107 修复因教务系统JS代码变更而无法解析课表的重大bug，增加requirement.txt
+
 >    V0.4.0.20191026 增加命令行参数解析，增加控制台输入学号密码（不回显处理），并与初始设置兼容；修复班级课表中教师为空时解析异常bug  
 
 >    V0.3.1.20191018 增加解析课程所在周并优化课表输出格式，修复班级课表中班级解析bug，引入logging模块记录日志便于debug  
@@ -226,6 +310,9 @@ P.S.:
 
 网络非法外之地，本项目相关技术内容仅供学习研究，请在合理合法范围内使用！  
 The relevant technical content of this project is only for study and research, please use within the reasonable and legal scope!
+
+**License:**    
+**GPL-3.0**  
 
 未经允许不得商用！  
 Non-commercial use!    
