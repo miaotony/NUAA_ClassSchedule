@@ -32,20 +32,8 @@ NUAA_ClassSchedule
 ---
 ## Usage
 
-**请在`Python 3`环境下使用，并确保以下库均已安装**。   
+**请在`Python 3`环境下使用**。   
 
-使用到的库:   
->requests  
-re  
-bs4  
-lxml  
-hashlib  
-time  
-random  
-json  
-logging   
-argparse  
-getpass  
 
 ### **Step**  
 
@@ -74,19 +62,19 @@ getpass
 Windows 环境下：  
 
 ```
-    python getClassSchedule.py
+    python main.py
 ```
 
 Linux 环境下：  
 
 ```
-    python3 getClassSchedule.py
+    python3 main.py
 ```
 
 从 V0.4.0.20191026 版本起开始支持命令行参数啦！  
 **命令行参数说明：**  
 ```
-usage: getClassSchedule.py [-h] [-i ID] [-p PWD] [-c {0,1}]  
+usage: main.py [-h] [-i ID] [-p PWD] [-c {0,1}]  
 
 Get NUAA class schedule at ease! 一个小jio本，让你获取课表更加便捷而实在~  
 
@@ -101,7 +89,7 @@ optional arguments:
 
 示例：  
 ```
-    python getClassSchedule.py -i <your ID> -p <your password> 
+    python main.py -i <your ID> -p <your password> 
 ```
 
 同时也支持在控制台输入学号密码啦，且为了保护，密码不带回显，输完之后`<ENTER>`就好啦！  
@@ -112,15 +100,22 @@ optional arguments:
 
 - Step 4  
 运行后即可得到解析好的课表啦~   
+在`NUAAiCal-Data`目录下就可以看到生成好的`.ics`日历文件啦！  
 
 
 ### **Screenshots 使用截图**    
+
+**使用命令行参数：**  
+![V0.6.0.20191108-1](img/V0.6.0.20191108-1.png)  
+
 **控制台输入：**  
 ![V0.4.0.20191026-1](img/V0.4.0.20191026-1.png)  
 
-**使用命令行参数：**  
-![V0.4.0.20191026-2](img/V0.4.0.20191026-2.png)  
+**导出.ics文件：**   
+![V0.6.0.20191108-2.png](img/V0.6.0.20191108-2.png)  
 
+**将.ics导入到Outlook的效果：**   
+![Outlook_example.png](img/Outlook_example.png)  
 
 P.S.:  
 课表解析部分原始JavaScript数据片段：   
@@ -227,15 +222,18 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 ---
 ## Version
 
-@Version:  V0.5.1.20191107 
+@Version:  V0.6.0.20191108
 
 @Update Log:  
+>    V0.6.0.20191108 基于对象重构课表解析的部分功能，增加生成iCal日历文件并导出（部分参考NUAA-iCal-Python）  
+
 >    V0.5.1.20191107 优化代码结构，便于下一步重构及生成iCal文件  
 
 >    V0.5.0.20191107 修复因教务系统JS代码变更而无法解析课表的重大bug，增加requirement.txt
 
 >    V0.4.0.20191026 增加命令行参数解析，增加控制台输入学号密码（不回显处理），并与初始设置兼容；修复班级课表中教师为空时解析异常bug  
-
+    ![V0.4.0.20191026-2](img/V0.4.0.20191026-2.png)  
+    
 >    V0.3.1.20191018 增加解析课程所在周并优化课表输出格式，修复班级课表中班级解析bug，引入logging模块记录日志便于debug  
      ![V0.3.1.20191018](img/V0.3.1.20191018.png)
 
@@ -258,8 +256,8 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 - [x] 解析课表  Parse class schedule data  
 - [ ] 导出课表  Export class schedule data  
 - [x] 命令行参数  Get args from terminal  
-- [ ] 基于对象重构  Refactor based on object  
-- [ ] 生成.ics日历文件 :calendar:  Generate .ics file  
+- [x] 基于对象重构  Refactor based on object  
+- [x] 生成.ics日历文件 :calendar:  Generate .ics file  
 - [ ] 打包为.exe可执行程序 Packing  
 - [ ] 图形化界面  GUI  
 - [ ] 搭建网络服务，在线导出日历文件  Web service  
@@ -314,7 +312,7 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 The relevant technical content of this project is only for study and research, please use within the reasonable and legal scope!
 
 **License:**    
-**GPL-3.0**  
+**[GPL-3.0](LICENSE)**  
 
 未经允许不得商用！  
 Non-commercial use!    
