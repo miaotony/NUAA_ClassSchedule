@@ -16,9 +16,9 @@ class Lesson:
         :param courseInfo: 课程信息列表
         :param courseTime: 课程时间
         """
-        self.list_teacher = list_teacher
-        self.courseInfo = courseInfo
-        self.courseTime = courseTime
+        # self.list_teacher = list_teacher  # 节约一点内存...
+        # self.courseInfo = courseInfo
+        # self.courseTime = courseTime
 
         """下面开始解析具体信息  Parsing From here"""
         self.teacherName = [list_teacher[i]['name'] for i in range(len(list_teacher))]
@@ -32,11 +32,6 @@ class Lesson:
         self.day_of_week = str(int(courseTime[0][0]) + 1)
         self.course_unit = [str(int(courseTime[i][1]) + 1) for i in range(len(courseTime))]
 
-    def __str__(self):
-        """
-        魔法方法输出课程信息
-        :return: {str} 课程信息
-        """
         str_teacherName = ','.join(self.teacherName)
         str_vaildWeeks = ','.join(map(str, self.vaildWeeks))
         str_courseUnit = ','.join(self.course_unit)
@@ -49,9 +44,15 @@ class Lesson:
             '6': '六',
             '7': '日',
         }.get(self.day_of_week) + " 第" + str_courseUnit + "节"
-        str_for_print = '\n'.join(
+        self.str_for_print = '\n'.join(
             [str_teacherName, self.courseName, self.roomName, '第' + str_vaildWeeks + '周', str_courseTime])
-        return str_for_print
+
+    def __str__(self):
+        """
+        魔法方法输出课程信息
+        :return: {str} 课程信息
+        """
+        return self.str_for_print
 
     def output_description(self, week):
         """
@@ -62,5 +63,5 @@ class Lesson:
         description = ','.join(self.teacherName) + \
                       " \n当前周次：%d" % week + \
                       " \n上课周次：" + ','.join(map(str, self.vaildWeeks)) + \
-                      " \n\nPowered by <a href=\"https://github.com/miaotony/NUAA_ClassSchedule\">NUAA_ClassSchedule</a>"
+                      " \n\nPowered by NUAA_ClassSchedule.\n URL: https://github.com/miaotony/NUAA_ClassSchedule "
         return description
