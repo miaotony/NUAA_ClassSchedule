@@ -101,7 +101,7 @@ optional arguments:
 
 - Step 4  
 运行后即可得到解析好的课表啦~   
-在`NUAAiCal-Data`目录下就可以看到生成好的`.ics`日历文件，以及`.txt`文本文件啦！  
+在`NUAAiCal-Data`目录下就可以看到生成好的`.ics`日历文件，`.txt`文本文件，还有`.xlsx`表格文件啦！  
 
 - Step 5  
 将生成好的`.ics`日历文件导入你喜欢的日历，然后尽情享用吧~！  
@@ -226,9 +226,11 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 ---
 ## Version
 
-@Version:  V0.7.0.20191109
+@Version:  V0.8.0.20191112
 
 @Update Log:  
+>    V0.8.0.20191112 新增导出课表到`.xlsx`表格文件；调换输出课程名称和教师顺序，更加符合逻辑   
+
 >    V0.7.0.20191109 新增导出课表到`.txt`文件；  
 新增匹配天目湖校区时间表；  
 修复Issue#2 `Too Quick Click` bug；  
@@ -263,10 +265,11 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 - [x] 登录新教务管理系统  Login to the new Educational Administration System   
 - [x] 获取课表  Get class schedule data   
 - [x] 解析课表  Parse class schedule data  
-- [x] 导出课表  Export class schedule data  
+- [x] 导出课表到`.txt`文件  Export class schedule data to `.txt` file  
 - [x] 命令行参数  Get args from terminal  
 - [x] 基于对象重构  Refactor based on object  
 - [x] 生成`.ics`日历文件 :calendar:  Generate `.ics` file  
+- [x] 生成`.xlsx`表格文件  Generate `.xlsx` file  
 - [ ] 打包为`.exe`可执行程序 Packing  
 - [ ] 图形化界面  GUI  
 - [ ] 搭建网络服务，在线导出日历文件  Web service  
