@@ -124,7 +124,7 @@ optional arguments:
 ![Outlook_example.png](img/Outlook_example.png)  
 
 **将课表导出到`.xlsx`文件：**
-![xlsx_file](img/xlsx_file.png)
+![xlsx_file](img/V0.8.0.20191112.png)
 
 ### Raw Data  
 课表解析部分原始JavaScript数据片段：   
