@@ -34,8 +34,8 @@ if __name__ == "__main__":
     stuPwd = r""
     choice = 0  # 0 for std, 1 for class.个人课表or班级课表
     retry_cnt = 3  # 登录重试次数
-    xn = '2019-2020'
-    xq = '1'
+    semester_year = '2019-2020'
+    semester = '1'
     semester_start_date = datetime(2019, 9, 2, 0, 0, 0,
                                    tzinfo=timezone('Asia/Shanghai'))
 
@@ -83,12 +83,13 @@ if __name__ == "__main__":
         print('课表获取完成，下面开始生成iCal日历文件啦！\n')
         cal = create_ics(list_lessonObj, semester_start_date)
         print('日历生成完成，下面开始导出啦！\n')
-        export_ics(cal, xn, xq, stuID)
+        export_ics(cal, semester_year, semester, stuID)  # Export `.ics` file
+        exportCourseTable(list_lessonObj, semester_year, semester, stuID)  # Export `.txt` file
 
-        print('累计用时：', time.time() - temp_time, 's')
-        print("Thanks for your use!")
+        print('导出完成，累计用时：', time.time() - temp_time, 's')
+        print("Thanks for your use! 欢迎来GitHub上点个Star呢！")
     except Exception as e:
         print("ERROR! 欢迎在GitHub上提出issue & Pull Request!")
         print(e)
     finally:
-        print()
+        session.cookies.clear()  # 清一下cookie

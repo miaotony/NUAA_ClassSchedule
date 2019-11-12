@@ -8,8 +8,10 @@ GitHub: https://github.com/miaotony/NUAA_ClassSchedule
 Pull Requests & issues welcome!
 
 @Author: MiaoTony
-@Version: V0.6.0.20191108
+@Version: V0.7.0.20191109
 @UpdateLog:
+    V0.7.0.20191109 新增导出课表到`.txt`文件；新增匹配天目湖校区时间表；修复Issue#2 `Too Quick Click` bug；
+                    删除`requirement.txt`中存在的标准库，仅保留第三方库
     V0.6.0.20191108 基于对象重构课表解析的部分功能，增加生成iCal日历文件并导出（部分参考NUAA-iCal-Python）
     V0.5.1.20191107 优化代码结构，便于下一步重构及生成iCal文件
     V0.5.0.20191107 修复因教务系统JS代码变更而无法解析课表的重大bug，增加requirement.txt

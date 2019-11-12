@@ -21,7 +21,7 @@ from settings import VERSION
 def create_ics(lessons, semester_start_date):
     cal = Calendar()
     cal.add('prodid', '-//miaotony//NUAA_ClassSchedule//CN')
-    cal.add('version', VERSION)
+    cal.add('version', '2.0')
     cal.add('X-WR-TIMEZONE', 'Asia/Shanghai')
 
     for lesson in lessons:
@@ -30,23 +30,42 @@ def create_ics(lessons, semester_start_date):
             event.add('summary', lesson.courseName)
 
             # Lesson start time
-            # 隐含bug：未匹配天目湖校区
-            lesson_start_hour = {
-                '1': 8,
-                '3': 10,
-                '5': 14,
-                '7': 16,
-                '9': 18,
-                '11': 20,
-            }.get(lesson.course_unit[0])
-            lesson_start_minute = {
-                '1': 0,
-                '3': 15,
-                '5': 0,
-                '7': 15,
-                '9': 45,
-                '11': 35,
-            }.get(lesson.course_unit[0])
+            # fix bug: 匹配天目湖校区时间表
+            # 潜在bug: roomName为空的情况默认为将军路明故宫的时间表
+            if '天目湖' in lesson.roomName:
+                lesson_start_hour = {
+                    '1': 8,
+                    '3': 10,
+                    '5': 14,
+                    '7': 16,
+                    '9': 18,
+                    '11': 20,
+                }.get(lesson.course_unit[0])
+                lesson_start_minute = {
+                    '1': 30,
+                    '3': 30,
+                    '5': 0,
+                    '7': 0,
+                    '9': 45,
+                    '11': 35,
+                }.get(lesson.course_unit[0])
+            else:
+                lesson_start_hour = {
+                    '1': 8,
+                    '3': 10,
+                    '5': 14,
+                    '7': 16,
+                    '9': 18,
+                    '11': 20,
+                }.get(lesson.course_unit[0])
+                lesson_start_minute = {
+                    '1': 0,
+                    '3': 15,
+                    '5': 0,
+                    '7': 15,
+                    '9': 45,
+                    '11': 35,
+                }.get(lesson.course_unit[0])
 
             lesson_start_time = semester_start_date + \
                                 timedelta(weeks=week - 1, days=int(lesson.day_of_week) - 1,
@@ -74,8 +93,8 @@ def create_ics(lessons, semester_start_date):
     return cal
 
 
-def export_ics(cal, xn, xq, xh):
-    filename = 'NUAAiCal-Data/NUAA-curriculum-' + xn + '-' + xq + '-' + xh + '.ics'
+def export_ics(cal, semester_year, semester, stuID):
+    filename = 'NUAAiCal-Data/NUAA-curriculum-' + semester_year + '-' + semester + '-' + stuID + '.ics'
 
     if os.path.exists('NUAAiCal-Data'):
         # print('Directory exists.')

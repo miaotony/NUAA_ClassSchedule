@@ -1,17 +1,5 @@
-os
-sys
 requests
-re
 bs4
 lxml
-hashlib
-time
-random
-json
-logging
-argparse
-getpass
-datetime
 pytz
 icalendar
-tempfile

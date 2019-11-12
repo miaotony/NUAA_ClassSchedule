@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
 """
-getClassSchedule  获取课表并进行解析
+getClassSchedule  登录教务系统，获取课表，进行解析及导出
 
 @Author: MiaoTony
 """
@@ -50,7 +50,9 @@ def aao_login(stuID, stuPwd, retry_cnt=3):
     :param retry_cnt: 登录重试次数
     :return: name: {str} 姓名(学号)
     """
-    while retry_cnt >= 0:
+    try_cnt = 1
+    while try_cnt <= retry_cnt:
+        session.cookies.clear()  # 先清一下cookie
         r1 = session.get(host + '/eams/login.action')
         # logging.debug(r1.text)
 
@@ -70,8 +72,8 @@ def aao_login(stuID, stuPwd, retry_cnt=3):
             # logging.debug(postPwd)  # 结果是40位字符串
 
             # 开始登录啦
-            # while retry_cnt >= 0:
             postData = {'username': stuID, 'password': postPwd}
+            time.sleep(0.5 * try_cnt)  # fix Issue#2 `Too Quick Click` bug, sleep for longer time for a new trial
             r2 = session.post(host + '/eams/login.action', data=postData)
             if r2.status_code == 200 or r2.status_code == 302:
                 logging.debug(r2.text)
@@ -83,10 +85,10 @@ def aao_login(stuID, stuPwd, retry_cnt=3):
                     exit(2)
                 elif re.search(r"ui-state-error", r2.text):  # 过快点击
                     print("ERROR! 请不要过快点击!\n")
-                    time.sleep(2)
-                    retry_cnt -= 1
+                    time.sleep(1)
+                    try_cnt += 1
                     # session.headers["User-Agent"] = UAs[1]  # random.randint(0, len(UAs)-1)  # 换UA也不行
-                    exit(3)
+                    # exit(3)
                 else:
                     temp_soup = BeautifulSoup(r2.text.encode('utf-8'), 'lxml')
                     name = temp_soup.find('a', class_='personal-name').string.strip()
@@ -96,8 +98,10 @@ def aao_login(stuID, stuPwd, retry_cnt=3):
                 print("Login ERROR!\n")
                 exit(1)
         else:
-            print('Search key ERROR!\n')
+            print('Search token ERROR!\n')
             exit(1)
+    print("ERROR! 过一会儿再试试吧...\n")
+    exit(3)
 
 
 def getCourseTable(choice=0):
@@ -106,6 +110,7 @@ def getCourseTable(choice=0):
     :param choice: 0 for std, 1 for class.个人课表or班级课表，默认为个人课表。
     :return:courseTable: {Response} 课表html响应
     """
+    time.sleep(0.5)  # fix Issue#2 `Too Quick Click` bug
     courseTableResponse = session.get(host + '/eams/courseTableForStd.action')
     # logging.debug(courseTableResponse.text)
 
@@ -218,3 +223,26 @@ def parseCourseTable(courseTable):
         course_cnt += 1
         print()
     return list_lessonObj
+
+
+def exportCourseTable(list_lessonObj, xn, xq, stuID):
+    """
+    导出课表到文件
+    :param list_lessonObj: {list}Lesson类组成的列表，包含所有课表信息
+    :param xn: {str}学年
+    :param xq: {str}学期 1或2
+    :param stuID {str}学号
+    :return: None
+    """
+    filename = 'NUAAiCal-Data/NUAA-curriculum-' + xn + '-' + xq + '-' + stuID + '.txt'
+    with open(filename, 'w', encoding='utf-8') as output_file:
+        try:
+            course_cnt = 1
+            for lessonObj in list_lessonObj:
+                output_file.write('No.{} course: \n'.format(course_cnt))
+                output_file.write(lessonObj.str_for_print)
+                output_file.write('\n\n')
+                course_cnt += 1
+        except Exception as e:
+            print('ERROR! 导出课表到文件出错！')
+            print(e)
