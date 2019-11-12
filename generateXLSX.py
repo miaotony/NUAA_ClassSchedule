@@ -5,8 +5,8 @@ generateXLSX  生成及导出.xlsx表格文件
 
 @Author: ZegWe
 """
-from openpyxl import *
-from openpyxl.styles import *
+from openpyxl import Workbook
+from openpyxl.styles import Alignment, PatternFill, Font
 
 def create_xls(lessons, semester_year, semester, stuID):
 	book = Workbook()
