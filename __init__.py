@@ -10,6 +10,7 @@ Pull Requests & issues welcome!
 @Author: MiaoTony
 @Version: V0.7.0.20191109
 @UpdateLog:
+	V0.7.1.20191112 新增导出课表到`.xlsx`表格文件；调换输出课程名称和教师顺序，更加符合逻辑
     V0.7.0.20191109 新增导出课表到`.txt`文件；新增匹配天目湖校区时间表；修复Issue#2 `Too Quick Click` bug；
                     删除`requirement.txt`中存在的标准库，仅保留第三方库
     V0.6.0.20191108 基于对象重构课表解析的部分功能，增加生成iCal日历文件并导出（部分参考NUAA-iCal-Python）

@@ -19,6 +19,7 @@ from datetime import datetime, timedelta
 from pytz import timezone
 from generateICS import create_ics, export_ics
 from getClassSchedule import *
+from generateXLSX import *
 from settings import VERSION, DEBUG
 
 if DEBUG:
@@ -85,9 +86,12 @@ if __name__ == "__main__":
         print('日历生成完成，下面开始导出啦！\n')
         export_ics(cal, semester_year, semester, stuID)  # Export `.ics` file
         exportCourseTable(list_lessonObj, semester_year, semester, stuID)  # Export `.txt` file
-
+        print('开始生成xlsx表格文件！ \n')
+        xlsx = create_xls(list_lessonObj, semester_year, semester, stuID)
+        print('xlsx文件生成完成，开始导出！\n')
+        export_xls(xlsx, semester_year, semester, stuID)  # Export `.xlsx` file
         print('导出完成，累计用时：', time.time() - temp_time, 's')
-        print("Thanks for your use! 欢迎来GitHub上点个Star呢！")
+        print("Thanks for your use! 欢迎来GitHub上点个Star呢")
     except Exception as e:
         print("ERROR! 欢迎在GitHub上提出issue & Pull Request!")
         print(e)

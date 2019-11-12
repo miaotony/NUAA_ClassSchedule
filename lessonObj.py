@@ -45,7 +45,7 @@ class Lesson:
             '7': '日',
         }.get(self.day_of_week) + " 第" + str_courseUnit + "节"
         self.str_for_print = '\n'.join(
-            [str_teacherName, self.courseName, self.roomName, '第' + str_vaildWeeks + '周', str_courseTime])
+            [self.courseName, str_teacherName, self.roomName, '第' + str_vaildWeeks + '周', str_courseTime])
 
     def __str__(self):
         """
