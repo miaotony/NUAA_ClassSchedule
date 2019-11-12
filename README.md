@@ -117,13 +117,13 @@ optional arguments:
 **控制台输入：**  
 ![V0.4.0.20191026-1](img/V0.4.0.20191026-1.png)  
 
-**导出.ics文件：**   
+**导出`.ics`文件：**   
 ![V0.6.0.20191108-1.png](img/V0.6.0.20191108-1.png)  
 
-**将.ics导入到Outlook的效果：**   
+**将`.ics`导入到Outlook的效果：**   
 ![Outlook_example.png](img/Outlook_example.png)  
 
-**将课表导出到.xlsx文件：**
+**将课表导出到`.xlsx`文件：**
 ![xlsx_file](img/xlsx_file.png)
 
 ### Raw Data  
