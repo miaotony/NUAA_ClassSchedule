@@ -73,7 +73,7 @@ def aao_login(stuID, stuPwd, retry_cnt=3):
 
             # 开始登录啦
             postData = {'username': stuID, 'password': postPwd}
-            time.sleep(0.5 * try_cnt)  # fix Issue#2 `Too Quick Click` bug, sleep for longer time for a new trial
+            time.sleep(0.5 * try_cnt)  # fix Issue #2 `Too Quick Click` bug, sleep for longer time for a new trial
             r2 = session.post(host + '/eams/login.action', data=postData)
             if r2.status_code == 200 or r2.status_code == 302:
                 logging.debug(r2.text)
@@ -110,7 +110,7 @@ def getCourseTable(choice=0):
     :param choice: 0 for std, 1 for class.个人课表or班级课表，默认为个人课表。
     :return:courseTable: {Response} 课表html响应
     """
-    time.sleep(0.5)  # fix Issue#2 `Too Quick Click` bug
+    time.sleep(0.5)  # fix Issue #2 `Too Quick Click` bug
     courseTableResponse = session.get(host + '/eams/courseTableForStd.action')
     # logging.debug(courseTableResponse.text)
 
@@ -225,16 +225,16 @@ def parseCourseTable(courseTable):
     return list_lessonObj
 
 
-def exportCourseTable(list_lessonObj, xn, xq, stuID):
+def exportCourseTable(list_lessonObj, semester_year, semester, stuID):
     """
     导出课表到文件
     :param list_lessonObj: {list}Lesson类组成的列表，包含所有课表信息
-    :param xn: {str}学年
-    :param xq: {str}学期 1或2
+    :param semester_year: {str}学年
+    :param semester: {str}学期 '1'或'2'
     :param stuID {str}学号
     :return: None
     """
-    filename = 'NUAAiCal-Data/NUAA-curriculum-' + xn + '-' + xq + '-' + stuID + '.txt'
+    filename = 'NUAAiCal-Data/NUAA-curriculum-' + semester_year + '-' + semester + '-' + stuID + '.txt'
     with open(filename, 'w', encoding='utf-8') as output_file:
         try:
             course_cnt = 1
