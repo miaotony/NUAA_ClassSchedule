@@ -7,6 +7,7 @@ generateXLSX  生成及导出.xlsx表格文件
 """
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, PatternFill, Font
+import os
 
 
 def create_xls(lessons, semester_year, semester, stuID):
@@ -59,8 +60,8 @@ def export_xls(xls, semester_year, semester, stuID):
     try:
         filename = 'NUAAiCal-Data/NUAA-curriculum-' + \
             semester_year + '-' + semester + '-' + stuID + '.xlsx'
-        xls.save(filename)
-        print('文件已经导出到\"' + filename + '\"。')
+        xls.save(os.path.abspath(filename))
+        print('表格文件已导出到\"' + os.path.abspath(filename) + '\"。')
     except Exception as e:
         print('ERROR! 导出到xlsx文件错误')
         print(e)

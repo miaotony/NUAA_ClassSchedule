@@ -63,5 +63,5 @@ class Lesson:
         description = ','.join(self.teacherName) + \
                       " \n当前周次：%d" % week + \
                       " \n上课周次：" + ','.join(map(str, self.vaildWeeks)) + \
-                      " \n\nPowered by NUAA_ClassSchedule.\n URL: https://github.com/miaotony/NUAA_ClassSchedule "
+                      " \n\nPowered by NUAA_ClassSchedule. \nURL: https://github.com/miaotony/NUAA_ClassSchedule "
         return description
