@@ -8,7 +8,7 @@ generateXLSX  生成及导出.xlsx表格文件
 from openpyxl import *
 from openpyxl.styles import *
 
-def create_xls(lessons, semester_year, semester, stID):
+def create_xls(lessons, semester_year, semester, stuID):
 	book = Workbook()
 	sheet = book.create_sheet('classTable',0)
 	alignment = Alignment(
@@ -19,7 +19,7 @@ def create_xls(lessons, semester_year, semester, stID):
 	)
 	sheet.merge_cells('A1:I1')
 	# print('1\n')
-	sheet.cell(1,1,'Semester year: ' + semester_year + '  Semester: ' + semester + '  ID: ' + stID).alignment=alignment
+	sheet.cell(1,1,'Semester year: ' + semester_year + '  Semester: ' + semester + '  ID: ' + stuID).alignment=alignment
 	sheet.column_dimensions['A'].width = 3
 	sheet.row_dimensions[1].height = 20
 	sheet.row_dimensions[2].height = 20
@@ -50,9 +50,9 @@ def create_xls(lessons, semester_year, semester, stID):
 			# sheet.cell(unit+2, day+1).border = Border(stl,stl,stl,stl)
 	return book
 
-def export_xls(xls, semester_year, semester, stID):
+def export_xls(xls, semester_year, semester, stuID):
     try:
-	    filename = 'NUAAiCal-Data/NUAA-curriculum-' + semester_year + '-' + semester + '-' + stID + '.xlsx'
+	    filename = 'NUAAiCal-Data/NUAA-curriculum-' + semester_year + '-' + semester + '-' + stuID + '.xlsx'
 	    xls.save(filename)
 	    print('文件已经导出到\"' + filename + '\"。')
     except Exception as e:
