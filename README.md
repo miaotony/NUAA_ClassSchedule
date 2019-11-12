@@ -123,6 +123,8 @@ optional arguments:
 **将.ics导入到Outlook的效果：**   
 ![Outlook_example.png](img/Outlook_example.png)  
 
+**将课表导出到.xlsx文件：**
+![xlsx_file](img/xlsx_file.png)
 
 ### Raw Data  
 课表解析部分原始JavaScript数据片段：   
