@@ -8,7 +8,7 @@ Pull Requests & issues welcome!
 
 main.py  程序入口
 
-@Author: MiaoTony
+@Author: MiaoTony, ZegWe
 """
 
 import time
