@@ -17,7 +17,7 @@ def create_xls(lessons, semester_year, semester, stuID):
 		shrink_to_fit=True,
 		wrap_text=True,
 	)
-	sheet.merge_cells('A1:I1')
+	sheet.merge_cells('A1:H1')
 	# print('1\n')
 	sheet.cell(1,1,'Semester year: ' + semester_year + '  Semester: ' + semester + '  ID: ' + stuID).alignment=alignment
 	sheet.column_dimensions['A'].width = 3
@@ -41,7 +41,7 @@ def create_xls(lessons, semester_year, semester, stuID):
 		# print(rag)
 		sheet.merge_cells(rag)
 		if(sheet.cell(unit+2,day+1).value != None):
-			sheet.cell(unit+2, day+1).value = str(sheet.cell(unit+2, day+1).value) + lesson.__str__()
+			sheet.cell(unit+2, day+1).value = str(sheet.cell(unit+2, day+1).value) + '\n\n' + lesson.str_for_print
 		else:
 			sheet.cell(unit+2, day+1).value = lesson.str_for_print
 			sheet.cell(unit+2, day+1).alignment=alignment
