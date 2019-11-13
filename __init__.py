@@ -8,8 +8,9 @@ GitHub: https://github.com/miaotony/NUAA_ClassSchedule
 Pull Requests & issues welcome!
 
 @Author: MiaoTony, ZegWe
-@Version: V0.8.0.20191112
+@Version: V0.8.1.20191113
 @UpdateLog:
+    V0.8.1.20191113 修复表格导出bug，完善`requirement.txt`等
     V0.8.0.20191112 新增导出课表到`.xlsx`表格文件；调换输出课程名称和教师顺序，更加符合逻辑
     V0.7.0.20191109 新增导出课表到`.txt`文件；新增匹配天目湖校区时间表；修复Issue#2 `Too Quick Click` bug；
                     删除`requirement.txt`中存在的标准库，仅保留第三方库
