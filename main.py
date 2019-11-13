@@ -91,7 +91,7 @@ if __name__ == "__main__":
         print('xlsx文件生成完成，开始导出！\n')
         export_xls(xlsx, semester_year, semester, stuID)  # Export `.xlsx` file
         print('导出完成，累计用时：', time.time() - temp_time, 's')
-        print("Thanks for your use! 欢迎来GitHub上点个Star呢")
+        print("Thanks for your use! 欢迎来GitHub上点个Star呢！")
     except Exception as e:
         print("ERROR! 欢迎在GitHub上提出issue & Pull Request!")
         print(e)
