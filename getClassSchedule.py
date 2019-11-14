@@ -1,19 +1,9 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
 """
-模拟登录NUAA新版教务系统，获取课表，解析后生成iCal日历文件...
+getClassSchedule  登录教务系统，获取课表，进行解析及导出
 
-@Author: miaotony
-@Version: V0.4.0.20191026
-@UpdateLog:
-    V0.4.0.20191026 增加命令行参数解析，增加控制台输入学号密码（不回显处理），并与初始设置兼容；修复班级课表中教师为空时解析异常bug
-    V0.3.1.20191018 增加解析课程所在周并优化课表输出格式，修复班级课表中班级解析bug，引入logging模块记录日志便于debug
-    V0.3.0.20191017 增加 课表解析，增加 班级、实践周匹配，优化代码结构
-    V0.2.1.20191012 增加UA列表，增加BeautifulSoup提取姓名学号，优化代码结构，为下一步解析课表做准备
-    V0.2.0.20191010 成功登录教务系统，并成功获取个人或班级课表，但还未进行提取
-    V0.1.1.20190910 加入未登录成功或过快点击的判断
-    V0.1.0.20190909 尝试登录新教务系统成功，仅登录而已
-
+@Author: MiaoTony
 """
 
 import requests
@@ -24,14 +14,7 @@ import time
 import random
 import json
 import logging
-import argparse
-import getpass
-
-_version_ = "V0.4.0.20191026"
-
-logging.basicConfig(level=logging.WARNING,
-                    format='%(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')  # 设置日志级别及格式
-
+from lessonObj import Lesson
 
 session = requests.Session()
 UAs = [
@@ -43,7 +26,7 @@ UAs = [
     "Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1"
 ]
 headers = {
-    "User-Agent": UAs[0],  # UAs[random.randint(0, len(UAs) - 1)],  # random UA
+    "User-Agent": UAs[1],  # UAs[random.randint(0, len(UAs) - 1)],  # random UA
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     # "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
     "Accept-Language": "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2",
@@ -67,7 +50,9 @@ def aao_login(stuID, stuPwd, retry_cnt=3):
     :param retry_cnt: 登录重试次数
     :return: name: {str} 姓名(学号)
     """
-    while retry_cnt >= 0:
+    try_cnt = 1
+    while try_cnt <= retry_cnt:
+        session.cookies.clear()  # 先清一下cookie
         r1 = session.get(host + '/eams/login.action')
         # logging.debug(r1.text)
 
@@ -87,8 +72,8 @@ def aao_login(stuID, stuPwd, retry_cnt=3):
             # logging.debug(postPwd)  # 结果是40位字符串
 
             # 开始登录啦
-            # while retry_cnt >= 0:
             postData = {'username': stuID, 'password': postPwd}
+            time.sleep(0.5 * try_cnt)  # fix Issue #2 `Too Quick Click` bug, sleep for longer time for a new trial
             r2 = session.post(host + '/eams/login.action', data=postData)
             if r2.status_code == 200 or r2.status_code == 302:
                 logging.debug(r2.text)
@@ -100,10 +85,10 @@ def aao_login(stuID, stuPwd, retry_cnt=3):
                     exit(2)
                 elif re.search(r"ui-state-error", r2.text):  # 过快点击
                     print("ERROR! 请不要过快点击!\n")
-                    time.sleep(2)
-                    retry_cnt -= 1
+                    time.sleep(1)
+                    try_cnt += 1
                     # session.headers["User-Agent"] = UAs[1]  # random.randint(0, len(UAs)-1)  # 换UA也不行
-                    exit(3)
+                    # exit(3)
                 else:
                     temp_soup = BeautifulSoup(r2.text.encode('utf-8'), 'lxml')
                     name = temp_soup.find('a', class_='personal-name').string.strip()
@@ -113,8 +98,10 @@ def aao_login(stuID, stuPwd, retry_cnt=3):
                 print("Login ERROR!\n")
                 exit(1)
         else:
-            print('Search key ERROR!\n')
+            print('Search token ERROR!\n')
             exit(1)
+    print("ERROR! 过一会儿再试试吧...\n")
+    exit(3)
 
 
 def getCourseTable(choice=0):
@@ -123,6 +110,7 @@ def getCourseTable(choice=0):
     :param choice: 0 for std, 1 for class.个人课表or班级课表，默认为个人课表。
     :return:courseTable: {Response} 课表html响应
     """
+    time.sleep(0.5)  # fix Issue #2 `Too Quick Click` bug
     courseTableResponse = session.get(host + '/eams/courseTableForStd.action')
     # logging.debug(courseTableResponse.text)
 
@@ -172,7 +160,7 @@ def parseCourseTable(courseTable):
     """
     解析课表
     :param courseTable: {Response} 课表html响应
-    :return: None
+    :return: list_lessonObj: {list} 由Lesson类构成的列表
     """
     soup = BeautifulSoup(courseTable.text.encode('utf-8'), 'lxml')
 
@@ -193,10 +181,11 @@ def parseCourseTable(courseTable):
     re_teachers = re.compile(r'actTeachers\s*=\s*\[(.+)];')
     re_singleTeacher = re.compile(r'({.+?})')
     re_courseInfo = re.compile(
-        r'actTeacherName\.join\(\',\'\),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*)\s*\)')
-    # courseId,courseName,roomId,roomName,vaildWeeks,taskId,remark,assistantName,experiItemName,schGroupNo
+        r'actTeacherName\.join\(\',\'\),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*)\s*,\s*(.*)\s*\)')
+    # courseId,courseName,roomId,roomName,vaildWeeks,taskId,remark,assistantName,experiItemName,schGroupNo,teachClassName
     re_courseTime = re.compile(r'index\s*=\s*(\d+)\s*\*\s*unitCount\s*\+\s*(\d+);')
 
+    list_lessonObj = []  # Initialization
     course_cnt = 1
     for singleCourse in list_courses[1:]:
         print('No.{} course: '.format(course_cnt))
@@ -217,92 +206,43 @@ def parseCourseTable(courseTable):
                 list_teacher.append(json.loads(teacher))
         logging.info(list_teacher)
 
-        logging.info('Parsing course info...')
+        logging.info('Parsing course info...')  # DEBUG
         courseInfo = re_courseInfo.search(singleCourse, re.DOTALL | re.MULTILINE)
         logging.debug(courseInfo)
-        courseName = re.sub(r'<sup .*?>', '', courseInfo[2]).replace('</sup>', '').replace('"', '')  # 去除sup标签及自带的`"`
-        roomName = courseInfo[4].replace('"', '')
-        vaildWeeks = courseInfo[5].replace('"', '')
 
         logging.info('Parsing course time...')  # DEBUG
         courseTime = re_courseTime.findall(singleCourse)
         logging.info(courseTime)
 
+        new_lessonObj = Lesson(list_teacher, courseInfo, courseTime)
+        # 把课程的全部信息都传给Lesson，在初始化时进行具体信息的匹配，后续有改动直接在Lesson类里面改就完事了
         """Print info"""
-        print(','.join([list_teacher[i]['name'] for i in range(len(list_teacher))]))  # teachers
-        print(courseName)  # courseName
-        print(roomName)  # roomName
-        vaildWeeks_str = ','.join(
-            [str(Week_i) for Week_i in range(1, len(vaildWeeks)) if vaildWeeks[Week_i] == '1'])  # So cool!
-        print('第' + vaildWeeks_str + '周')
-        day_of_week = str(int(courseTime[0][0]) + 1)
-        course_unit = ','.join([str(int(courseTime[i][1]) + 1) for i in range(len(courseTime))])
-        print("星期" + {
-            '1': '一',
-            '2': '二',
-            '3': '三',
-            '4': '四',
-            '5': '五',
-            '6': '六',
-            '7': '日',
-        }.get(day_of_week) + " 第" + course_unit + "节")
+        print(new_lessonObj)
+        list_lessonObj.append(new_lessonObj)
 
         course_cnt += 1
         print()
+    return list_lessonObj
 
 
-if __name__ == "__main__":
-    # 学号及密码
-    stuID = r""
-    stuPwd = r""
-    choice = 0  # 0 for std, 1 for class.个人课表or班级课表
-    retry_cnt = 3  # 登录重试次数
-
-    print("Welcome to use the NUAA_ClassSchedule script.")
-    print("Author: MiaoTony\nGitHub: https://github.com/miaotony/NUAA_ClassSchedule")
-    print("Version: " + _version_ + '\n')
-
-    # Parse args 命令行参数解析
-    parser = argparse.ArgumentParser()
-    parser.description = 'Get NUAA class schedule at ease! 一个小jio本，让你获取课表更加便捷而实在~'
-    parser.add_argument("-i", "--id", help="Student ID 学号", type=str)
-    parser.add_argument("-p", "--pwd", help="Student password 教务处密码", type=str)
-    parser.add_argument("-c", "--choice", help="Input `0` for personal curriculum(default), `1` for class curriculum.\
-                        输入`0`获取个人课表(无此参数默认为个人课表)，输入`1`获取班级课表", type=int, choices=[0, 1])  # , default=0
-
-    try:
-        # 解析优先级高到低：命令行参数->上面的初始设置->控制台输入
-        args = parser.parse_args()
-        logging.info(args)
-
-        if args.id is not None:  # 命令行参数优先
-            stuID = args.id
-        if args.pwd is not None:
-            stuPwd = args.pwd
-        if args.choice is not None:
-            choice = args.choice
-
-        if stuID == '' or stuPwd == '':  # 若学号密码为空则在控制台获取
-            print('Please login!')
-            stuID = input('Please input your student ID:')
-            # stuPwd = input('Please input your password:')
-            stuPwd = getpass.getpass('Please input your password:(不会回显，输入完成<ENTER>即可)')
-            while True:
-                choice = int(input('Please input your choice (`0`: personal, `1`: class):'))
-                if choice in [0, 1]:
-                    break
-                else:
-                    print('ERROR! Choice shoule be `0` or `1`!')
-
-        temp_time = time.time()  # 计个时看看
-        name = aao_login(stuID, stuPwd, retry_cnt)
-        print('\nMeow~下面开始获取{}课表啦！\n'.format({0: '个人', 1: '班级'}.get(choice)))
-        courseTable = getCourseTable(choice=choice)
-        parseCourseTable(courseTable)
-        print('累计用时：', time.time() - temp_time, 's')
-        print("Thanks for your use!")
-    except Exception as e:
-        print("ERROR! 欢迎在GitHub上提出issue & Pull Request!")
-        print(e)
-    finally:
-        print()
+def exportCourseTable(list_lessonObj, semester_year, semester, stuID):
+    """
+    导出课表到文件
+    :param list_lessonObj: {list}Lesson类组成的列表，包含所有课表信息
+    :param semester_year: {str}学年
+    :param semester: {str}学期 '1'或'2'
+    :param stuID {str}学号
+    :return: None
+    """
+    filename = 'NUAAiCal-Data/NUAA-curriculum-' + semester_year + '-' + semester + '-' + stuID + '.txt'
+    with open(filename, 'w', encoding='utf-8') as output_file:
+        try:
+            course_cnt = 1
+            for lessonObj in list_lessonObj:
+                output_file.write('No.{} course: \n'.format(course_cnt))
+                output_file.write(lessonObj.str_for_print)
+                output_file.write('\n\n')
+                course_cnt += 1
+        except Exception as e:
+            print('ERROR! 导出课表到文件出错！')
+            print(e)
