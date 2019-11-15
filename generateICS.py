@@ -5,17 +5,16 @@ generateICS  生成及导出.ics日历文件
 
 @Author: MiaoTony, Triple-Z(原作者）
 """
-from __future__ import print_function
-from __future__ import unicode_literals
+# from __future__ import print_function
+# from __future__ import unicode_literals
 
-from icalendar import Calendar, Event, vText
+from icalendar import Calendar, Event
 from datetime import datetime, timedelta
 from pytz import timezone
-import tempfile
-import hashlib
+# import tempfile
+from hashlib import md5
 import os
 from sys import getsizeof
-from settings import VERSION
 
 
 def create_ics(lessons, semester_start_date):
@@ -140,7 +139,7 @@ def export_ics(cal, semester_year, semester, stuID):
 
 
 def is_same(file1, file2):
-    hash1 = hashlib.md5()
+    hash1 = md5()
     with open(file1, 'rb') as f1:
         f1_data = f1.read()
     # print(getsizeof(f1_data))
@@ -150,7 +149,7 @@ def is_same(file1, file2):
     # print(file1.name)
     # print(md5_1)
 
-    hash2 = hashlib.md5()
+    hash2 = md5()
     with open(file2, 'rb') as f2:
         f2_data = f2.read()
         # print(getsizeof(f2_data))

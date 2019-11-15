@@ -126,6 +126,16 @@ optional arguments:
 **顺手再点个Star吧~**   
 **在导入iCal日历前，请确认时区已设定为 `UTC/GMT+08:00` 即北京时间，否则可能会出现导入后时间不正确的情况！**   
 
+
+>什么？你没有Python环境？  
+>在Windows下可以试试这个打包好的可执行程序呀！    
+
+下载地址在Release下呢！  
+
+>缺点就是emmm，文件太大下载太慢，而且每一次打开的时候根据电脑性能需要加载一定时间。  
+>那就凑合着用吧（建议还是用上面的方法呀！  
+
+
     
 ### **Screenshots 使用截图**    
 
@@ -143,6 +153,11 @@ optional arguments:
 
 **将课表导出到`.xlsx`文件：**
 ![xlsx_file](img/V0.8.0.20191112.png)
+
+**使用`.exe`程序执行：**（V0.9.0.20191115开始支持）  
+![exe](img/exe.png)  
+Or 从命令行执行：  
+![exe2](img/exe2.png)  
 
 ### Raw Data  
 课表解析部分原始JavaScript数据片段：   
@@ -220,7 +235,6 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
     this.teachClassName = teachClassName;
 }
 ```
-![Code_JS](img/Code_JavaScript.png)  
 
 下面这个是原来的：  
 ![Code_JS_old](img/Code_JavaScript_old.png)  
@@ -248,9 +262,11 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 ---
 ## Version
 
-@Version:  V0.8.1.20191113
+@Version:  V0.9.0.20191115
 
 @Update Log:  
+>    V0.9.0.20191115 新增打包为`.exe`可执行程序，可在未安装python环境的Windows系统下使用  
+
 >    V0.8.1.20191113 修复表格导出bug，完善`requirement.txt`等  
 
 >    V0.8.0.20191112 新增导出课表到`.xlsx`表格文件；调换输出课程名称和教师顺序，更加符合逻辑   
@@ -294,11 +310,14 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 - [x] 基于对象重构  Refactor based on object  
 - [x] 生成`.ics`日历文件 :calendar:  Generate `.ics` file  
 - [x] 生成`.xlsx`表格文件  Generate `.xlsx` file  
-- [ ] 打包为`.exe`可执行程序 Packing  
+- [x] 打包为`.exe`可执行程序 Packing  
 - [ ] 图形化界面  GUI  
 - [ ] 搭建网络服务，在线导出日历文件  Web service  
 - [ ] 提供课表订阅服务  Subscribe service  
 - [ ] 使用情况分析  Usage analysis  
+- [ ] 导出考试安排  Export examination schedule  
+- [ ] 适配研究生课表  Adapt to postgraduate's class schedule
+- [ ] 适配教师课表  Adapt to teacher's class schedule
 - [ ] etc.     
 
   
