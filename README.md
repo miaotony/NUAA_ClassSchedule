@@ -12,7 +12,7 @@ NUAA_ClassSchedule
 模拟登录南京航空航天大学新版教务系统，获取课表，解析后生成iCal日历文件...  
 
 >- 话说大家平常是怎么看课表的呀？  
->  - **上教务系统** / **截图** / **小程序** / **手动建课表** / **问同学** / ...   
+>- **上教务系统** / **截图** / **小程序** / **手动建课表** / **问同学** / ...   
 >
 >- I have an idea! 大家有没有想过把课表导入到日历呀？！  
 >你看，这么做不仅可以**自定义课程**，和其他安排放在一起；  
@@ -68,13 +68,13 @@ NUAA_ClassSchedule
 
 - Step 1   
  进入你喜欢的目录，将本仓库clone到本地，或直接下载`zip`文件（Download ZIP）   
-```shell script
+```
     git clone https://github.com/miaotony/NUAA_ClassSchedule.git
 ```
  
 - Step 2  
  进入目录，安装所需的库（Linux下使用pip3，Windows下使用pip）  
-```shell script
+```
     pip3 install -r requirement.txt
 ```
 
@@ -92,16 +92,16 @@ NUAA_ClassSchedule
   
 
 Windows 环境下：  
-```shell script
+```
     python main.py
 ```
 
 Linux 环境下：  
-```shell script
+```
     python3 main.py
 ```
 或者 直接执行main.py （前提是将文件权限设为**可执行**）  
-```shell script
+```
     chmod +x *
     ./main.py
 ```
@@ -126,7 +126,7 @@ optional arguments:
 ```  
 
 示例：  
-```shell script
+```
     python main.py -i <your ID> -p <your password> 
 ```
 
