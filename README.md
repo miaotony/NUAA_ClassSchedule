@@ -75,7 +75,7 @@ NUAA_ClassSchedule
 - Step 2  
  进入目录，安装所需的库（Linux下使用pip3，Windows下使用pip）  
 ```
-    pip3 install -r requirement.txt
+    pip3 install -r requirements.txt
 ```
 
 - Step 3  
