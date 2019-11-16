@@ -151,18 +151,20 @@ optional arguments:
 ### **Screenshots 使用截图**    
 
 **使用命令行参数：**  
-![V0.7.0.20191109-1](img/V0.7.0.20191109-1.png)  
+![V0.10.0.20191116](img/V0.10.0.20191116.png)  
 
 **控制台输入：**  
 ![V0.4.0.20191026-1](img/V0.4.0.20191026-1.png)  
 
 **导出`.ics`文件：**   
-![V0.6.0.20191108-1.png](img/V0.6.0.20191108-1.png)  
+![successful_export_example](img/successful_export_example.png)  
 
 **将`.ics`导入到Outlook的效果：**   
 ![Outlook_example.png](img/Outlook_example.png)  
+客户端：  
+![Outlook_example_iPad.png](img/Outlook_example_iPad.png)  
 
-**将课表导出到`.xlsx`文件：**
+**将课表导出到`.xlsx`文件：**  
 ![xlsx_file](img/V0.8.0.20191112.png)
 
 **使用`.exe`程序执行：**（V0.9.0.20191115 开始支持）  
