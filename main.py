@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 Welcome to use the NUAA_ClassSchedule script.
@@ -12,6 +12,7 @@ main.py  程序入口
 """
 
 import os
+from platform import system as system_platform
 import time
 import logging
 import argparse
@@ -42,7 +43,7 @@ if __name__ == "__main__":
                                    tzinfo=timezone('Asia/Shanghai'))
 
     print("Welcome to use the NUAA_ClassSchedule script.")
-    print("Author: MiaoTony\nGitHub: https://github.com/miaotony/NUAA_ClassSchedule")
+    print("Author: MiaoTony, ZegWe\nGitHub: https://github.com/miaotony/NUAA_ClassSchedule")
     print("Version: " + VERSION + '\n')
 
     # Parse args 命令行参数解析
@@ -52,6 +53,8 @@ if __name__ == "__main__":
     parser.add_argument("-p", "--pwd", help="Student password 教务处密码", type=str)
     parser.add_argument("-c", "--choice", help="Input `0` for personal curriculum(default), `1` for class curriculum.\
                         输入`0`获取个人课表(无此参数默认为个人课表)，输入`1`获取班级课表", type=int, choices=[0, 1])  # , default=0
+    parser.add_argument("--notxt", help="Don't export `.txt` file. 加入此选项则不导出`.txt`文件", action="store_true")
+    parser.add_argument("--noxlsx", help="Don't export `.xlsx` file. 加入此选项则不导出`.xlsx`表格", action="store_true")
 
     try:
         # 解析优先级高到低：命令行参数->上面的初始设置->控制台输入
@@ -82,20 +85,23 @@ if __name__ == "__main__":
         print('\nMeow~下面开始获取{}课表啦！\n'.format({0: '个人', 1: '班级'}.get(choice)))
         courseTable = getCourseTable(choice=choice)
         list_lessonObj = parseCourseTable(courseTable)
-        print('课表获取完成，下面开始生成iCal日历文件啦！\n')
+        print('课表获取完成，下面开始生成iCal日历文件啦！')
         cal = create_ics(list_lessonObj, semester_start_date)
         print('日历生成完成，下面开始导出啦！\n')
         export_ics(cal, semester_year, semester, stuID)  # Export `.ics` file
-        exportCourseTable(list_lessonObj, semester_year, semester, stuID)  # Export `.txt` file
-        print('开始生成xlsx表格文件！ \n')
-        xlsx = create_xls(list_lessonObj, semester_year, semester, stuID)
-        print('xlsx文件生成完成，开始导出！\n')
-        export_xls(xlsx, semester_year, semester, stuID)  # Export `.xlsx` file
-        print('导出完成，累计用时：', time.time() - temp_time, 's')
+        if not args.notxt:  # 若命令行参数含`--notxt`则不导出
+            exportCourseTable(list_lessonObj, semester_year, semester, stuID)  # Export `.txt` file
+        if not args.noxlsx:  # 若命令行参数含`--noxlsx`则不导出
+            print('\n开始生成xlsx表格文件！ ')
+            xlsx = create_xls(list_lessonObj, semester_year, semester, stuID)
+            print('xlsx文件生成完成，开始导出！')
+            export_xls(xlsx, semester_year, semester, stuID)  # Export `.xlsx` file
+        print('\n导出完成，累计用时：', time.time() - temp_time, 's')
         print("Thanks for your use! 欢迎来GitHub上点个Star呢！")
     except Exception as e:
         print("ERROR! 欢迎在GitHub上提出issue & Pull Request!")
         print(e)
     finally:
         session.cookies.clear()  # 清一下cookie
-        os.system('pause')
+        if system_platform() == 'Windows':  # Fix Linux `sh: 1: pause: not found` bug
+            os.system('pause')

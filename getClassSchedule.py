@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 getClassSchedule  登录教务系统，获取课表，进行解析及导出

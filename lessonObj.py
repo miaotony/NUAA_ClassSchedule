@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 lessonObj  课程Lesson类相关属性及方法

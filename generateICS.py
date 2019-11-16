@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 generateICS  生成及导出.ics日历文件
@@ -14,7 +14,7 @@ from pytz import timezone
 # import tempfile
 from hashlib import md5
 import os
-from sys import getsizeof
+# from sys import getsizeof
 
 
 def create_ics(lessons, semester_start_date):

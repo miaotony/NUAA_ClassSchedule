@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 settings  相关设置
@@ -8,4 +8,4 @@ settings  相关设置
 
 DEBUG = False
 
-VERSION = "V0.9.0.20191115"
+VERSION = "V0.10.0.20191116"

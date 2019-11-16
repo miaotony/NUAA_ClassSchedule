@@ -51,17 +51,30 @@ NUAA_ClassSchedule
 
 **请在`Python 3`环境下食用**。   
 
+
+>- 什么？你没有 Python 环境？ 或者 你不想折腾？  
+>- 在 Windows 或 MacOS 下可以试试这个打包好的可执行程序啦！    
+>（MacOS版本由 @ZegWe 提供）  
+
+下载地址在 [Release](https://github.com/miaotony/NUAA_ClassSchedule/releases) 下呢！  
+
+>~~缺点就是，文件太大下载太慢，而且每一次打开的时候根据电脑性能需要加载一定时间。（这行划掉）~~  
+> 之前的问题出在pyinstaller打包上，**现在重新打包了，文件精简啦，欢迎来试试呀！**    
+
+>如果喜欢折腾，或者不放心的话，推荐还是用下面的方法呢！  
+
+
 ### **Step**  
 
 - Step 1   
  进入你喜欢的目录，将本仓库clone到本地，或直接下载`zip`文件（Download ZIP）   
-```
+```shell script
     git clone https://github.com/miaotony/NUAA_ClassSchedule.git
 ```
  
 - Step 2  
- 安装所需的库（Linux下使用pip3，Windows下使用pip）  
-```
+ 进入目录，安装所需的库（Linux下使用pip3，Windows下使用pip）  
+```shell script
     pip3 install -r requirement.txt
 ```
 
@@ -79,35 +92,41 @@ NUAA_ClassSchedule
   
 
 Windows 环境下：  
-
-```
+```shell script
     python main.py
 ```
 
 Linux 环境下：  
-
-```
+```shell script
     python3 main.py
 ```
+或者 直接执行main.py （前提是将文件权限设为**可执行**）  
+```shell script
+    chmod +x *
+    ./main.py
+```
 
-从 V0.4.0.20191026 版本起开始支持命令行参数啦！  
+> 从 V0.4.0.20191026 版本起开始支持命令行参数啦！  
+
 **命令行参数说明：**  
 ```
-usage: main.py [-h] [-i ID] [-p PWD] [-c {0,1}]  
+usage: main.py [-h] [-i ID] [-p PWD] [-c {0,1}] [--notxt] [--noxlsx]
 
-Get NUAA class schedule at ease! 一个小jio本，让你获取课表更加便捷而实在~  
+Get NUAA class schedule at ease! 一个小jio本，让你获取课表更加便捷而实在~
 
-optional arguments:  
-  -h, --help            show this help message and exit  
-  -i ID, --id ID        Student ID 学号  
-  -p PWD, --pwd PWD     Student password 教务处密码  
-  -c {0,1}, --choice {0,1}  
-                        Input `0` for personal curriculum(default), `1` for class curriculum.   
-                        输入`0`获取个人课表(无此参数默认为个人课表)，输入`1`获取班级课表   
+optional arguments:
+  -h, --help            show this help message and exit
+  -i ID, --id ID        Student ID 学号
+  -p PWD, --pwd PWD     Student password 教务处密码
+  -c {0,1}, --choice {0,1}
+                        Input `0` for personal curriculum(default), `1` for
+                        class curriculum. 输入`0`获取个人课表(无此参数默认为个人课表)，输入`1`获取班级课表
+  --notxt               Don't export `.txt` file. 加入此选项则不导出`.txt`文件
+  --noxlsx              Don't export `.xlsx` file. 加入此选项则不导出`.xlsx`表格
 ```  
 
 示例：  
-```
+```shell script
     python main.py -i <your ID> -p <your password> 
 ```
 
@@ -120,21 +139,13 @@ optional arguments:
 - Step 4  
 运行后即可得到解析好的课表啦~   
 在`NUAAiCal-Data`目录下就可以看到生成好的`.ics`日历文件，`.txt`文本文件，还有`.xlsx`表格文件啦！  
+    > V0.10.0.20191116: 导出选项可通过命令行参数进行选择  
+
 
 - Step 5  
 将生成好的`.ics`日历文件导入你喜欢的日历，然后尽情享用吧~！  
 **顺手再点个Star吧~**   
 **在导入iCal日历前，请确认时区已设定为 `UTC/GMT+08:00` 即北京时间，否则可能会出现导入后时间不正确的情况！**   
-
-
->什么？你没有Python环境？  
->在Windows下可以试试这个打包好的可执行程序呀！    
-
-下载地址在Release下呢！  
-
->缺点就是emmm，文件太大下载太慢，而且每一次打开的时候根据电脑性能需要加载一定时间。  
->那就凑合着用吧（建议还是用上面的方法呀！  
-
 
     
 ### **Screenshots 使用截图**    
@@ -154,7 +165,7 @@ optional arguments:
 **将课表导出到`.xlsx`文件：**
 ![xlsx_file](img/V0.8.0.20191112.png)
 
-**使用`.exe`程序执行：**（V0.9.0.20191115开始支持）  
+**使用`.exe`程序执行：**（V0.9.0.20191115 开始支持）  
 ![exe](img/exe.png)  
 Or 从命令行执行：  
 ![exe2](img/exe2.png)  
@@ -250,9 +261,9 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 已经匹配天目湖校区时间表啦~  
 （潜在bug：教室名称为空则默认是将军路明故宫校区时间表...
 
-* 课程所在周还没有进行合并，于是显示出来的是分立的，这个后面再说吧。  
+* Issue # 10 课程所在周还没有进行合并，于是显示出来的是分立的，这个后面再说吧。  
 
-* 时长持续超过两节（如持续三节课）的课，获取的原始数据中可能存在分开（如2+1）的形式，导致生成的iCal也是独立的，
+* Issue # 11 时长持续超过两节（如持续三节课）的课，获取的原始数据中可能存在分开（如2+1）的形式，导致生成的iCal也是独立的，
 目前还没有做合并emmm。  
 
 * 考虑到不同课表在解析上可能存在差异，且随着时间发展页面的访问可能会发生变化，目前版本具有时效性。  
@@ -262,9 +273,11 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 ---
 ## Version
 
-@Version:  V0.9.0.20191115
+@Version:  V0.10.0.20191116
 
 @Update Log:  
+>    V0.10.0.20191116 新增命令行导出选项参数；重新打包，精简可执行程序大小并新增MacOS版本；修复Linux下`sh: 1: pause: not found` bug  
+
 >    V0.9.0.20191115 新增打包为`.exe`可执行程序，可在未安装python环境的Windows系统下使用  
 
 >    V0.8.1.20191113 修复表格导出bug，完善`requirement.txt`等  
@@ -310,7 +323,7 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 - [x] 基于对象重构  Refactor based on object  
 - [x] 生成`.ics`日历文件 :calendar:  Generate `.ics` file  
 - [x] 生成`.xlsx`表格文件  Generate `.xlsx` file  
-- [x] 打包为`.exe`可执行程序 Packing  
+- [x] 打包为可执行程序 Packing  
 - [ ] 图形化界面  GUI  
 - [ ] 搭建网络服务，在线导出日历文件  Web service  
 - [ ] 提供课表订阅服务  Subscribe service  
@@ -331,7 +344,7 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 
    这是个（已经毕业了的）学长开发的小项目，但老接口随着新教务系统的启用而关闭，进而原脚本无法继续使用。
    
-   在开发本项目过程中，解析了课表之后，受到了此项目的启发，参考其实现了iCal日历文件的生成。在此非常感谢原作者！  
+   在开发本项目过程中，解析课表之后，受到了此项目的启发，参考其实现了iCal日历文件的生成。在此非常感谢原作者！  
 
 2. ISCNU iCal课表
     >网址：[点这里](https://i.scnu.edu.cn/ical/)   
