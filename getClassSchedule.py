@@ -14,6 +14,9 @@ import time
 import random
 import json
 import logging
+from PIL import Image
+from io import BytesIO
+# from pytesseract import image_to_string
 from lessonObj import Lesson
 
 session = requests.Session()
@@ -55,6 +58,7 @@ def aao_login(stuID, stuPwd, retry_cnt=3):
         session.cookies.clear()  # 先清一下cookie
         r1 = session.get(host + '/eams/login.action')
         # logging.debug(r1.text)
+        captcha_resp = session.get(host + '/eams/captcha/image.action')  # Captcha 验证码图片
 
         temp_token_match = re.compile(r"CryptoJS\.SHA1\(\'([0-9a-zA-Z\-]*)\'")
         # 搜索密钥
@@ -71,15 +75,22 @@ def aao_login(stuID, stuPwd, retry_cnt=3):
             postPwd = s1.hexdigest()  # 加密处理
             # logging.debug(postPwd)  # 结果是40位字符串
 
+            # Captcha 验证码 # Fix Issue #13 bug, but only for Windows.
+            captcha_img = Image.open(BytesIO(captcha_resp.content))
+            captcha_img.show()  # show the captcha
+            # text = image_to_string(captcha_img)  # 前提是装了Tesseract-OCR，可以试试自动识别
+            # print(text)
+            captcha_str = input('Please input the captcha:')
+
             # 开始登录啦
-            postData = {'username': stuID, 'password': postPwd}
+            postData = {'username': stuID, 'password': postPwd, 'captcha_response': captcha_str}
             time.sleep(0.5 * try_cnt)  # fix Issue #2 `Too Quick Click` bug, sleep for longer time for a new trial
             r2 = session.post(host + '/eams/login.action', data=postData)
             if r2.status_code == 200 or r2.status_code == 302:
                 logging.debug(r2.text)
                 temp_key = temp_token_match.search(r2.text)
                 if temp_key:  # 找到密钥说明没有登录成功，需要重试
-                    print("ID or Password ERROR! Login ERROR!\n")
+                    print("ID, Password or Captcha ERROR! Login ERROR!\n")
                     temp_key = temp_key.group(1)
                     logging.debug(temp_key)
                     exit(2)

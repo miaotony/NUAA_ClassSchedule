@@ -32,13 +32,7 @@ NUAA_ClassSchedule
 感兴趣的一起来干呗！   
 **欢迎提issue & PR！**  
 
->20191119更新：  
-Issue #13   
-**由于11.18晚上教务系统在登录验证中加入了验证码，导致本脚本登录失败，目前无法正常使用，恢复时间未知。**   
-![1574163995402](https://user-images.githubusercontent.com/41962043/69144028-5bbbd580-0b05-11ea-99dc-e89ffa3750d0.jpeg)  
->- 在Windows下有一个解决方案是，爬取验证码图片后调用PIL库进行显示。  
-就是最近比较忙没空折腾……  
-欢迎大佬们的PR哈！ 
+
 
 ### **Important!! 免责条款**  
 
@@ -271,6 +265,14 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 已经匹配天目湖校区时间表啦~  
 （潜在bug：教室名称为空则默认是将军路明故宫校区时间表...
 
+* Issue #13   
+**由于11.18晚上教务系统在登录验证中加入了验证码，导致本脚本登录失败，目前无法正常使用，恢复时间未知。**   
+欢迎大佬们的PR哈！   
+![1574163995402](https://user-images.githubusercontent.com/41962043/69144028-5bbbd580-0b05-11ea-99dc-e89ffa3750d0.jpeg)  
+>- 在Windows下有一个解决方案是，爬取验证码图片后调用PIL库进行显示。  
+>---->V0.11.0.20191121版本已利用此方案进行修复  
+
+
 * Issue #10 课程所在周还没有进行合并，于是显示出来的是分立的，这个后面再说吧。  
 
 * Issue #11 时长持续超过两节（如持续三节课）的课，获取的原始数据中可能存在分开（如2+1）的形式，导致生成的iCal也是独立的，
@@ -283,9 +285,11 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 ---
 ## Version
 
-@Version:  V0.10.0.20191116
+@Version:  V0.11.0.20191121
 
 @Update Log:  
+>    V0.11.0.20191121 Fix Issue #13 captcha bug, but only for Windows.调用PIL库显示验证码，仅Windows下有效。    
+
 >    V0.10.0.20191116 新增命令行导出选项参数；重新打包，精简可执行程序大小并新增MacOS版本；修复Linux下`sh: 1: pause: not found` bug  
 
 >    V0.9.0.20191115 新增打包为`.exe`可执行程序，可在未安装python环境的Windows系统下使用  

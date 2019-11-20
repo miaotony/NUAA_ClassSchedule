@@ -8,4 +8,4 @@ settings  相关设置
 
 DEBUG = False
 
-VERSION = "V0.10.0.20191116"
+VERSION = "V0.11.0.20191121"

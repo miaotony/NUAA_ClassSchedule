@@ -8,8 +8,9 @@ GitHub: https://github.com/miaotony/NUAA_ClassSchedule
 Pull Requests & issues welcome!
 
 @Author: MiaoTony, ZegWe
-@Version: V0.10.0.20191116
+@Version: V0.11.0.20191121
 @UpdateLog:
+    V0.11.0.20191121 Fix Issue #13 captcha bug, but only for Windows.调用PIL库显示验证码，仅Windows下有效。
     V0.10.0.20191116 新增命令行导出选项参数；重新打包，精简可执行程序大小并新增MacOS版本；修复Linux下`sh: 1: pause: not found` bug
     V0.9.0.20191115 新增打包为`.exe`可执行程序，可在未安装python环境的Windows系统下使用
     V0.8.1.20191113 修复表格导出bug，完善`requirement.txt`等
