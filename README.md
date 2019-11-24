@@ -9,7 +9,7 @@
 ## Description
 
 NUAA_ClassSchedule  
-模拟登录南京航空航天大学新版教务系统，获取课表，解析后生成iCal日历文件...  
+登录南京航空航天大学新教务系统，获取课表及考试信息，解析后生成iCal日历及xlsx表格文件，进而导入Outlook等日历。     
 
 >- 话说大家平常是怎么看课表的呀？  
 >- **上教务系统** / **截图** / **小程序** / **手动建课表** / **问同学** / ...   
@@ -73,7 +73,7 @@ NUAA_ClassSchedule
 ```
     git clone https://github.com/miaotony/NUAA_ClassSchedule.git
 ```
- 
+
 - Step 2  
  进入目录，安装所需的库（Linux下使用pip3，Windows下使用pip）  
 ```
@@ -83,12 +83,12 @@ NUAA_ClassSchedule
 - Step 3  
 **使用时先修改程序里的`stuID`为学号，`stuPwd`为教务处密码**  
    请在`r""`两个引号之间输入，即变量类型为字符串str。  
-   
+  
    `choice`为个人或班级课表的选择，0为个人，1为班级，**默认为个人课表**。  
    而后保存，再执行此程序即可。  
-   
+  
    **密码仅在本地保存，访问官方教务系统，请放心使用。**   
-     
+  
    *习惯命令行参数的，~~后面会加的啦~~*   
    **已经实现了命令行参数，具体往下看！**   
   
@@ -112,7 +112,8 @@ Linux 环境下：
 
 **命令行参数说明：**  
 ```
-usage: main.py [-h] [-i ID] [-p PWD] [-c {0,1}] [--notxt] [--noxlsx]
+usage: main.py [-h] [-i ID] [-p PWD] [-c {0,1}] [--noexam] [--notxt]
+               [--noxlsx]
 
 Get NUAA class schedule at ease! 一个小jio本，让你获取课表更加便捷而实在~
 
@@ -123,9 +124,10 @@ optional arguments:
   -c {0,1}, --choice {0,1}
                         Input `0` for personal curriculum(default), `1` for
                         class curriculum. 输入`0`获取个人课表(无此参数默认为个人课表)，输入`1`获取班级课表
+  --noexam              Don't export exam schedule. 加入此选项则不导出考试安排
   --notxt               Don't export `.txt` file. 加入此选项则不导出`.txt`文件
   --noxlsx              Don't export `.xlsx` file. 加入此选项则不导出`.xlsx`表格
-```  
+```
 
 示例：  
 ```
@@ -141,6 +143,7 @@ optional arguments:
 - Step 4  
 运行后即可得到解析好的课表啦~   
 在`NUAAiCal-Data`目录下就可以看到生成好的`.ics`日历文件，`.txt`文本文件，还有`.xlsx`表格文件啦！  
+  
     > V0.10.0.20191116: 导出选项可通过命令行参数进行选择  
 
 
@@ -158,21 +161,36 @@ optional arguments:
 **控制台输入：**  
 ![V0.4.0.20191026-1](img/V0.4.0.20191026-1.png)  
 
+**使用`.exe`程序执行：** （V0.9.0.20191115 开始支持）   
+![exe](../../activities/Hackathon2019EastChina/meow/img/exe.png)  
+Or 从命令行执行：  
+![exe2](../../activities/Hackathon2019EastChina/meow/img/exe2.png)  
+
+**GUI界面：**（V0.12.0.20191124）    
+
+![GUI](../../activities/Hackathon2019EastChina/meow/img/GUI.png)
+
 **导出`.ics`文件：**   
-![successful_export_example](img/successful_export_example.png)  
+![successful_export_example](../../activities/Hackathon2019EastChina/meow/img/successful_export_example.png)  
 
 **将`.ics`导入到Outlook的效果：**   
-![Outlook_example.png](img/Outlook_example.png)  
-客户端：  
-![Outlook_example_iPad.png](img/Outlook_example_iPad.png)  
+![Outlook_example.png](../../activities/Hackathon2019EastChina/meow/img/Outlook_example.png)  
+
+Outlook客户端：  
+![Outlook_example_iPad.png](../../activities/Hackathon2019EastChina/meow/img/Outlook_example_iPad.png)  
 
 **将课表导出到`.xlsx`文件：**  
-![xlsx_file](img/V0.8.0.20191112.png)
+![xlsx_file](../../activities/Hackathon2019EastChina/meow/img/V0.8.0.20191112.png)
 
-**使用`.exe`程序执行：**（V0.9.0.20191115 开始支持）  
-![exe](img/exe.png)  
-Or 从命令行执行：  
-![exe2](img/exe2.png)  
+**导出到文本文件：**   
+
+![Export_txt](../../activities/Hackathon2019EastChina/meow/img/Export_txt.png)
+
+**WEB端部署：**（暂未完成，仍在测试中）     
+
+![image-20191124124120567](../../activities/Hackathon2019EastChina/meow/img/Web.png)
+
+  
 
 ### Raw Data  
 课表解析部分原始JavaScript数据片段：   
@@ -285,9 +303,11 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 ---
 ## Version
 
-@Version:  V0.11.0.20191121
+@Version:  V0.12.0.20191124
 
 @Update Log:  
+>     V0.12.0.20191124 新增导出考试安排；新增基于tkinter实现GUI界面，并与CIL相互兼容，但仍存在小bug。（For Hackathon 2019 @ East China, 20191123-24, with Cooook & Pinyi Qian)    
+
 >    V0.11.0.20191121 Fix Issue #13 captcha bug, but only for Windows.调用PIL库显示验证码，仅Windows下有效。    
 
 >    V0.10.0.20191116 新增命令行导出选项参数；重新打包，精简可执行程序大小并新增MacOS版本；修复Linux下`sh: 1: pause: not found` bug  
@@ -311,13 +331,13 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 
 >    V0.4.0.20191026 增加命令行参数解析，增加控制台输入学号密码（不回显处理），并与初始设置兼容；修复班级课表中教师为空时解析异常bug  
      ![V0.4.0.20191026-2](img/V0.4.0.20191026-2.png)  
-    
+
 >    V0.3.1.20191018 增加解析课程所在周并优化课表输出格式，修复班级课表中班级解析bug，引入logging模块记录日志便于debug  
      ![V0.3.1.20191018](img/V0.3.1.20191018.png)
 
 >    V0.3.0.20191017 增加 课表解析，增加 班级、实践周匹配，优化代码结构   
      ![V0.3.0.20191017](img/V0.3.0.20191017.png)  
-        
+
 >    V0.2.1.20191012 增加UA列表，增加BeautifulSoup提取姓名学号，优化代码结构，为下一步解析课表做准备  
 
 >    V0.2.0.20191010 成功登录教务系统，并成功获取个人或班级课表，但还未进行提取  
@@ -338,11 +358,11 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 - [x] 生成`.ics`日历文件 :calendar:  Generate `.ics` file  
 - [x] 生成`.xlsx`表格文件  Generate `.xlsx` file  
 - [x] 打包为可执行程序 Packing  
-- [ ] 图形化界面  GUI  
+- [x] 图形化界面  GUI  
+- [x] 导出考试安排  Export examination schedule  
 - [ ] 搭建网络服务，在线导出日历文件  Web service  
 - [ ] 提供课表订阅服务  Subscribe service  
 - [ ] 使用情况分析  Usage analysis  
-- [ ] 导出考试安排  Export examination schedule  
 - [ ] 适配研究生课表  Adapt to postgraduate's class schedule
 - [ ] 适配教师课表  Adapt to teacher's class schedule
 - [ ] etc.     
@@ -369,13 +389,7 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 ---
 ## Sponsorship
 
-如果真想赞助的话，`Alipay`扫下面的二维码领个红包吧，每天都能领的那种，顺手薅个羊毛。  
-
-或者 
-
-> 打开支付宝首页搜“**522869066**”领红包
-
-<img src="img/Sponsorship.jpg" style="max-width:50%;" />
+如果真想赞助的话  
 
 `WeChat`:   
 
@@ -404,5 +418,5 @@ Non-commercial use!
 The final interpretation right belongs to the developer of the project.  
 
 
-Copyright © 2019 [MiaoTony](https://github.com/miaotony)  
+Copyright © 2019 [MiaoTony](https://github.com/miaotony)  & other developers.  
 
