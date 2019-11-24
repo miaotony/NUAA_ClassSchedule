@@ -1,4 +1,4 @@
-# NUAA_ClassSchedule
+NUAA_ClassSchedule
 
 [点此访问本项目网页](https://miaotony.github.io/NUAA_ClassSchedule/)  
 
@@ -162,33 +162,33 @@ optional arguments:
 ![V0.4.0.20191026-1](img/V0.4.0.20191026-1.png)  
 
 **使用`.exe`程序执行：** （V0.9.0.20191115 开始支持）   
-![exe](../../activities/Hackathon2019EastChina/meow/img/exe.png)  
+![exe](img/exe.png)  
 Or 从命令行执行：  
-![exe2](../../activities/Hackathon2019EastChina/meow/img/exe2.png)  
+![exe2](img/exe2.png)  
 
 **GUI界面：**（V0.12.0.20191124）    
 
-![GUI](../../activities/Hackathon2019EastChina/meow/img/GUI.png)
+![GUI](img/GUI.png)
 
 **导出`.ics`文件：**   
-![successful_export_example](../../activities/Hackathon2019EastChina/meow/img/successful_export_example.png)  
+![successful_export_example](img/successful_export_example.png)  
 
 **将`.ics`导入到Outlook的效果：**   
-![Outlook_example.png](../../activities/Hackathon2019EastChina/meow/img/Outlook_example.png)  
+![Outlook_example.png](img/Outlook_example.png)  
 
 Outlook客户端：  
-![Outlook_example_iPad.png](../../activities/Hackathon2019EastChina/meow/img/Outlook_example_iPad.png)  
+![Outlook_example_iPad.png](img/Outlook_example_iPad.png)  
 
 **将课表导出到`.xlsx`文件：**  
-![xlsx_file](../../activities/Hackathon2019EastChina/meow/img/V0.8.0.20191112.png)
+![xlsx_file](img/V0.8.0.20191112.png)
 
 **导出到文本文件：**   
 
-![Export_txt](../../activities/Hackathon2019EastChina/meow/img/Export_txt.png)
+![Export_txt](img/Export_txt.png)
 
 **WEB端部署：**（暂未完成，仍在测试中）     
 
-![image-20191124124120567](../../activities/Hackathon2019EastChina/meow/img/Web.png)
+![image-20191124124120567](img/Web.png)
 
   
 
