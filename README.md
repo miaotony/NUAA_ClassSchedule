@@ -306,7 +306,7 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 @Version:  V0.12.0.20191124
 
 @Update Log:  
->     V0.12.0.20191124 新增导出考试安排；新增基于tkinter实现GUI界面，并与CIL相互兼容，但仍存在小bug。（For Hackathon 2019 @ East China, 20191123-24, with Cooook & Pinyi Qian)    
+>     V0.12.0.20191124 新增导出考试安排；新增基于tkinter实现GUI界面，并与CLI相互兼容，但仍存在小bug。（For Hackathon 2019 @ East China, 20191123-24, with Cooook & Pinyi Qian)    
 
 >    V0.11.0.20191121 Fix Issue #13 captcha bug, but only for Windows.调用PIL库显示验证码，仅Windows下有效。    
 
