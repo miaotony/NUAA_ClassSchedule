@@ -8,8 +8,9 @@ GitHub: https://github.com/miaotony/NUAA_ClassSchedule
 Pull Requests & issues welcome!
 
 @Author: MiaoTony, ZegWe, Cooook, Pinyi Qian
-@Version: V0.12.0.20191124
+@Version: V0.13.0.20191207
 @UpdateLog:
+    V0.13.0.20191207 Fix Issue #14 【获取课表到获取考试信息后直接报错 `list index out of range`】
     V0.12.0.20191124 新增导出考试安排；新增基于tkinter实现GUI界面，并与CLI相互兼容，但仍存在小bug。
     V0.11.0.20191121 Fix Issue #13 captcha bug, but only for Windows.调用PIL库显示验证码，仅Windows及MacOS下有效。
     V0.10.0.20191116 新增命令行导出选项参数；重新打包，精简可执行程序大小并新增MacOS版本；修复Linux下`sh: 1: pause: not found` bug

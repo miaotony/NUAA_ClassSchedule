@@ -254,14 +254,17 @@ def getExamSchedule():
     soup = BeautifulSoup(examSchedule.text.encode('utf-8'), 'lxml')
     '''exam Schedule'''
     exam_Schedule_Text = soup.select('tbody > tr')
-    # print(exam_Schedule_Text)
+    print(exam_Schedule_Text)
     Ans_list = []
-    for single_exam_Schedule in exam_Schedule_Text:
-        tmp = []
-        single_exam_Schedule = single_exam_Schedule.find_all('td')
-        for i in single_exam_Schedule:
-            tmp.append(i.get_text().strip())
-        Ans_list.append(tmp)
+
+    if exam_Schedule_Text:  # add a protection
+        for single_exam_Schedule in exam_Schedule_Text:
+            tmp = []
+            single_exam_Schedule = single_exam_Schedule.find_all('td')
+            if single_exam_Schedule:  # add a protection
+                for i in single_exam_Schedule:
+                    tmp.append(i.get_text().strip())
+                Ans_list.append(tmp)
     return Ans_list
 
 

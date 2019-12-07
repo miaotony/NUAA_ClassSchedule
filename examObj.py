@@ -3,7 +3,7 @@
 """
 examObj  考试Exam类相关属性及方法
 
-@Author: Cooook
+@Author: Cooook, Miaotony
 """
 import re
 
@@ -19,7 +19,11 @@ class Exam:
         self.examLocation = exam[5]
         self.examStatue = exam[7]
         self.others = exam[8]
-        list_inter = list(re.findall(r'(\d*)-(\d*)-(\d*)', exam[3])[0])
+        temp = re.findall(r'(\d*)-(\d*)-(\d*)', exam[3])
+        if temp:  # Fix issue #14 `list index out of range`
+            list_inter = list(temp[0])
+        else:
+            list_inter = []
 
         if not list_inter:
             self.examDate = exam[3]  # 没有的话是字符串直接赋值

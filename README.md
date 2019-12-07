@@ -303,10 +303,12 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 ---
 ## Version
 
-@Version:  V0.12.0.20191124
+@Version:  V0.13.0.20191207 
 
 @Update Log:  
->     V0.12.0.20191124 新增导出考试安排；新增基于tkinter实现GUI界面，并与CLI相互兼容，但仍存在小bug。（For Hackathon 2019 @ East China, 20191123-24, with Cooook & Pinyi Qian)    
+>    V0.13.0.20191207 Fix Issue #14 【获取课表到获取考试信息后直接报错 `list index out of range`】
+
+>    V0.12.0.20191124 新增导出考试安排；新增基于tkinter实现GUI界面，并与CLI相互兼容，但仍存在小bug。（For Hackathon 2019 @ East China, 20191123-24, with Cooook & Pinyi Qian)    
 
 >    V0.11.0.20191121 Fix Issue #13 captcha bug, but only for Windows.调用PIL库显示验证码，仅Windows下有效。    
 
