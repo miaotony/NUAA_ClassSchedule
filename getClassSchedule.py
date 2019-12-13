@@ -254,7 +254,7 @@ def getExamSchedule():
     soup = BeautifulSoup(examSchedule.text.encode('utf-8'), 'lxml')
     '''exam Schedule'''
     exam_Schedule_Text = soup.select('tbody > tr')
-    print(exam_Schedule_Text)
+    # print(exam_Schedule_Text)
     Ans_list = []
 
     if exam_Schedule_Text:  # add a protection
