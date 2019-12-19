@@ -1,8 +1,10 @@
-NUAA_ClassSchedule
+# NUAA_ClassSchedule
 
-[点此访问本项目网页](https://miaotony.github.io/NUAA_ClassSchedule/)  
+欢迎尝试[**本项目在线版本**](https://nuaaical.herokuapp.com/)    
 
-[点此访问本项目GitHub仓库](https://github.com/miaotony/NUAA_ClassSchedule)  
+[*点此访问本项目网页*](https://miaotony.github.io/NUAA_ClassSchedule/)  
+
+[*点此访问本项目GitHub仓库*](https://github.com/miaotony/NUAA_ClassSchedule)  
 
 
 
@@ -19,7 +21,8 @@ NUAA_ClassSchedule
 >还可以利用**桌面插件**，方便快捷地获取课表；  
 >还能根据自己的需要**设定提醒**……  
 >更多用途可以自由发挥，多棒的主意呢！  
->   
+> 
+>
 >说实话，这的确就是偶然间想到的一个小想法呢，说干就干，于是就有了这个项目啦！  
 >还在犹豫什么呢，不如就来试试吧！嘿嘿嘿~  
 
@@ -186,11 +189,19 @@ Outlook客户端：
 
 ![Export_txt](img/Export_txt.png)
 
-**WEB端部署：**（暂未完成，仍在测试中）     
+**WEB端部署：**（仍在测试中）     
 
 ![image-20191124124120567](img/Web.png)
 
-  
+web端版本目前已经部署在了 heroku 上，网址：[点此访问本项目在线版本](https://nuaaical.herokuapp.com/)  
+或 https://nuaaical.herokuapp.com/  
+
+欢迎来尝试一下哈~  
+
+>在线版本的源码请参考`NUAA_iCal_Web`仓库。  
+https://github.com/miaotony/NUAA_iCal_Web
+
+
 
 ### Raw Data  
 课表解析部分原始JavaScript数据片段：   
@@ -362,7 +373,7 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 - [x] 打包为可执行程序 Packing  
 - [x] 图形化界面  GUI  
 - [x] 导出考试安排  Export examination schedule  
-- [ ] 搭建网络服务，在线导出日历文件  Web service  
+- [x] 搭建网络服务，在线导出日历文件  Web service  https://github.com/miaotony/NUAA_iCal_Web  
 - [ ] 提供课表订阅服务  Subscribe service  
 - [ ] 使用情况分析  Usage analysis  
 - [ ] 适配研究生课表  Adapt to postgraduate's class schedule
