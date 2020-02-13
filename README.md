@@ -314,9 +314,11 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 ---
 ## Version
 
-@Version:  V0.13.0.20191207 
+@Version:  V0.14.0.20200213  
 
 @Update Log:  
+>    V0.14.0.20200213 Update semester_start_date to 20200224 for 2019-2020(2) semester. Delete curriculum choice (person or class). 默认导出个人课表，只在命令行中保留导出班级课表的选项。  
+
 >    V0.13.0.20191207 Fix Issue #14 【获取课表到获取考试信息后直接报错 `list index out of range`】
 
 >    V0.12.0.20191124 新增导出考试安排；新增基于tkinter实现GUI界面，并与CLI相互兼容，但仍存在小bug。（For Hackathon 2019 @ East China, 20191123-24, with Cooook & Pinyi Qian)    
@@ -374,10 +376,11 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 - [x] 图形化界面  GUI  
 - [x] 导出考试安排  Export examination schedule  
 - [x] 搭建网络服务，在线导出日历文件  Web service  https://github.com/miaotony/NUAA_iCal_Web  
+- [ ] 搭建Telegram Bot在线导出日历文件  Telegram Bot  
 - [ ] 提供课表订阅服务  Subscribe service  
 - [ ] 使用情况分析  Usage analysis  
-- [ ] 适配研究生课表  Adapt to postgraduate's class schedule
-- [ ] 适配教师课表  Adapt to teacher's class schedule
+- [ ] 适配研究生课表  Adapt to postgraduate's class schedule  
+- [ ] 适配教师课表  Adapt to teacher's class schedule  
 - [ ] etc.     
 
   
@@ -431,5 +434,5 @@ Non-commercial use!
 The final interpretation right belongs to the developer of the project.  
 
 
-Copyright © 2019 [MiaoTony](https://github.com/miaotony)  & other developers.  
+Copyright © 2019-2020 [MiaoTony](https://github.com/miaotony)  & other developers.  
 

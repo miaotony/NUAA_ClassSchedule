@@ -78,17 +78,6 @@ def aao_login(stuID, stuPwd, captcha_str, retry_cnt=1):
             postPwd = s1.hexdigest()  # 加密处理
             # logging.debug(postPwd)  # 结果是40位字符串
 
-            # Captcha 验证码 # Fix Issue #13 bug, but only for Windows.
-            # captcha_img = Image.open(BytesIO(captcha_resp.content))
-            # captcha_img.show()  # show the captcha
-
-            # img= ImageTk.PhotoImage(captcha_img)
-            # label_img = tkinter.ttk.Label(window, image = img).place(x = 560, y = 2)
-
-            # text = image_to_string(captcha_img)  # 前提是装了Tesseract-OCR，可以试试自动识别
-            # print(text)
-            # captcha_str = input('Please input the captcha:')
-
             # 开始登录啦
             postData = {'username': stuID, 'password': postPwd, 'captcha_response': captcha_str}
             time.sleep(0.5 * try_cnt)  # fix Issue #2 `Too Quick Click` bug, sleep for longer time for a new trial

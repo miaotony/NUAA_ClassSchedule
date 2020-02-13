@@ -19,6 +19,7 @@ import argparse
 from getpass import getpass
 from datetime import datetime, timedelta
 from pytz import timezone
+from io import BytesIO
 from generateICS import create_ics, export_ics, create_exam_ics
 from getClassSchedule import *
 from generateXLSX import *
@@ -38,8 +39,8 @@ if __name__ == "__main__":
     choice = 0  # 0 for std, 1 for class.个人课表or班级课表
     retry_cnt = 3  # 登录重试次数
     semester_year = '2019-2020'
-    semester = '1'
-    semester_start_date = datetime(2019, 9, 2, 0, 0, 0,
+    semester = '2'
+    semester_start_date = datetime(2020, 2, 24, 0, 0, 0,
                                    tzinfo=timezone('Asia/Shanghai'))
 
     print("Welcome to use the NUAA_ClassSchedule script.")
@@ -74,12 +75,6 @@ if __name__ == "__main__":
             stuID = input('Please input your student ID:')
             # stuPwd = input('Please input your password:')
             stuPwd = getpass('Please input your password:(不会回显，输入完成<ENTER>即可)')
-            while True:
-                choice = int(input('Please input your choice (`0`: personal, `1`: class):'))
-                if choice in [0, 1]:
-                    break
-                else:
-                    print('ERROR! Choice shoule be `0` or `1`!')
 
         # Captcha 验证码 # Fix Issue #13 bug, but only for Windows & MacOS.
         captcha_resp = session.get(host + '/eams/captcha/image.action')  # Captcha 验证码图片
