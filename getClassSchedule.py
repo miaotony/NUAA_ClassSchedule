@@ -15,6 +15,8 @@ import random
 import json
 import logging
 from lessonObj import Lesson
+from PIL import Image
+from io import BytesIO
 
 session = requests.Session()
 UAs = [
@@ -56,6 +58,8 @@ def aao_login(stuID, stuPwd, retry_cnt=3):
         r1 = session.get(host + '/eams/login.action')
         # logging.debug(r1.text)
 
+        cookie = requests.utils.dict_from_cookiejar(r1.cookies) # get cookies
+
         temp_token_match = re.compile(r"CryptoJS\.SHA1\(\'([0-9a-zA-Z\-]*)\'")
         # 搜索密钥
         if temp_token_match.search(r1.text):
@@ -71,10 +75,34 @@ def aao_login(stuID, stuPwd, retry_cnt=3):
             postPwd = s1.hexdigest()  # 加密处理
             # logging.debug(postPwd)  # 结果是40位字符串
 
+            ### load and show valcode
+            print("正在加载验证码，注意查看...\n")
+            retry_cnt_copy = retry_cnt
+            while retry_cnt_copy:
+                try:
+                    response = requests.get(
+                        'http://aao-eas.nuaa.edu.cn/eams/captcha/image.action', cookies=cookie)  # git varcode with cookie,may fail
+                    image = Image.open(BytesIO(response.content))
+                    image.show()
+                    captcha_response = input("输入验证码: ")
+                    break
+                except:
+                    if retry_cnt_copy == 1:
+                        print("Going to exit,may be you should run script later..\n")
+                        exit(3)
+                    else:
+                        print("may be a network error,retrying...\n")
+                        time.sleep(0.5)
+                    retry_cnt_copy -= 1
+            ###
+
             # 开始登录啦
-            postData = {'username': stuID, 'password': postPwd}
-            time.sleep(0.5 * try_cnt)  # fix Issue #2 `Too Quick Click` bug, sleep for longer time for a new trial
-            r2 = session.post(host + '/eams/login.action', data=postData)
+            postData = {'username': stuID, 'password': postPwd,
+                        'captcha_response': captcha_response}
+            # fix Issue #2 `Too Quick Click` bug, sleep for longer time for a new trial
+            time.sleep(0.5 * try_cnt)
+            r2 = session.post(host + '/eams/login.action',
+                              data=postData, cookies=cookie)# post form with cookie
             if r2.status_code == 200 or r2.status_code == 302:
                 logging.debug(r2.text)
                 temp_key = temp_token_match.search(r2.text)
@@ -91,7 +119,8 @@ def aao_login(stuID, stuPwd, retry_cnt=3):
                     # exit(3)
                 else:
                     temp_soup = BeautifulSoup(r2.text.encode('utf-8'), 'lxml')
-                    name = temp_soup.find('a', class_='personal-name').string.strip()
+                    name = temp_soup.find(
+                        'a', class_='personal-name').string.strip()
                     print("Login OK!\nHello, {}!".format(name))
                     return name
             else:
@@ -114,7 +143,8 @@ def getCourseTable(choice=0):
     courseTableResponse = session.get(host + '/eams/courseTableForStd.action')
     # logging.debug(courseTableResponse.text)
 
-    temp_ids_match = re.compile(r"bg\.form\.addInput\(form,\"ids\",\"([0-9]*)\"")
+    temp_ids_match = re.compile(
+        r"bg\.form\.addInput\(form,\"ids\",\"([0-9]*)\"")
     temp_ids = temp_ids_match.findall(courseTableResponse.text)
     if temp_ids:
         logging.debug(temp_ids)  # [0] for std, [1] for class.
@@ -167,7 +197,8 @@ def parseCourseTable(courseTable):
     """personal info"""
     personalInfo = soup.select('div#ExportA > div')[0].get_text()
     logging.debug(personalInfo)  # DEBUG
-    stuClass = re.findall(r'(所属班级|班级名称):\s*([A-Za-z\d]*)', personalInfo)[0]  # 个人课表为`所属班级`，班级课表为`班级名称`
+    # 个人课表为`所属班级`，班级课表为`班级名称`
+    stuClass = re.findall(r'(所属班级|班级名称):\s*([A-Za-z\d]*)', personalInfo)[0]
     print('班级:' + stuClass[1])
     practiceWeek = re.findall(r'实践周：\s*(.*)', personalInfo, re.DOTALL)[0]
     practiceWeek = "".join(practiceWeek.split())
@@ -183,7 +214,8 @@ def parseCourseTable(courseTable):
     re_courseInfo = re.compile(
         r'actTeacherName\.join\(\',\'\),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*)\s*,\s*(.*)\s*\)')
     # courseId,courseName,roomId,roomName,vaildWeeks,taskId,remark,assistantName,experiItemName,schGroupNo,teachClassName
-    re_courseTime = re.compile(r'index\s*=\s*(\d+)\s*\*\s*unitCount\s*\+\s*(\d+);')
+    re_courseTime = re.compile(
+        r'index\s*=\s*(\d+)\s*\*\s*unitCount\s*\+\s*(\d+);')
 
     list_lessonObj = []  # Initialization
     course_cnt = 1
@@ -199,15 +231,18 @@ def parseCourseTable(courseTable):
             teacher = re_singleTeacher.findall(teachers[0])
             if len(teacher) > 1:  # More than 1 teachers
                 for teacher_i in teacher:
-                    teacher_i = teacher_i.replace('id', '\"id\"').replace('name', '\"name\"').replace('lab', '\"lab\"')
+                    teacher_i = teacher_i.replace('id', '\"id\"').replace(
+                        'name', '\"name\"').replace('lab', '\"lab\"')
                     list_teacher.append(json.loads(teacher_i))
             else:  # Single teacher
-                teacher = teacher[0].replace('id', '\"id\"').replace('name', '\"name\"').replace('lab', '\"lab\"')
+                teacher = teacher[0].replace('id', '\"id\"').replace(
+                    'name', '\"name\"').replace('lab', '\"lab\"')
                 list_teacher.append(json.loads(teacher))
         logging.info(list_teacher)
 
         logging.info('Parsing course info...')  # DEBUG
-        courseInfo = re_courseInfo.search(singleCourse, re.DOTALL | re.MULTILINE)
+        courseInfo = re_courseInfo.search(
+            singleCourse, re.DOTALL | re.MULTILINE)
         logging.debug(courseInfo)
 
         logging.info('Parsing course time...')  # DEBUG
@@ -234,7 +269,8 @@ def exportCourseTable(list_lessonObj, semester_year, semester, stuID):
     :param stuID {str}学号
     :return: None
     """
-    filename = 'NUAAiCal-Data/NUAA-curriculum-' + semester_year + '-' + semester + '-' + stuID + '.txt'
+    filename = 'NUAAiCal-Data/NUAA-curriculum-' + \
+        semester_year + '-' + semester + '-' + stuID + '.txt'
     with open(filename, 'w', encoding='utf-8') as output_file:
         try:
             course_cnt = 1
