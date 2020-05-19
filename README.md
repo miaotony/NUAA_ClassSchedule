@@ -47,6 +47,14 @@ NUAA_ClassSchedule
 >点击访问[**南航新版教务系统**](http://aao-eas.nuaa.edu.cn/eams/login.action)
 
 
+---
+## Version
+
+**V0.15.0.20200520**  
+
+**Change Log:**   
+Please refer to [HERE](CHANGELOG.md).
+
 
 ---
 ## Usage
@@ -176,7 +184,7 @@ python main.py -i <your ID> -p <your password>
 **控制台输入：**  
 ![V0.4.0.20191026-1](img/V0.4.0.20191026-1.png)  
 
-**使用`.exe`程序执行：** （V0.9.0.20191115 开始支持）   
+**使用`.exe`程序执行：** （`V0.9.0.20191115` 开始支持）   
 ![exe](img/exe.png)  
 Or 从命令行执行：  
 ![exe2](img/exe2.png)  
@@ -310,13 +318,6 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 
 * 对于存在的问题和疑问，欢迎在issue中提出，也欢迎提出PR哈！  
 
----
-## Version
-
-V0.15.0.20200520  
-
-**Change Log:**   
-Please refer to [HERE](CHANGELOG.md).
 
 ---
 ## TODO
