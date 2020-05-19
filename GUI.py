@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+GUI
+"""
 import tkinter as tk
 import tkinter.messagebox
 import tkinter.ttk
@@ -12,6 +17,7 @@ from io import BytesIO
 from getClassSchedule import *
 from generateICS import create_ics, export_ics, create_exam_ics
 from generateXLSX import *
+
 # import subprocess as sub
 
 # 将命令行结果重定向到GUI

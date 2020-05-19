@@ -11,7 +11,7 @@
 ## Description
 
 NUAA_ClassSchedule  
-登录南京航空航天大学新教务系统，获取课表及考试信息，解析后生成iCal日历及xlsx表格文件，进而导入Outlook等日历。     
+登录南京航空航天大学新教务系统，获取课表及考试信息，解析后生成 iCal 日历及 xlsx 表格文件，进而导入 Outlook 等日历。     
 
 >- 话说大家平常是怎么看课表的呀？  
 >- **上教务系统** / **截图** / **小程序** / **手动建课表** / **问同学** / ...   
@@ -28,8 +28,6 @@ NUAA_ClassSchedule
 
 
 其实这个项目挺有意思的233 *(斜眼笑.gif)*  
-
-鉴于时间有限，最近事情较多，有继续开发的计划不过估计会咕咕咕  
 
 所以——    
 感兴趣的一起来干呗！   
@@ -62,56 +60,59 @@ NUAA_ClassSchedule
 >（MacOS版本由 @ZegWe 提供）  
 
 下载地址在 [Release](https://github.com/miaotony/NUAA_ClassSchedule/releases) 下呢！  
-
->~~缺点就是，文件太大下载太慢，而且每一次打开的时候根据电脑性能需要加载一定时间。（这行划掉）~~  
-> 之前的问题出在pyinstaller打包上，**现在重新打包了，文件精简啦，欢迎来试试呀！**    
+欢迎来试试呀！  
 
 >如果喜欢折腾，或者不放心的话，推荐还是用下面的方法呢！  
 
 
 ### **Step**  
 
-- Step 1   
+#### Step 1   
  进入你喜欢的目录，将本仓库clone到本地，或直接下载`zip`文件（Download ZIP）   
 ```
-    git clone https://github.com/miaotony/NUAA_ClassSchedule.git
+git clone https://github.com/miaotony/NUAA_ClassSchedule.git
 ```
 
-- Step 2  
+#### Step 2  
  进入目录，安装所需的库（Linux下使用pip3，Windows下使用pip）  
 ```
-    pip3 install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
-- Step 3  
-**使用时先修改程序里的`stuID`为学号，`stuPwd`为教务处密码**  
-   请在`r""`两个引号之间输入，即变量类型为字符串str。  
-  
-   `choice`为个人或班级课表的选择，0为个人，1为班级，**默认为个人课表**。  
-   而后保存，再执行此程序即可。  
-  
-   **密码仅在本地保存，访问官方教务系统，请放心使用。**   
-  
-   *习惯命令行参数的，~~后面会加的啦~~*   
-   **已经实现了命令行参数，具体往下看！**   
-  
+#### Step 3  
 
+这一步有3种方案，任意一种都有效呢！
+
+**方案1：控制台输入**  
+
+首先执行程序。  
 Windows 环境下：  
 ```
-    python main.py
+python main.py
 ```
 
 Linux 环境下：  
 ```
-    python3 main.py
+python3 main.py
 ```
 或者 直接执行main.py （前提是将文件权限设为**可执行**）  
 ```
-    chmod +x *
-    ./main.py
+chmod +x *
+./main.py
 ```
 
-> 从 V0.4.0.20191026 版本起开始支持命令行参数啦！  
+而后在控制台输入学号、密码及验证码。  
+
+为了保护，密码不带回显，输完之后`<ENTER>`就好啦！  
+
+验证码图片会调用系统默认的应用来打开。
+
+**方案2：命令行参数**  
+
+> 从 `V0.4.0.20191026` 版本起开始支持命令行参数啦！  
+
+> 从 `V0.14.0.20200213` 版本开始，控制台默认导出个人课表，只在命令行中保留导出班级课表的选项。
+
 
 **命令行参数说明：**  
 ```
@@ -134,23 +135,34 @@ optional arguments:
 
 示例：  
 ```
-    python main.py -i <your ID> -p <your password> 
+python main.py -i <your ID> -p <your password> 
 ```
 
-同时也支持在控制台输入学号密码啦，且为了保护，密码不带回显，输完之后`<ENTER>`就好啦！  
+运行程序后会弹出验证码图片，在控制台输入验证码即可。  
 
-当然，和上面的初始参数也是互相兼容的，解析的优先级由高到低为：  
+**方案3：修改程序参数（不推荐）**   
+
+使用时先修改`main.py`程序里的`stuID`为学号，`stuPwd`为教务处密码。  
+请在`r""`两个引号之间输入，即变量类型为字符串str。  
+  
+`choice`为个人或班级课表的选择，0为个人，1为班级，**默认为个人课表**。  
+而后保存，再执行此程序即可。  
+  
+**密码仅在本地保存，访问官方教务系统，请放心使用。**   
+  
+
+当然，上述三种方案之间在默认情况下是互相兼容的，解析的优先级由高到低为：  
 命令行参数->上面的初始设置->控制台输入  
 
 
-- Step 4  
-运行后即可得到解析好的课表啦~   
+#### Step 4  
+按上面的方法运行后即可得到解析好的课表啦~   
 在`NUAAiCal-Data`目录下就可以看到生成好的`.ics`日历文件，`.txt`文本文件，还有`.xlsx`表格文件啦！  
   
-    > V0.10.0.20191116: 导出选项可通过命令行参数进行选择  
+> 从 `V0.10.0.20191116` 版本开始，导出选项可通过命令行参数进行选择。  
 
 
-- Step 5  
+#### Step 5  
 将生成好的`.ics`日历文件导入你喜欢的日历，然后尽情享用吧~！  
 **顺手再点个Star吧~**   
 **在导入iCal日历前，请确认时区已设定为 `UTC/GMT+08:00` 即北京时间，否则可能会出现导入后时间不正确的情况！**   
@@ -169,7 +181,7 @@ optional arguments:
 Or 从命令行执行：  
 ![exe2](img/exe2.png)  
 
-**GUI界面：**（V0.12.0.20191124）    
+**GUI界面：**（`V0.12.0.20191124`）    
 
 ![GUI](img/GUI.png)
 
@@ -204,11 +216,11 @@ https://github.com/miaotony/NUAA_iCal_Web
 
 
 ### Raw Data  
-课表解析部分原始JavaScript数据片段：   
+课表解析部分原始 JavaScript 数据片段：   
 
-> 20191107更新：  
+> 20191107 更新：  
 教务系统中`TaskActivity`函数新增了一个`teachClassName`参数，导致之前的版本匹配出现问题，
-在 V0.5.0.20191107 版本中已经修复。  
+在 `V0.5.0.20191107` 版本中已经修复。  
 
 ```javascript
 var teachers = [{id:2270,name:"任艳芳",lab:false}];
@@ -287,20 +299,7 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 ## Known Issues  
 **已知存在的bug**
 
-* ~~登录时提示 **`ERROR! 请不要过快点击!`**~~  
-已经解决啦~
-
-* ~~隐含bug：未匹配天目湖校区时间表，后面再说吧……（欢迎PR）~~  
-已经匹配天目湖校区时间表啦~  
-（潜在bug：教室名称为空则默认是将军路明故宫校区时间表...
-
-* Issue #13   
-**由于11.18晚上教务系统在登录验证中加入了验证码，导致本脚本登录失败，目前无法正常使用，恢复时间未知。**   
-欢迎大佬们的PR哈！   
-![1574163995402](https://user-images.githubusercontent.com/41962043/69144028-5bbbd580-0b05-11ea-99dc-e89ffa3750d0.jpeg)  
->- 在Windows下有一个解决方案是，爬取验证码图片后调用PIL库进行显示。  
->---->V0.11.0.20191121版本已利用此方案进行修复  
-
+* 匹配天目湖校区时间表时的潜在bug：教室名称为空则默认是将军路明故宫校区时间表...  
 
 * Issue #10 课程所在周还没有进行合并，于是显示出来的是分立的，这个后面再说吧。  
 
@@ -314,52 +313,10 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 ---
 ## Version
 
-@Version:  V0.14.0.20200213  
+V0.15.0.20200520  
 
-@Update Log:  
->    V0.14.0.20200213 Update semester_start_date to 20200224 for 2019-2020(2) semester. Delete curriculum choice (person or class). 默认导出个人课表，只在命令行中保留导出班级课表的选项。  
-
->    V0.13.0.20191207 Fix Issue #14 【获取课表到获取考试信息后直接报错 `list index out of range`】
-
->    V0.12.0.20191124 新增导出考试安排；新增基于tkinter实现GUI界面，并与CLI相互兼容，但仍存在小bug。（For Hackathon 2019 @ East China, 20191123-24, with Cooook & Pinyi Qian)    
-
->    V0.11.0.20191121 Fix Issue #13 captcha bug, but only for Windows.调用PIL库显示验证码，仅Windows下有效。    
-
->    V0.10.0.20191116 新增命令行导出选项参数；重新打包，精简可执行程序大小并新增MacOS版本；修复Linux下`sh: 1: pause: not found` bug  
-
->    V0.9.0.20191115 新增打包为`.exe`可执行程序，可在未安装python环境的Windows系统下使用  
-
->    V0.8.1.20191113 修复表格导出bug，完善`requirement.txt`等  
-
->    V0.8.0.20191112 新增导出课表到`.xlsx`表格文件；调换输出课程名称和教师顺序，更加符合逻辑   
-
->    V0.7.0.20191109 新增导出课表到`.txt`文件；  
-新增匹配天目湖校区时间表；  
-修复Issue #2 `Too Quick Click` bug；  
-删除`requirement.txt`中存在的标准库，仅保留第三方库  
-
->    V0.6.0.20191108 基于对象重构课表解析的部分功能，增加生成iCal日历文件并导出（部分参考NUAA-iCal-Python）  
-
->    V0.5.1.20191107 优化代码结构，便于下一步重构及生成iCal文件  
-
->    V0.5.0.20191107 修复因教务系统JS代码变更而无法解析课表的重大bug，增加requirement.txt
-
->    V0.4.0.20191026 增加命令行参数解析，增加控制台输入学号密码（不回显处理），并与初始设置兼容；修复班级课表中教师为空时解析异常bug  
-     ![V0.4.0.20191026-2](img/V0.4.0.20191026-2.png)  
-
->    V0.3.1.20191018 增加解析课程所在周并优化课表输出格式，修复班级课表中班级解析bug，引入logging模块记录日志便于debug  
-     ![V0.3.1.20191018](img/V0.3.1.20191018.png)
-
->    V0.3.0.20191017 增加 课表解析，增加 班级、实践周匹配，优化代码结构   
-     ![V0.3.0.20191017](img/V0.3.0.20191017.png)  
-
->    V0.2.1.20191012 增加UA列表，增加BeautifulSoup提取姓名学号，优化代码结构，为下一步解析课表做准备  
-
->    V0.2.0.20191010 成功登录教务系统，并成功获取个人或班级课表，但还未进行提取  
-
->    V0.1.1.20190910 加入未登录成功或过快点击的判断  
-
->    V0.1.0.20190909 尝试登录新教务系统成功，仅登录而已  
+**Change Log:**   
+Please refer to [HERE](CHANGELOG.md).
 
 ---
 ## TODO
