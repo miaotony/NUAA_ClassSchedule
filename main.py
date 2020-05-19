@@ -12,6 +12,8 @@ main.py  程序入口
 """
 
 import os
+import sys
+import subprocess
 from platform import system as system_platform
 import time
 import logging
@@ -19,7 +21,7 @@ import argparse
 from getpass import getpass
 from datetime import datetime, timedelta
 from pytz import timezone
-from io import BytesIO
+# from io import BytesIO
 from generateICS import create_ics, export_ics, create_exam_ics
 from getClassSchedule import *
 from generateXLSX import *
@@ -27,10 +29,12 @@ from settings import VERSION, DEBUG
 
 if DEBUG:
     logging.basicConfig(level=logging.INFO,
-                        format='%(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')  # 设置日志级别及格式
+                        format='%(asctime)s %(filename)s[line:%(lineno)d]-%(levelname)s: %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')  # 设置日志级别及格式
 else:
     logging.basicConfig(level=logging.WARNING,
-                        format='%(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')  # 设置日志级别及格式
+                        format='%(asctime)s %(filename)s[line:%(lineno)d]-%(levelname)s: %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')  # 设置日志级别及格式
 
 if __name__ == "__main__":
     # 学号及密码
@@ -78,13 +82,34 @@ if __name__ == "__main__":
 
         # Captcha 验证码 # Fix Issue #13 bug, but only for Windows & MacOS.
         captcha_resp = session.get(host + '/eams/captcha/image.action')  # Captcha 验证码图片
-        captcha_img = Image.open(BytesIO(captcha_resp.content))
-        captcha_img.show()  # show the captcha
+        img_path = os.path.join(os.getcwd(), 'captcha.jpg')
+        with open(img_path, 'wb') as captcha_fp:
+            captcha_fp.write(captcha_resp.content)
+        try:
+            # 在不同平台显示验证码
+            if sys.platform.find('darwin') >= 0:
+                subprocess.call(['open', img_path])
+            elif sys.platform.find('linux') >= 0:
+                subprocess.call(['xdg-open', img_path])
+            else:
+                os.startfile(img_path)
+        except:
+            from PIL import Image
+            # captcha_img = Image.open(BytesIO(captcha_resp.content))
+            captcha_img = Image.open(img_path)
+            captcha_img.show()  # show the captcha
+            captcha_img.close()
 
         # text = image_to_string(captcha_img)  # 前提是装了Tesseract-OCR，可以试试自动识别
         # print(text)
         captcha_str = input('Please input the captcha:')
 
+        # 删除验证码图片
+        if sys.platform.find('darwin') >= 0:
+            os.system("osascript -e 'quit app \"Preview\"'")
+        os.remove(img_path)
+
+        # 开始登录
         name = aao_login(stuID, stuPwd, captcha_str, retry_cnt)
         temp_time = time.time()  # 计个时看看
         print('\n## Meow~下面开始获取{}课表啦！\n'.format({0: '个人', 1: '班级'}.get(choice)))

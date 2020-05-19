@@ -14,10 +14,10 @@ import time
 import random
 import json
 import logging
-import tkinter as tk
-import tkinter.ttk
-from PIL import Image, ImageTk
-from io import BytesIO
+# import tkinter as tk
+# import tkinter.ttk
+# from PIL import Image, ImageTk
+# from io import BytesIO
 # from pytesseract import image_to_string
 from lessonObj import Lesson
 from examObj import Exam
