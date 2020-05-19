@@ -98,10 +98,10 @@ courseTable = []
 courseTableObj = []
 examSchedule = []
 examScheduleObj = []
-semester_start_date = datetime(2019, 9, 2, 0, 0, 0,
+semester_start_date = datetime(2020, 2, 24, 0, 0, 0,
                                tzinfo=timezone('Asia/Shanghai'))
 semester_year = '2019-2020'
-semester = '1'
+semester = '2'
 
 
 def getSch():
