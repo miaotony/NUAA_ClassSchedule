@@ -12,7 +12,7 @@ from io import BytesIO
 from getClassSchedule import *
 from generateICS import create_ics, export_ics, create_exam_ics
 from generateXLSX import *
-import subprocess as sub
+# import subprocess as sub
 
 # 将命令行结果重定向到GUI
 # p = sub.Popen('./script', stdout=sub.PIPE, stderr=sub.PIPE)
