@@ -1,8 +1,14 @@
 ## Change log
 
+### `V0.15.1.20200520`
+
+Fix a requirement bug.  
+指定了`requirements.txt`中的依赖版本，修复依赖的版本问题。  
+估计是 beautifulsoup4 版本升级估计修改了一些接口。  
+
 ### `V0.15.0.20200520`
 
-Fix captcha display bug. （Issue #13）  
+Fix a captcha display bug. （Issue #13）  
 修复了验证码显示的问题，在不同平台下调用系统的应用来打开验证码图片。  
 Update document. 更新了说明文档，分离了 Change log。
 

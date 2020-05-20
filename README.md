@@ -50,7 +50,7 @@ NUAA_ClassSchedule
 ---
 ## Version
 
-**V0.15.0.20200520**  
+**V0.15.1.20200520**  
 
 **Change Log:**   
 Please refer to [HERE](CHANGELOG.md).
@@ -76,13 +76,16 @@ Please refer to [HERE](CHANGELOG.md).
 ### **Step**  
 
 #### Step 1   
- 进入你喜欢的目录，将本仓库clone到本地，或直接下载`zip`文件（Download ZIP）   
+进入你喜欢的目录，将本仓库clone到本地，或直接下载`zip`文件（Download ZIP）。   
 ```
 git clone https://github.com/miaotony/NUAA_ClassSchedule.git
 ```
 
 #### Step 2  
- 进入目录，安装所需的库（Linux下使用pip3，Windows下使用pip）  
+进入目录，安装所需的库（Linux下使用pip3，Windows下使用pip）。
+
+**建议在虚拟环境中运行。**  
+  
 ```
 pip3 install -r requirements.txt
 ```
