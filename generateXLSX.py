@@ -34,13 +34,13 @@ def create_xls(lessons, semester_year, semester, stuID):
     sheet.column_dimensions['A'].width = 3
     sheet.row_dimensions[1].height = 20
     sheet.row_dimensions[2].height = 20
-    # print('1\n')
+
     for i in range(1, 12):
         sheet.cell(i + 2, 1, i).alignment = alignment
         sheet.row_dimensions[i + 2].height = 60
     weekday = ['一', '二', '三', '四', '五', '六', '天']
     ab = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
-    # print('2\n')
+
     for i in range(0, 7):
         sheet.cell(2, i + 2, '星期' + weekday[i]).alignment = alignment
         sheet.column_dimensions[ab[i + 1]].width = 20

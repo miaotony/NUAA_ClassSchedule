@@ -81,29 +81,28 @@ def aao_login(stuID, stuPwd, captcha_str, retry_cnt=1):
                 logging.debug(r2.text)
                 temp_key = temp_token_match.search(r2.text)
                 if temp_key:  # 找到密钥说明没有登录成功，需要重试
-                    print("ID, Password or Captcha ERROR! Login ERROR!\n")
+                    # print("ID, Password or Captcha ERROR! Login ERROR!\n")
                     temp_key = temp_key.group(1)
                     logging.debug(temp_key)
-                    exit(2)
+                    raise Exception("ID, Password or Captcha ERROR! Login ERROR!")
                 elif re.search(r"ui-state-error", r2.text):  # 过快点击
                     print("ERROR! 请不要过快点击!\n")
                     time.sleep(1)
                     try_cnt += 1
                     # session.headers["User-Agent"] = UAs[1]  # random.randint(0, len(UAs)-1)  # 换UA也不行
-                    # exit(3)
                 else:
                     temp_soup = BeautifulSoup(r2.text.encode('utf-8'), 'lxml')
                     name = temp_soup.find('a', class_='personal-name').string.strip()
                     print("Login OK!\nHello, {}!".format(name))
                     return name
             else:
-                print("Login ERROR!\n")
-                exit(1)
+                # print("Login ERROR!\n")
+                raise Exception("Login ERROR!")
         else:
-            print('Search token ERROR!\n')
-            exit(1)
-    print("ERROR! 过一会儿再试试吧...\n")
-    exit(3)
+            # print('Search token ERROR!\n')
+            raise Exception("Search token ERROR!")
+    # print("ERROR! 过一会儿再试试吧...\n")
+    raise Exception("ERROR! 过一会儿再试试吧...")
 
 
 def getCourseTable(choice=0):
@@ -154,8 +153,8 @@ def getCourseTable(choice=0):
         # logging.debug(session.cookies.get_dict())
         return courseTable
     else:
-        print("Get ids ERROR!")
-        exit(4)
+        # print("Get ids ERROR!")
+        raise Exception("Get ids ERROR!")
 
 
 def parseCourseTable(courseTable):

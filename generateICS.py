@@ -92,8 +92,7 @@ def create_ics(lessons, semester_start_date):
             try:
                 event.add('description', lesson.output_description(week=week))
             except UnicodeDecodeError:
-                print("ERROR!")
-                exit(6)  # 放弃python2.x了
+                raise Exception("ERROR!")  # 放弃python2.x了
             cal.add_component(event)
     return cal
 
@@ -136,7 +135,7 @@ def export_ics(cal, semester_year, semester, stuID):
             tem_path = os.path.abspath(tem.name)
             tem.write(cal.to_ical())
             tem_filename = tem.name
-            tem.read()  # fix a py2.7 bug... issue#2
+            tem.read()  # fix a py2.7 bug...
             tem.close()
             # print(getsizeof(tem.read()))
             is_update = not is_same(tem_path, filename)

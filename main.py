@@ -80,7 +80,7 @@ if __name__ == "__main__":
             # stuPwd = input('Please input your password:')
             stuPwd = getpass('Please input your password:(不会回显，输入完成<ENTER>即可)')
 
-        # Captcha 验证码 # Fix Issue #13 bug, but only for Windows & MacOS.
+        # Captcha 验证码 # Fix Issue #13 bug.
         captcha_resp = session.get(host + '/eams/captcha/image.action')  # Captcha 验证码图片
         img_path = os.path.join(os.getcwd(), 'captcha.jpg')
         with open(img_path, 'wb') as captcha_fp:
@@ -95,6 +95,7 @@ if __name__ == "__main__":
                 os.startfile(img_path)
         except:
             from PIL import Image
+
             # captcha_img = Image.open(BytesIO(captcha_resp.content))
             captcha_img = Image.open(img_path)
             captcha_img.show()  # show the captcha
@@ -138,7 +139,7 @@ if __name__ == "__main__":
         print("Thanks for your use! 欢迎来GitHub上点个Star呢！")
 
     except Exception as e:
-        print("ERROR! 欢迎在GitHub上提出issue & Pull Request!")
+        print("ERROR! 如果遇到技术问题，欢迎在GitHub上提出issue & Pull Request!")
         print(e)
     finally:
         session.cookies.clear()  # 清一下cookie

@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 GUI
+
+bug:
+    stuID未能显示；没有对输入情况进行判断。
 """
 import tkinter as tk
 import tkinter.messagebox
@@ -200,8 +203,3 @@ bu_outputAs_all = tk.Button(window, text='一键导出', bg='#ffff9f', font=('Ar
                             command=outputAs_all).place(x=30, y=300)
 
 window.mainloop()
-
-'''
-bug:
-    stuID未能显示
-'''

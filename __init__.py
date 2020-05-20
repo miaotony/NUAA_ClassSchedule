@@ -8,7 +8,7 @@ GitHub: https://github.com/miaotony/NUAA_ClassSchedule
 Pull Requests & issues welcome!
 
 @Author: MiaoTony, ZegWe, Cooook, Pinyi Qian
-@UpdateLog: Please refer to `CHANGELOG.md`.
+@ChangeLog: Please refer to `CHANGELOG.md`.
 
 """
 
