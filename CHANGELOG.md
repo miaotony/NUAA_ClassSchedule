@@ -1,10 +1,16 @@
 ## Change log
 
+### `V0.15.2.20200520`
+Replace `exit` with `raise Exception`.  
+用抛出异常来取代直接退出。  
+去除一些多余的代码。  
+重新打包生成新的可执行文件，新增 GUI 界面的可执行程序。  
+
 ### `V0.15.1.20200520`
 
 Fix a requirement bug.  
 指定了`requirements.txt`中的依赖版本，修复依赖的版本问题。  
-估计是 beautifulsoup4 版本升级估计修改了一些接口。  
+估计是 beautifulsoup4 版本升级中修改了一些接口。  
 
 ### `V0.15.0.20200520`
 
@@ -14,7 +20,8 @@ Update document. 更新了说明文档，分离了 Change log。
 
 ### `V0.14.0.20200213`
 
-Update semester_start_date to 20200224 for 2019-2020(2) semester. Delete curriculum choice (person or class). 默认导出个人课表，只在命令行中保留导出班级课表的选项。  
+Update semester_start_date to 20200224 for 2019-2020(2) semester. Delete curriculum choice (person or class).   
+默认导出个人课表，只在命令行中保留导出班级课表的选项。  
 
 ### `V0.13.0.20191207` 
 
@@ -22,15 +29,19 @@ Fix Issue #14 【获取课表到获取考试信息后直接报错 `list index ou
 
 ### `V0.12.0.20191124` 
 
-新增导出考试安排；新增基于tkinter实现GUI界面，并与CLI相互兼容，但仍存在小bug。（For Hackathon 2019 @ East China, 20191123-24, with Cooook & Pinyi Qian)    
+新增导出考试安排；新增基于tkinter实现GUI界面，并与CLI相互兼容，但仍存在小bug。  
+（For Hackathon 2019 @ East China, 20191123-24, with Cooook & Pinyi Qian)    
 
 ### `V0.11.0.20191121` 
 
-Fix Issue #13 captcha bug, but only for Windows.调用PIL库显示验证码，仅Windows下有效。    
+Fix Issue #13 captcha bug, but only for Windows.  
+调用PIL库显示验证码，仅Windows下有效。    
 
 ### `V0.10.0.20191116` 
 
-新增命令行导出选项参数；重新打包，精简可执行程序大小并新增MacOS版本；修复Linux下`sh: 1: pause: not found` bug  
+新增命令行导出选项参数；  
+重新打包，精简可执行程序大小并新增MacOS版本；  
+修复Linux下`sh: 1: pause: not found` bug  
 
 ### `V0.9.0.20191115` 
 
@@ -65,18 +76,21 @@ Fix Issue #13 captcha bug, but only for Windows.调用PIL库显示验证码，�
 
 ### `V0.4.0.20191026` 
 
-增加命令行参数解析，增加控制台输入学号密码（不回显处理），并与初始设置兼容；修复班级课表中教师为空时解析异常bug  
-     ![V0.4.0.20191026-2](img/V0.4.0.20191026-2.png)  
+增加命令行参数解析，增加控制台输入学号密码（不回显处理），并与初始设置兼容；  
+修复班级课表中教师为空时解析异常bug  
+![V0.4.0.20191026-2](img/V0.4.0.20191026-2.png)  
 
 ### `V0.3.1.20191018` 
 
-增加解析课程所在周并优化课表输出格式，修复班级课表中班级解析bug，引入logging模块记录日志便于debug  
-     ![V0.3.1.20191018](img/V0.3.1.20191018.png)
+增加解析课程所在周并优化课表输出格式，  
+修复班级课表中班级解析bug，  
+引入logging模块记录日志便于debug  
+![V0.3.1.20191018](img/V0.3.1.20191018.png)
 
 ### `V0.3.0.20191017` 
 
 增加 课表解析，增加 班级、实践周匹配，优化代码结构   
-     ![V0.3.0.20191017](img/V0.3.0.20191017.png)  
+![V0.3.0.20191017](img/V0.3.0.20191017.png)  
 
 ### `V0.2.1.20191012` 
 
