@@ -50,10 +50,10 @@ NUAA_ClassSchedule
 ---
 ## Version
 
-**V0.15.2.20200520**  
+**V0.16.0.20200714**  
 
 **Change Log:**   
-Please refer to [HERE](CHANGELOG.md).
+Please refer to [CHANGELOG](CHANGELOG.md).
 
 
 ---
@@ -337,7 +337,7 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 - [x] 图形化界面  GUI  
 - [x] 导出考试安排  Export examination schedule  
 - [x] 搭建网络服务，在线导出日历文件  Web service  https://github.com/miaotony/NUAA_iCal_Web  
-- [ ] 搭建Telegram Bot在线导出日历文件  Telegram Bot  
+- [x] 搭建Telegram Bot在线导出日历文件  Telegram Bot  @NUAA_iCal_bot  https://t.me/NUAA_iCal_bot  
 - [ ] 提供课表订阅服务  Subscribe service  
 - [ ] 使用情况分析  Usage analysis  
 - [ ] 适配研究生课表  Adapt to postgraduate's class schedule  
@@ -361,7 +361,7 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
     >网址：[点这里](https://i.scnu.edu.cn/ical/)   
     https://i.scnu.edu.cn/ical/
     
-    这里有一些关于iCal的使用方法，可以参考一波。  
+    这里有一些关于iCal的使用方法，可以参考一下哈。  
 
 ---
 ## Sponsorship
