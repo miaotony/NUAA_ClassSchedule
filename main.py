@@ -40,8 +40,8 @@ if __name__ == "__main__":
     # 学号及密码
     stuID = r""
     stuPwd = r""
-    choice = 0  # 0 for std, 1 for class.个人课表or班级课表
-    retry_cnt = 3  # 登录重试次数
+    choice = 0  # 0 for std, 1 for class. 个人课表or班级课表
+    # retry_cnt = 3  # 登录重试次数 Deprecated
     semester_year = '2019-2020'
     semester = '2'
     semester_start_date = datetime(2020, 2, 24, 0, 0, 0,
@@ -111,7 +111,7 @@ if __name__ == "__main__":
         os.remove(img_path)
 
         # 开始登录
-        name = aao_login(stuID, stuPwd, captcha_str, retry_cnt)
+        name = aao_login(stuID, stuPwd, captcha_str)
         temp_time = time.time()  # 计个时看看
         print('\n## Meow~下面开始获取{}课表啦！\n'.format({0: '个人', 1: '班级'}.get(choice)))
         courseTable = getCourseTable(choice=choice)

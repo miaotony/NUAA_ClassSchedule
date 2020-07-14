@@ -43,64 +43,71 @@ session.headers = headers
 host = r'http://aao-eas.nuaa.edu.cn'
 
 
-def aao_login(stuID, stuPwd, captcha_str, retry_cnt=1):
+def aao_login(stuID, stuPwd, captcha_str):
     """
     登录新教务系统
     :param stuID: 学号
     :param stuPwd: 密码
-    :param retry_cnt: 登录重试次数
     :return: name: {str} 姓名(学号)
     """
-    try_cnt = 1
-    while try_cnt <= retry_cnt:
-        # session.cookies.clear()  # 先清一下cookie
-        r1 = session.get(host + '/eams/login.action')
-        # logging.debug(r1.text)
-        # captcha_resp = session.get(host + '/eams/captcha/image.action')  # Captcha 验证码图片
+    # session.cookies.clear()  # 先清一下cookie
+    r1 = session.get(host + '/eams/login.action')
+    # logging.debug(r1.text)
 
-        temp_token_match = re.compile(r"CryptoJS\.SHA1\(\'([0-9a-zA-Z\-]*)\'")
-        # 搜索密钥
-        if temp_token_match.search(r1.text):
-            print("Search token OK!")
-            temp_token = temp_token_match.search(r1.text).group(1)
-            logging.debug(temp_token)
-            postPwd = temp_token + stuPwd
-            # logging.debug(postPwd)
+    temp_token_match = re.compile(r"CryptoJS\.SHA1\(\'([0-9a-zA-Z\-]*)\'")
+    # 搜索密钥
+    if temp_token_match.search(r1.text):
+        print("Search token OK!")
+        temp_token = temp_token_match.search(r1.text).group(1)
+        logging.debug(temp_token)
+        postPwd = temp_token + stuPwd
+        # logging.debug(postPwd)
 
-            # 开始进行SHA1加密
-            s1 = sha1()  # 创建sha1对象
-            s1.update(postPwd.encode())  # 对s1进行更新
-            postPwd = s1.hexdigest()  # 加密处理
-            # logging.debug(postPwd)  # 结果是40位字符串
+        # 开始进行SHA1加密
+        s1 = sha1()  # 创建sha1对象
+        s1.update(postPwd.encode())  # 对s1进行更新
+        postPwd = s1.hexdigest()  # 加密处理
+        # logging.debug(postPwd)  # 结果是40位字符串
 
-            # 开始登录啦
-            postData = {'username': stuID, 'password': postPwd, 'captcha_response': captcha_str}
-            time.sleep(0.5 * try_cnt)  # fix Issue #2 `Too Quick Click` bug, sleep for longer time for a new trial
-            r2 = session.post(host + '/eams/login.action', data=postData)
-            if r2.status_code == 200 or r2.status_code == 302:
-                logging.debug(r2.text)
-                temp_key = temp_token_match.search(r2.text)
-                if temp_key:  # 找到密钥说明没有登录成功，需要重试
-                    # print("ID, Password or Captcha ERROR! Login ERROR!\n")
+        # 开始登录啦
+        postData = {'username': stuID, 'password': postPwd,
+                    'captcha_response': captcha_str}
+        # fix Issue #2 `Too Quick Click` bug, sleep for longer time for a new trial
+        time.sleep(random.uniform(0.7, 1))  # 更改为随机延时
+        r2 = session.post(host + '/eams/login.action', data=postData)
+        r2.encoding = 'utf-8'
+        if r2.status_code == 200 or r2.status_code == 302:
+            logging.debug(r2.text)
+            temp_key = temp_token_match.search(r2.text)
+            if temp_key:  # 找到密钥说明没有登录成功，需要重试
+                if '验证码不正确' in r2.text:
+                    # print("Captcha ERROR! Login ERROR!\n")
+                    raise Exception("Captcha ERROR! Login ERROR!")
+                else:
+                    # print("ID or Password ERROR! Login ERROR!\n")
                     temp_key = temp_key.group(1)
                     logging.debug(temp_key)
-                    raise Exception("ID, Password or Captcha ERROR! Login ERROR!")
-                elif re.search(r"ui-state-error", r2.text):  # 过快点击
-                    print("ERROR! 请不要过快点击!\n")
-                    time.sleep(1)
-                    try_cnt += 1
-                    # session.headers["User-Agent"] = UAs[1]  # random.randint(0, len(UAs)-1)  # 换UA也不行
-                else:
-                    temp_soup = BeautifulSoup(r2.text.encode('utf-8'), 'lxml')
-                    name = temp_soup.find('a', class_='personal-name').string.strip()
-                    print("Login OK!\nHello, {}!".format(name))
-                    return name
+                    raise Exception("ID or Password ERROR! Login ERROR!")
+            elif re.search(r"ui-state-error", r2.text):  # 过快点击
+                # print("ERROR! 请不要过快点击!\n")
+                raise Exception("ERROR! 请不要过快点击!")
+            else:
+                temp_soup = BeautifulSoup(r2.text.encode('utf-8'), 'lxml')
+                name = temp_soup.find(
+                    'a', class_='personal-name').string.strip()
+                print("Login OK!\nHello, {}!".format(name))
+                return name
+        else:
+            print(r2.text)
+            if '连接已重置' in r2.text:
+                # print("Login ERROR! 连接已重置!\n")
+                raise Exception("Login ERROR! 教务系统连接已重置，请重试！")
             else:
                 # print("Login ERROR!\n")
                 raise Exception("Login ERROR!")
-        else:
-            # print('Search token ERROR!\n')
-            raise Exception("Search token ERROR!")
+    else:
+        # print('Search token ERROR!\n')
+        raise Exception("Search token ERROR!")
     # print("ERROR! 过一会儿再试试吧...\n")
     raise Exception("ERROR! 过一会儿再试试吧...")
 
@@ -115,7 +122,8 @@ def getCourseTable(choice=0):
     courseTableResponse = session.get(host + '/eams/courseTableForStd.action')
     # logging.debug(courseTableResponse.text)
 
-    temp_ids_match = re.compile(r"bg\.form\.addInput\(form,\"ids\",\"([0-9]*)\"")
+    temp_ids_match = re.compile(
+        r"bg\.form\.addInput\(form,\"ids\",\"([0-9]*)\"")
     temp_ids = temp_ids_match.findall(courseTableResponse.text)
     if temp_ids:
         logging.debug(temp_ids)  # [0] for std, [1] for class.
@@ -168,7 +176,8 @@ def parseCourseTable(courseTable):
     """personal info"""
     personalInfo = soup.select('div#ExportA > div')[0].get_text()
     logging.debug(personalInfo)  # DEBUG
-    stuClass = re.findall(r'(所属班级|班级名称):\s*([A-Za-z\d]*)', personalInfo)[0]  # 个人课表为`所属班级`，班级课表为`班级名称`
+    # 个人课表为`所属班级`，班级课表为`班级名称`
+    stuClass = re.findall(r'(所属班级|班级名称):\s*([A-Za-z\d]*)', personalInfo)[0]
     print('班级:' + stuClass[1])
     practiceWeek = re.findall(r'实践周：\s*(.*)', personalInfo, re.DOTALL)[0]
     practiceWeek = "".join(practiceWeek.split())
@@ -184,7 +193,8 @@ def parseCourseTable(courseTable):
     re_courseInfo = re.compile(
         r'actTeacherName\.join\(\',\'\),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*),\s*(.*)\s*,\s*(.*)\s*\)')
     # courseId,courseName,roomId,roomName,vaildWeeks,taskId,remark,assistantName,experiItemName,schGroupNo,teachClassName
-    re_courseTime = re.compile(r'index\s*=\s*(\d+)\s*\*\s*unitCount\s*\+\s*(\d+);')
+    re_courseTime = re.compile(
+        r'index\s*=\s*(\d+)\s*\*\s*unitCount\s*\+\s*(\d+);')
 
     list_lessonObj = []  # Initialization
     course_cnt = 1
@@ -200,15 +210,18 @@ def parseCourseTable(courseTable):
             teacher = re_singleTeacher.findall(teachers[0])
             if len(teacher) > 1:  # More than 1 teachers
                 for teacher_i in teacher:
-                    teacher_i = teacher_i.replace('id', '\"id\"').replace('name', '\"name\"').replace('lab', '\"lab\"')
+                    teacher_i = teacher_i.replace('id', '\"id\"').replace(
+                        'name', '\"name\"').replace('lab', '\"lab\"')
                     list_teacher.append(json.loads(teacher_i))
             else:  # Single teacher
-                teacher = teacher[0].replace('id', '\"id\"').replace('name', '\"name\"').replace('lab', '\"lab\"')
+                teacher = teacher[0].replace('id', '\"id\"').replace(
+                    'name', '\"name\"').replace('lab', '\"lab\"')
                 list_teacher.append(json.loads(teacher))
         logging.info(list_teacher)
 
         logging.info('Parsing course info...')  # DEBUG
-        courseInfo = re_courseInfo.search(singleCourse, re.DOTALL | re.MULTILINE)
+        courseInfo = re_courseInfo.search(
+            singleCourse, re.DOTALL | re.MULTILINE)
         logging.debug(courseInfo)
 
         logging.info('Parsing course time...')  # DEBUG
@@ -232,7 +245,8 @@ def getExamSchedule():
     :return:Ans_list: {list} 考试安排列表
     """
     time.sleep(0.5)
-    examSchedule = session.get(host + r'/eams/examSearchForStd!examTable.action')
+    examSchedule = session.get(
+        host + r'/eams/examSearchForStd!examTable.action')
 
     soup = BeautifulSoup(examSchedule.text.encode('utf-8'), 'lxml')
     '''exam Schedule'''
@@ -278,7 +292,8 @@ def exportCourseTable(list_lessonObj, list_examObj, semester_year, semester, stu
     :param stuID {str}学号
     :return: None
     """
-    filename = 'NUAAiCal-Data/NUAA-curriculum-' + semester_year + '-' + semester + '-' + stuID + '.txt'
+    filename = 'NUAAiCal-Data/NUAA-curriculum-' + \
+        semester_year + '-' + semester + '-' + stuID + '.txt'
     with open(filename, 'w', encoding='utf-8') as output_file:
         try:
             course_cnt = 1
