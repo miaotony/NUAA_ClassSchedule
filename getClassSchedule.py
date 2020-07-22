@@ -42,6 +42,33 @@ headers = {
 session.headers = headers
 host = r'http://aao-eas.nuaa.edu.cn'
 
+def getSemesterFirstDay(semester:str):
+    """
+    从教务网校历获取学期的第一天
+    :param semester_year: 学年
+    :param semester: 学期
+    """
+    years = semester.split('-')[0:2]
+    term = int(semester.split('-')[2])
+    # print(years, term)
+    requestData = {'schoolYear': '-'.join(years),
+                   'term': term}
+    r = session.post(host + '/eams/calendarView!search.action', requestData)
+    if re.search(r'当前学期不存在', r.text) != None:
+        # print(r.text)
+        raise Exception('当前学期不存在，请切换到正确学期')
+    # print(r.text)
+    soup = BeautifulSoup(r.text.encode('utf-8'), 'lxml')
+    monthstr = soup.select('table > tr')[0].select('td')[1].get_text().replace(' ','').replace('\r','').replace('\n','')
+    daystr = soup.select('table > tr')[2].select('td')[1].get_text().replace(' ','').replace('\r','').replace('\n','')
+    months = dict(一=1,二=2,三=3,四=4,五=5,六=6,七=7,八=8,九=9,十=10,十一=11,十二=12)
+    year = int(years[term-1])
+    month = months[monthstr]
+    day = int(daystr)
+    return '-'.join(years), term, year, month, day
+
+
+print(getSemesterFirstDay('2019-2020-2'))
 
 def aao_login(stuID, stuPwd, captcha_str):
     """

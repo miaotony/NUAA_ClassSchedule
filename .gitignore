@@ -109,3 +109,6 @@ NUAAiCal-Data/
 
 # MacOS files
 .DS_Store
+
+# VS Code Config
+.vscode

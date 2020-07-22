@@ -42,10 +42,7 @@ if __name__ == "__main__":
     stuPwd = r""
     choice = 0  # 0 for std, 1 for class. 个人课表or班级课表
     # retry_cnt = 3  # 登录重试次数 Deprecated
-    semester_year = '2019-2020'
-    semester = '2'
-    semester_start_date = datetime(2020, 2, 24, 0, 0, 0,
-                                   tzinfo=timezone('Asia/Shanghai'))
+    semesterstr = ''
 
     print("Welcome to use the NUAA_ClassSchedule script.")
     print("Author: MiaoTony, ZegWe, Cooook, Pinyi Qian\nGitHub: https://github.com/miaotony/NUAA_ClassSchedule  \n")
@@ -56,6 +53,7 @@ if __name__ == "__main__":
     parser.description = 'Get NUAA class schedule at ease! 一个小jio本，让你获取课表更加便捷而实在~'
     parser.add_argument("-i", "--id", help="Student ID 学号", type=str)
     parser.add_argument("-p", "--pwd", help="Student password 教务处密码", type=str)
+    parser.add_argument("-s", "--semester", help="输入学期，例如 `2020-2021-1` 即2020-2021学年第1学期")
     parser.add_argument("-c", "--choice", help="Input `0` for personal curriculum(default), `1` for class curriculum.\
                         输入`0`获取个人课表(无此参数默认为个人课表)，输入`1`获取班级课表", type=int, choices=[0, 1])  # , default=0
     parser.add_argument("--noexam", help="Don't export exam schedule. 加入此选项则不导出考试安排", action="store_true")
@@ -74,7 +72,8 @@ if __name__ == "__main__":
             stuPwd = args.pwd
         if args.choice is not None:
             choice = args.choice
-
+        if args.semester is not None:
+            semesterstr = args.semester
         if stuID == '' or stuPwd == '':  # 若学号密码为空则在控制台获取
             stuID = input('Please input your student ID:')
             # stuPwd = input('Please input your password:')
@@ -113,6 +112,11 @@ if __name__ == "__main__":
         # 开始登录
         name = aao_login(stuID, stuPwd, captcha_str)
         temp_time = time.time()  # 计个时看看
+        if semesterstr == '':
+            semesterstr = input('请输入想要查询的学期，格式如 `2020-2021-1` :')
+        semester_year, semester, year, month, day = getSemesterFirstDay(semesterstr)
+        semester_start_date = datetime(year, month, day, 0, 0, 0,
+                                   tzinfo=timezone('Asia/Shanghai'))
         print('\n## Meow~下面开始获取{}课表啦！\n'.format({0: '个人', 1: '班级'}.get(choice)))
         courseTable = getCourseTable(choice=choice)
         list_lessonObj = parseCourseTable(courseTable)
