@@ -48,7 +48,7 @@ def getSemesterFirstDay(semester_str: str):
     从教务系统校历获取学期的第一天
     :param semester_str: 查询所需的学期字符串 e.g.`2020-2021-1`
     :return semester_year: {str} 学年
-    :return term: {str} 学期
+    :return semester: {str} 学期
     :return year, month, day: {int} 开学日期
     """
     # 先来判断一下输入字符串的有效性
@@ -77,7 +77,8 @@ def getSemesterFirstDay(semester_str: str):
     month = months[monthstr]
     day = int(daystr)
     semester_year = '-'.join(years)
-    return semester_year, str(term), year, month, day
+    semester = str(term)
+    return semester_year, semester, year, month, day
 
 
 def aao_login(stuID, stuPwd, captcha_str):
