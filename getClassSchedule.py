@@ -3,7 +3,7 @@
 """
 getClassSchedule  登录教务系统，获取课表，进行解析及导出
 
-@Author: MiaoTony
+@Author: MiaoTony, ZegWe
 """
 
 import requests
@@ -42,14 +42,22 @@ headers = {
 session.headers = headers
 host = r'http://aao-eas.nuaa.edu.cn'
 
-def getSemesterFirstDay(semester:str):
+
+def getSemesterFirstDay(semester_str: str):
     """
-    从教务网校历获取学期的第一天
-    :param semester_year: 学年
-    :param semester: 学期
+    从教务系统校历获取学期的第一天
+    :param semester_str: 查询所需的学期字符串 e.g.`2020-2021-1`
+    :return semester_year: {str} 学年
+    :return term: {str} 学期
+    :return year, month, day: {int} 开学日期
     """
-    years = semester.split('-')[0:2]
-    term = int(semester.split('-')[2])
+    # 先来判断一下输入字符串的有效性
+    re_semester = re.compile(r'[0-9]{4}-[0-9]{4}-[1-2]')
+    if not re_semester.findall(semester_str):
+        raise Exception('Parse semester ERROR!')
+    # 再来解析学期字符串
+    years = semester_str.split('-')[0:2]
+    term = int(semester_str.split('-')[2])
     # print(years, term)
     requestData = {'schoolYear': '-'.join(years),
                    'term': term}
@@ -59,23 +67,27 @@ def getSemesterFirstDay(semester:str):
         raise Exception('当前学期不存在，请切换到正确学期')
     # print(r.text)
     soup = BeautifulSoup(r.text.encode('utf-8'), 'lxml')
-    monthstr = soup.select('table > tr')[0].select('td')[1].get_text().replace(' ','').replace('\r','').replace('\n','')
-    daystr = soup.select('table > tr')[2].select('td')[1].get_text().replace(' ','').replace('\r','').replace('\n','')
-    months = dict(一=1,二=2,三=3,四=4,五=5,六=6,七=7,八=8,九=9,十=10,十一=11,十二=12)
+    monthstr = soup.select('table > tr')[0].select('td')[1].get_text().replace(
+        ' ', '').replace('\r', '').replace('\n', '')
+    daystr = soup.select('table > tr')[2].select('td')[1].get_text().replace(
+        ' ', '').replace('\r', '').replace('\n', '')
+    months = dict(一=1, 二=2, 三=3, 四=4, 五=5, 六=6,
+                  七=7, 八=8, 九=9, 十=10, 十一=11, 十二=12)
     year = int(years[term-1])
     month = months[monthstr]
     day = int(daystr)
-    return '-'.join(years), term, year, month, day
+    semester_year = '-'.join(years)
+    return semester_year, str(term), year, month, day
 
-
-print(getSemesterFirstDay('2019-2020-2'))
 
 def aao_login(stuID, stuPwd, captcha_str):
     """
     登录新教务系统
     :param stuID: 学号
     :param stuPwd: 密码
-    :return: name: {str} 姓名(学号)
+    :param captcha_str: 验证码
+    :return name: {str} 姓名(学号)
+    :return semester_info: {str} 学期信息，如 `2020-2021-1`
     """
     # session.cookies.clear()  # 先清一下cookie
     r1 = session.get(host + '/eams/login.action')
@@ -120,10 +132,19 @@ def aao_login(stuID, stuPwd, captcha_str):
                 raise Exception("ERROR! 请不要过快点击!")
             else:
                 temp_soup = BeautifulSoup(r2.text.encode('utf-8'), 'lxml')
+                # 提取姓名
                 name = temp_soup.find(
                     'a', class_='personal-name').string.strip()
+                # 提取当前学期信息
+                semester_info_raw = temp_soup.select(
+                    '#teach-week')[0].text.strip()
+                # print(semester_info_raw)
+                re_semesterInfo = re.compile(r'(\d{4}-\d{4})第(\d{1})学期')
+                semester_info = re_semesterInfo.search(semester_info_raw)
+                semester_info = semester_info[1] + '-' + semester_info[2]
                 print("Login OK!\nHello, {}!".format(name))
-                return name
+                print("The current semester is {}.".format(semester_info))
+                return name, semester_info
         else:
             print(r2.text)
             if '连接已重置' in r2.text:
