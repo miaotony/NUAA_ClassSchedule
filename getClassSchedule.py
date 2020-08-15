@@ -181,7 +181,7 @@ def getCourseTable(choice=0, semester_year="", semester=""):
             if s['schoolYear'] == semester_year and s['name'] == str(semester):
                 semester_id = s['id']
     # print(semester_id)
-    if semester_id == NULL:
+    if not ('semester_id' in dir()):
         raise Exception("Can not find the semester you have entered")
     courseTableResponse = session.get(host + '/eams/courseTableForStd.action')
     # logging.debug(courseTableResponse.text)
