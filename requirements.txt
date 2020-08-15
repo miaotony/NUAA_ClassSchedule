@@ -7,3 +7,4 @@ pytz==2020.1
 icalendar==4.0.6
 openpyxl==3.0.3
 Pillow==7.1.2
+demjson==2.24

@@ -13,6 +13,7 @@ from hashlib import sha1
 import time
 import random
 import json
+import demjson
 import logging
 from lessonObj import Lesson
 from examObj import Exam
@@ -161,13 +162,25 @@ def aao_login(stuID, stuPwd, captcha_str):
     raise Exception("ERROR! 过一会儿再试试吧...")
 
 
-def getCourseTable(choice=0):
+def getCourseTable(choice=0, semester_year="", semester=""):
     """
     获取课表
     :param choice: 0 for std, 1 for class.个人课表or班级课表，默认为个人课表。
+    :param semester: `xxxx-xxxx-x` 学期
     :return:courseTable: {Response} 课表html响应
     """
     time.sleep(0.5)  # fix Issue #2 `Too Quick Click` bug
+    semesterCalendar = session.get(host + '/eams/dataQuery.action?dataType=semesterCalendar')
+    # print(semesterCalendar.text)
+    calendar = '{' + re.compile(r'semesters:.*}').findall(semesterCalendar.text)[0]
+    # print(calendar)
+    calendar = demjson.decode(calendar)['semesters']
+    # print('decode succeeded')
+    for y in calendar:
+        for s in calendar[y]:
+            if s['schoolYear'] == semester_year and s['name'] == str(semester):
+                semester_id = s['id']
+    # print(semester_id)
     courseTableResponse = session.get(host + '/eams/courseTableForStd.action')
     # logging.debug(courseTableResponse.text)
 
@@ -198,7 +211,7 @@ def getCourseTable(choice=0):
             "setting.kind": kind,
             # "startWeek": "",  # None for all weeks
             # "project.id": "1",
-            # "semester.id": session.cookies.get_dict()['semester.id'],
+            "semester.id": semester_id,
             "ids": ids
         }
         courseTable = session.get(host + r'/eams/courseTableForStd!courseTable.action',
