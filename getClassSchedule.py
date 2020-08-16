@@ -74,7 +74,7 @@ def getSemesterFirstDay(semester_str: str):
         ' ', '').replace('\r', '').replace('\n', '')
     months = dict(一=1, 二=2, 三=3, 四=4, 五=5, 六=6,
                   七=7, 八=8, 九=9, 十=10, 十一=11, 十二=12)
-    year = int(years[term-1])
+    year = int(years[term - 1])
     month = months[monthstr]
     day = int(daystr)
     semester_year = '-'.join(years)
@@ -167,7 +167,8 @@ def getCourseTable(choice=0, semester_year="", semester=""):
     """
     获取课表
     :param choice: 0 for std, 1 for class.个人课表or班级课表，默认为个人课表。
-    :param semester: `xxxx-xxxx-x` 学期
+    :param semester_year: `xxxx-xxxx` 学年 e.g. `2020-2021`
+    :param semester: `x` 学期 {1, 2}
     :return:courseTable: {Response} 课表html响应
     """
     # fix Issue #2 `Too Quick Click` bug
@@ -178,13 +179,15 @@ def getCourseTable(choice=0, semester_year="", semester=""):
     # print(calendar)
     calendar = demjson.decode(calendar)['semesters']
     # print('decode succeeded')
+    semester_id = ''
     for y in calendar:
         for s in calendar[y]:
             if s['schoolYear'] == semester_year and s['name'] == str(semester):
                 semester_id = s['id']
+                break
     # print(semester_id)
-    if not ('semester_id' in dir()):
-        raise Exception("Can not find the semester you have entered")
+    if not semester_id:
+        raise Exception("Can not find the semester you have entered!")
     courseTableResponse = session.get(host + '/eams/courseTableForStd.action')
     # logging.debug(courseTableResponse.text)
 
@@ -359,7 +362,7 @@ def exportCourseTable(list_lessonObj, list_examObj, semester_year, semester, stu
     :return: None
     """
     filename = 'NUAAiCal-Data/NUAA-curriculum-' + \
-        semester_year + '-' + semester + '-' + stuID + '.txt'
+               semester_year + '-' + semester + '-' + stuID + '.txt'
     with open(filename, 'w', encoding='utf-8') as output_file:
         try:
             course_cnt = 1
