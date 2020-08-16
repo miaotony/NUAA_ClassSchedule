@@ -92,6 +92,7 @@ def aao_login(stuID, stuPwd, captcha_str):
     """
     # session.cookies.clear()  # 先清一下cookie
     r1 = session.get(host + '/eams/login.action')
+    r1.encoding = 'utf-8'
     # logging.debug(r1.text)
 
     temp_token_match = re.compile(r"CryptoJS\.SHA1\(\'([0-9a-zA-Z\-]*)\'")
@@ -167,7 +168,8 @@ def getCourseTable(choice=0):
     :param choice: 0 for std, 1 for class.个人课表or班级课表，默认为个人课表。
     :return:courseTable: {Response} 课表html响应
     """
-    time.sleep(0.5)  # fix Issue #2 `Too Quick Click` bug
+    # fix Issue #2 `Too Quick Click` bug
+    time.sleep(random.uniform(0.6, 1))  # 随机延时
     courseTableResponse = session.get(host + '/eams/courseTableForStd.action')
     # logging.debug(courseTableResponse.text)
 
@@ -293,7 +295,7 @@ def getExamSchedule():
     获取考试安排
     :return:Ans_list: {list} 考试安排列表
     """
-    time.sleep(0.5)
+    time.sleep(random.uniform(0.6, 1))  # 随机延时
     examSchedule = session.get(
         host + r'/eams/examSearchForStd!examTable.action')
 
