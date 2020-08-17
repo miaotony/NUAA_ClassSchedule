@@ -127,7 +127,7 @@ Please input the semester you want to query, e.g. `2020-2021-1`: (the current se
 
         print('\n## Meow~下面开始获取{}课表啦！\n'.format({0: '个人', 1: '班级'}.get(choice)))
         temp_time = time.time()  # 计个时看看
-        courseTable = getCourseTable(choice=choice,semester_year = semester_year,semester=semester)
+        courseTable = getCourseTable(choice=choice, semester_year=semester_year, semester=semester)
         list_lessonObj = parseCourseTable(courseTable)
 
         print('## 下面开始获取考试信息啦！\n')

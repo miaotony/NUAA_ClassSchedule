@@ -64,8 +64,7 @@ def getSemesterFirstDay(semester_str: str):
                    'term': term}
     r = session.post(host + '/eams/calendarView!search.action', requestData)
     if re.search(r'当前学期不存在', r.text) != None:
-        # print(r.text)
-        raise Exception('当前学期不存在，请切换到正确学期')
+        raise Exception('ERROR! The current semester does not exist!')
     # print(r.text)
     soup = BeautifulSoup(r.text.encode('utf-8'), 'lxml')
     monthstr = soup.select('table > tr')[0].select('td')[1].get_text().replace(
