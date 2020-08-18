@@ -172,9 +172,11 @@ def getCourseTable(choice=0, semester_year="", semester=""):
     """
     # fix Issue #2 `Too Quick Click` bug
     time.sleep(random.uniform(0.6, 1))  # 随机延时
-    semesterCalendar = session.get(host + '/eams/dataQuery.action?dataType=semesterCalendar')
+    semesterCalendar = session.get(
+        host + '/eams/dataQuery.action?dataType=semesterCalendar')
     # print(semesterCalendar.text)
-    calendar = '{' + re.compile(r'semesters:.*}').findall(semesterCalendar.text)[0]
+    calendar = '{' + \
+        re.compile(r'semesters:.*}').findall(semesterCalendar.text)[0]
     # print(calendar)
     calendar = demjson.decode(calendar)['semesters']
     # print('decode succeeded')
@@ -360,8 +362,8 @@ def exportCourseTable(list_lessonObj, list_examObj, semester_year, semester, stu
     :param stuID {str}学号
     :return: None
     """
-    filename = 'NUAAiCal-Data/NUAA-curriculum-' + \
-               semester_year + '-' + semester + '-' + stuID + '.txt'
+    filename = 'NUAAiCal-Data/Schedule_' + stuID + \
+        '_' + semester_year + '-' + semester + '.txt'
     with open(filename, 'w', encoding='utf-8') as output_file:
         try:
             course_cnt = 1

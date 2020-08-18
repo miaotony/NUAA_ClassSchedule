@@ -3,10 +3,8 @@
 """
 generateICS  生成及导出.ics日历文件
 
-@Author: MiaoTony, Triple-Z(原作者）
+@Author: MiaoTony, Triple-Z(原作者)
 """
-# from __future__ import print_function
-# from __future__ import unicode_literals
 
 from icalendar import Calendar, Event
 from datetime import datetime, timedelta
@@ -75,11 +73,11 @@ def create_ics(lessons, semester_start_date):
                 }.get(lesson.course_unit[0])
 
             lesson_start_time = semester_start_date + \
-                                timedelta(weeks=week - 1, days=int(lesson.day_of_week) - 1,
-                                          hours=lesson_start_hour - semester_start_date.hour,
-                                          minutes=lesson_start_minute - semester_start_date.minute,
-                                          seconds=-semester_start_date.second,
-                                          milliseconds=-semester_start_date.microsecond)
+                timedelta(weeks=week - 1, days=int(lesson.day_of_week) - 1,
+                          hours=lesson_start_hour - semester_start_date.hour,
+                          minutes=lesson_start_minute - semester_start_date.minute,
+                          seconds=-semester_start_date.second,
+                          milliseconds=-semester_start_date.microsecond)
 
             lesson_end_time = lesson_start_time + timedelta(
                 minutes=50 * len(lesson.course_unit) + 5 * (len(lesson.course_unit) - 1))
@@ -124,13 +122,13 @@ def create_exam_ics(cal, exams):
 
 
 def export_ics(cal, semester_year, semester, stuID):
-    filename = 'NUAAiCal-Data/NUAA-curriculum-' + semester_year + '-' + semester + '-' + stuID + '.ics'
+    filename = 'NUAAiCal-Data/Schedule_' + stuID + \
+        '_' + semester_year + '-' + semester + '.ics'
 
     if os.path.exists('NUAAiCal-Data'):
         # print('Directory exists.')
         if os.path.isfile(filename):
             # File exists, check whether need to be updated.
-
             tem = open('.temp', 'w+b')
             tem_path = os.path.abspath(tem.name)
             tem.write(cal.to_ical())
