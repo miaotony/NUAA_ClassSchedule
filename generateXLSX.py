@@ -74,8 +74,8 @@ def export_xls(xls, semester_year, semester, stuID):
     :return: None
     """
     try:
-        filename = 'NUAAiCal-Data/NUAA-curriculum-' + \
-                   semester_year + '-' + semester + '-' + stuID + '.xlsx'
+        filename = 'NUAAiCal-Data/Schedule_' + stuID + \
+            '_' + semester_year + '-' + semester + '.xlsx'
         xls.save(os.path.abspath(filename))
         print('表格文件已导出到 \"' + os.path.abspath(filename) + '\"。')
     except Exception as e:

@@ -3,7 +3,7 @@
 """
 getClassSchedule  登录教务系统，获取课表，进行解析及导出
 
-@Author: MiaoTony
+@Author: MiaoTony, ZegWe
 """
 
 import requests
@@ -13,6 +13,7 @@ from hashlib import sha1
 import time
 import random
 import json
+import demjson
 import logging
 from lessonObj import Lesson
 from examObj import Exam
@@ -43,15 +44,55 @@ session.headers = headers
 host = r'http://aao-eas.nuaa.edu.cn'
 
 
+def getSemesterFirstDay(semester_str: str):
+    """
+    从教务系统校历获取学期的第一天
+    :param semester_str: 查询所需的学期字符串 e.g.`2020-2021-1`
+    :return semester_year: {str} 学年
+    :return semester: {str} 学期
+    :return year, month, day: {int} 开学日期
+    """
+    # 先来判断一下输入字符串的有效性
+    re_semester = re.compile(r'[0-9]{4}-[0-9]{4}-[1-2]')
+    if not re_semester.findall(semester_str):
+        raise Exception('Parse semester ERROR!')
+    # 再来解析学期字符串
+    years = semester_str.split('-')[0:2]
+    term = int(semester_str.split('-')[2])
+    # print(years, term)
+    requestData = {'schoolYear': '-'.join(years),
+                   'term': term}
+    r = session.post(host + '/eams/calendarView!search.action', requestData)
+    if re.search(r'当前学期不存在', r.text) != None:
+        raise Exception('ERROR! The current semester does not exist!')
+    # print(r.text)
+    soup = BeautifulSoup(r.text.encode('utf-8'), 'lxml')
+    monthstr = soup.select('table > tr')[0].select('td')[1].get_text().replace(
+        ' ', '').replace('\r', '').replace('\n', '')
+    daystr = soup.select('table > tr')[2].select('td')[1].get_text().replace(
+        ' ', '').replace('\r', '').replace('\n', '')
+    months = dict(一=1, 二=2, 三=3, 四=4, 五=5, 六=6,
+                  七=7, 八=8, 九=9, 十=10, 十一=11, 十二=12)
+    year = int(years[term - 1])
+    month = months[monthstr]
+    day = int(daystr)
+    semester_year = '-'.join(years)
+    semester = str(term)
+    return semester_year, semester, year, month, day
+
+
 def aao_login(stuID, stuPwd, captcha_str):
     """
     登录新教务系统
     :param stuID: 学号
     :param stuPwd: 密码
-    :return: name: {str} 姓名(学号)
+    :param captcha_str: 验证码
+    :return name: {str} 姓名(学号)
+    :return semester_info: {str} 学期信息，如 `2020-2021-1`
     """
     # session.cookies.clear()  # 先清一下cookie
     r1 = session.get(host + '/eams/login.action')
+    r1.encoding = 'utf-8'
     # logging.debug(r1.text)
 
     temp_token_match = re.compile(r"CryptoJS\.SHA1\(\'([0-9a-zA-Z\-]*)\'")
@@ -93,10 +134,19 @@ def aao_login(stuID, stuPwd, captcha_str):
                 raise Exception("ERROR! 请不要过快点击!")
             else:
                 temp_soup = BeautifulSoup(r2.text.encode('utf-8'), 'lxml')
+                # 提取姓名
                 name = temp_soup.find(
                     'a', class_='personal-name').string.strip()
+                # 提取当前学期信息
+                semester_info_raw = temp_soup.select(
+                    '#teach-week')[0].text.strip()
+                # print(semester_info_raw)
+                re_semesterInfo = re.compile(r'(\d{4}-\d{4})第(\d{1})学期')
+                semester_info = re_semesterInfo.search(semester_info_raw)
+                semester_info = semester_info[1] + '-' + semester_info[2]
                 print("Login OK!\nHello, {}!".format(name))
-                return name
+                print("The current semester is {}.".format(semester_info))
+                return name, semester_info
         else:
             print(r2.text)
             if '连接已重置' in r2.text:
@@ -112,13 +162,33 @@ def aao_login(stuID, stuPwd, captcha_str):
     raise Exception("ERROR! 过一会儿再试试吧...")
 
 
-def getCourseTable(choice=0):
+def getCourseTable(choice=0, semester_year="", semester=""):
     """
     获取课表
     :param choice: 0 for std, 1 for class.个人课表or班级课表，默认为个人课表。
+    :param semester_year: `xxxx-xxxx` 学年 e.g. `2020-2021`
+    :param semester: `x` 学期 {1, 2}
     :return:courseTable: {Response} 课表html响应
     """
-    time.sleep(0.5)  # fix Issue #2 `Too Quick Click` bug
+    # fix Issue #2 `Too Quick Click` bug
+    time.sleep(random.uniform(0.6, 1))  # 随机延时
+    semesterCalendar = session.get(
+        host + '/eams/dataQuery.action?dataType=semesterCalendar')
+    # print(semesterCalendar.text)
+    calendar = '{' + \
+        re.compile(r'semesters:.*}').findall(semesterCalendar.text)[0]
+    # print(calendar)
+    calendar = demjson.decode(calendar)['semesters']
+    # print('decode succeeded')
+    semester_id = ''
+    for y in calendar:
+        for s in calendar[y]:
+            if s['schoolYear'] == semester_year and s['name'] == str(semester):
+                semester_id = s['id']
+                break
+    # print(semester_id)
+    if not semester_id:
+        raise Exception("Can not find the semester you have entered!")
     courseTableResponse = session.get(host + '/eams/courseTableForStd.action')
     # logging.debug(courseTableResponse.text)
 
@@ -149,7 +219,7 @@ def getCourseTable(choice=0):
             "setting.kind": kind,
             # "startWeek": "",  # None for all weeks
             # "project.id": "1",
-            # "semester.id": session.cookies.get_dict()['semester.id'],
+            "semester.id": semester_id,
             "ids": ids
         }
         courseTable = session.get(host + r'/eams/courseTableForStd!courseTable.action',
@@ -244,7 +314,7 @@ def getExamSchedule():
     获取考试安排
     :return:Ans_list: {list} 考试安排列表
     """
-    time.sleep(0.5)
+    time.sleep(random.uniform(0.6, 1))  # 随机延时
     examSchedule = session.get(
         host + r'/eams/examSearchForStd!examTable.action')
 
@@ -292,8 +362,8 @@ def exportCourseTable(list_lessonObj, list_examObj, semester_year, semester, stu
     :param stuID {str}学号
     :return: None
     """
-    filename = 'NUAAiCal-Data/NUAA-curriculum-' + \
-        semester_year + '-' + semester + '-' + stuID + '.txt'
+    filename = 'NUAAiCal-Data/Schedule_' + stuID + \
+        '_' + semester_year + '-' + semester + '.txt'
     with open(filename, 'w', encoding='utf-8') as output_file:
         try:
             course_cnt = 1

@@ -1,12 +1,27 @@
 ## Change log
 
+### `V0.17.0.20200818`
+
+**!!!ATTENTION!!! The interface of this version has been changed greatly!**    
+**请注意，本版本函数接口有较大改动！**    
+[feat] Get the start date of a specific semester.   
+从教务系统获取指定学期的开学日期，不需要再手动修改啦！  
+[feat] Get the current semester.   
+从教务系统`homeExt.action`页面获取当前学期的信息，并与控制台输入兼容。  
+[feat] Add the semester option.   
+控制台、命令行参数中加入了学期的选项，支持导出指定学期的信息，默认则选择当前学期。  
+[refactor] Rename the files for export, optimize the code, etc.   
+修改了导出文件的文件名，优化代码结构，等等。  
+
 ### `V0.16.0.20200714`
+
 [feat] Add Telegram bot.  @NUAA_iCal_bot   
 新增 Telegram 端在线导出 iCalendar 文件的机器人，欢迎使用哈！  https://t.me/NUAA_iCal_bot  
 [refactor] Update `getClassSchedule.py`, delete `retry_cnt` param for `aao_login`.  
 删除了登录教务系统函数接口中的重试次数参数，进一步细化了如“验证码错误”等登录过程。  
 
 ### `V0.15.2.20200520`
+
 Replace `exit` with `raise Exception`.  
 用抛出异常来取代直接退出。  
 去除一些多余的代码。  
