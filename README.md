@@ -46,7 +46,7 @@ NUAA_ClassSchedule
 
  技术问题请提 issue，非技术问题原则上不予处理，请咨询有关部门，谢谢！  
 
->点击访问[**南航新版教务系统**](http://aao-eas.nuaa.edu.cn/eams/login.action)
+> 点击访问[**南航新版教务系统**](http://aao-eas.nuaa.edu.cn/eams/login.action)
 
 
 ---
@@ -134,8 +134,8 @@ chmod +x *
 
 **命令行参数说明：**  
 ```
-usage: main.py [-h] [-i ID] [-p PWD] [-c {0,1}] [--noexam] [--notxt]
-               [--noxlsx]
+usage: main.py [-h] [-i ID] [-p PWD] [-s SEMESTER] [-c {0,1}] [--noexam]
+               [--notxt] [--noxlsx]
 
 Get NUAA class schedule at ease! 一个小jio本，让你获取课表更加便捷而实在~
 
@@ -143,6 +143,8 @@ optional arguments:
   -h, --help            show this help message and exit
   -i ID, --id ID        Student ID 学号
   -p PWD, --pwd PWD     Student password 教务处密码
+  -s SEMESTER, --semester SEMESTER
+                        Semester 学期，例如 `2020-2021-1` 即2020-2021学年第1学期
   -c {0,1}, --choice {0,1}
                         Input `0` for personal curriculum(default), `1` for
                         class curriculum. 输入`0`获取个人课表(无此参数默认为个人课表)，输入`1`获取班级课表
