@@ -34,6 +34,12 @@ def create_ics(lessons, semester_start_date):
             event = Event()
             event.add('summary', lesson.courseName)
 
+            # 错峰时间批次对应的教学楼
+            batch1_jjl = ('1', '6', '7', 'D2')  # 将军路校区
+            batch1_mgg = ('18',)                # 明故宫校区
+            batch2_jjl = ('2', '4', '5', 'D1', 'D3')
+            batch2_mgg = ('7', '13')
+
             # Lesson start time
             # fix bug: 匹配天目湖校区时间表
             # 潜在bug: roomName为空的情况默认为将军路明故宫的时间表
@@ -51,6 +57,44 @@ def create_ics(lessons, semester_start_date):
                     '3': 30,
                     '5': 0,
                     '7': 0,
+                    '9': 45,
+                    '11': 35,
+                }.get(lesson.course_unit[0])
+            elif ('明故宫' in lesson.roomName and lesson.roomName.startswith(batch1_mgg)) or \
+                    ('将军路' in lesson.roomName and lesson.roomName.startswith(batch1_jjl)):
+                # Batch 1
+                lesson_start_hour = {
+                    '1': 8,
+                    '3': 10,
+                    '5': 14,
+                    '7': 16,
+                    '9': 18,
+                    '11': 20,
+                }.get(lesson.course_unit[0])
+                lesson_start_minute = {
+                    '1': 0,
+                    '3': 5,  # <--
+                    '5': 0,
+                    '7': 15,
+                    '9': 45,
+                    '11': 35,
+                }.get(lesson.course_unit[0])
+            elif ('明故宫' in lesson.roomName and lesson.roomName.startswith(batch2_mgg)) or \
+                    ('将军路' in lesson.roomName and lesson.roomName.startswith(batch2_jjl)):
+                # Batch 2
+                lesson_start_hour = {
+                    '1': 8,
+                    '3': 10,
+                    '5': 14,
+                    '7': 16,
+                    '9': 18,
+                    '11': 20,
+                }.get(lesson.course_unit[0])
+                lesson_start_minute = {
+                    '1': 0,
+                    '3': 25,  # <--
+                    '5': 0,
+                    '7': 15,
                     '9': 45,
                     '11': 35,
                 }.get(lesson.course_unit[0])
