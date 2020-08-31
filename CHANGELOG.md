@@ -23,6 +23,11 @@
 [refactor] Rename the files for export, optimize the code, etc.   
 修改了导出文件的文件名，优化代码结构，等等。  
 
+**[Known Issue]**  
+GUI has not been updated yet!   
+很抱歉，GUI 图形化界面的程序暂时并未更新，后期视情况可能会重写。  
+
+
 ### `V0.16.0.20200714`
 
 [feat] Add Telegram bot.  @NUAA_iCal_bot   
