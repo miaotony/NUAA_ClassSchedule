@@ -41,7 +41,7 @@ def create_ics(lessons, semester_start_date):
             batch2_mgg = ('7', '13')
 
             # Lesson start time
-            # fix bug: 匹配天目湖校区时间表
+            # 匹配天目湖校区时间表
             # 潜在bug: roomName为空的情况默认为将军路明故宫的时间表
             if '天目湖' in lesson.roomName:
                 lesson_start_hour = {

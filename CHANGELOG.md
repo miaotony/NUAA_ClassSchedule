@@ -1,5 +1,15 @@
 ## Change log
 
+### `V0.18.0.20200831`
+  
+[feat] Fit the different course time batches.  
+疫情期间错峰上下课时间批次修正。  
+
+**由于教室匹配时存在局限性，请注意仔细核对课程信息，尤其是三四小节课的上课时间，由此导致的问题概不负责！**   
+
+详见 [关于疫情期间错峰下课的通知](http://aao.nuaa.edu.cn/2020/0828/c11066a213716/page.htm)。  
+![错峰时间批次](img/DifferentCourseBatches.png)  
+
 ### `V0.17.0.20200818`
 
 **!!!ATTENTION!!! The interface of this version has been changed greatly!**    
