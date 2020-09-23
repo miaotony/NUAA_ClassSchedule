@@ -8,7 +8,11 @@
 
 **Telegram Bot:**  [@NUAA_iCal_bot](https://t.me/NUAA_iCal_bot)
 
-欢迎拓展其他版本呀！    
+欢迎拓展其他版本呀！     
+
+**如何将 `.ics` 日历文件导入日历？**    
+==> 详见 [HowToImport.md](HowToImport.md) 
+
 
 ## Description
 
@@ -185,6 +189,10 @@ python main.py -i <your ID> -p <your password>
 将生成好的`.ics`日历文件导入你喜欢的日历，然后尽情享用吧~！  
 **顺手再点个Star吧~**   
 **在导入iCal日历前，请确认时区已设定为 `UTC/GMT+08:00` 即北京时间，否则可能会出现导入后时间不正确的情况！**   
+
+#### **如何将 `.ics` 日历文件导入日历？**  
+详见 [HowToImport.md](HowToImport.md)
+
 
 ---
 
@@ -372,18 +380,13 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 ---
 ## Reference
 
-1. 开源项目`NUAA-Open-Source/NUAA-iCal-Python`  
-    >项目网址：[https://github.com/NUAA-Open-Source/NUAA-iCal-Python ](https://github.com/NUAA-Open-Source/NUAA-iCal-Python)     
+开源项目 `NUAA-Open-Source/NUAA-iCal-Python`  
+>项目网址：[https://github.com/NUAA-Open-Source/NUAA-iCal-Python](https://github.com/NUAA-Open-Source/NUAA-iCal-Python)     
     
-
 这是个（已经毕业了的）学长开发的小项目，但老接口随着新教务系统的启用而关闭，进而原脚本无法继续使用。
 
-   在开发本项目过程中，解析课表之后，受到了此项目的启发，参考其实现了 iCal 日历文件的生成。在此非常感谢原作者！  
+在开发本项目过程中，解析课表之后，受到了此项目的启发，参考其实现了 iCal 日历文件的生成。在此非常感谢原作者！  
 
-2. ISCNU iCal 课表
-    >网址：[https://i.scnu.edu.cn/ical/](https://i.scnu.edu.cn/ical/)   
-    
-    这里有一些关于iCal的使用方法，可以参考一下哈。  
 
 ---
 ## Sponsorship
