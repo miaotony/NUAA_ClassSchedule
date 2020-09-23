@@ -210,7 +210,7 @@ python main.py -i <your ID> -p <your password>
 
 **Telegram Bot:**
 
-![Telegram bot](README/tgbot.png)
+![Telegram bot](img/tgbot.png)
 
 详情请使用 Telegram 搜索 [@NUAA_iCal_bot](https://t.me/NUAA_iCal_bot)。
 
