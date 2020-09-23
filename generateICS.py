@@ -41,23 +41,33 @@ def create_ics(lessons, semester_start_date):
             batch2_mgg = ('7', '13')
 
             # Lesson start time
-            # 匹配天目湖校区时间表
+            # fix bug: 匹配天目湖校区时间表
             # 潜在bug: roomName为空的情况默认为将军路明故宫的时间表
             if '天目湖' in lesson.roomName:
                 lesson_start_hour = {
                     '1': 8,
+                    '2': 9,
                     '3': 10,
+                    '4': 11,
                     '5': 14,
+                    '6': 14,
                     '7': 16,
+                    '8': 16,
                     '9': 18,
+                    '10': 19,
                     '11': 20,
                 }.get(lesson.course_unit[0])
                 lesson_start_minute = {
-                    '1': 30,
+                    '1': 30, 
+                    '2': 25,
                     '3': 30,
-                    '5': 0,
+                    '4': 25,
+                    '5': 0, 
+                    '6': 55, 
                     '7': 0,
+                    '8': 55, 
                     '9': 45,
+                    '10': 40,
                     '11': 35,
                 }.get(lesson.course_unit[0])
             elif ('明故宫' in lesson.roomName and lesson.roomName.startswith(batch1_mgg)) or \
@@ -65,18 +75,28 @@ def create_ics(lessons, semester_start_date):
                 # Batch 1
                 lesson_start_hour = {
                     '1': 8,
+                    '2': 8,
                     '3': 10,
+                    '4': 11,
                     '5': 14,
+                    '6': 14,
                     '7': 16,
+                    '8': 17,
                     '9': 18,
+                    '10': 19,
                     '11': 20,
                 }.get(lesson.course_unit[0])
                 lesson_start_minute = {
                     '1': 0,
+                    '2': 55,
                     '3': 5,  # <--
+                    '4': 0,
                     '5': 0,
+                    '6': 55,
                     '7': 15,
+                    '8': 10,
                     '9': 45,
+                    '10': 40,
                     '11': 35,
                 }.get(lesson.course_unit[0])
             elif ('明故宫' in lesson.roomName and lesson.roomName.startswith(batch2_mgg)) or \
@@ -84,35 +104,55 @@ def create_ics(lessons, semester_start_date):
                 # Batch 2
                 lesson_start_hour = {
                     '1': 8,
+                    '2': 8,
                     '3': 10,
+                    '4': 11,
                     '5': 14,
+                    '6': 14,
                     '7': 16,
+                    '8': 17,
                     '9': 18,
+                    '10': 19,
                     '11': 20,
                 }.get(lesson.course_unit[0])
                 lesson_start_minute = {
                     '1': 0,
+                    '2': 55,
                     '3': 25,  # <--
+                    '4': 0,
                     '5': 0,
+                    '6': 55,
                     '7': 15,
+                    '8': 10,
                     '9': 45,
+                    '10': 40,
                     '11': 35,
                 }.get(lesson.course_unit[0])
             else:
                 lesson_start_hour = {
                     '1': 8,
+                    '2': 8,
                     '3': 10,
+                    '4': 11,
                     '5': 14,
+                    '6': 14,
                     '7': 16,
+                    '8': 17,
                     '9': 18,
+                    '10': 19,
                     '11': 20,
                 }.get(lesson.course_unit[0])
                 lesson_start_minute = {
                     '1': 0,
-                    '3': 15,
+                    '2': 55,
+                    '3': 15,  # <--
+                    '4': 0,
                     '5': 0,
+                    '6': 55,
                     '7': 15,
+                    '8': 10,
                     '9': 45,
+                    '10': 40,
                     '11': 35,
                 }.get(lesson.course_unit[0])
 
