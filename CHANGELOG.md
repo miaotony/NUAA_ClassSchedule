@@ -1,5 +1,13 @@
 ## Change log
 
+### `V0.19.0.20200923`
+  
+[feat] Add new web frontend, refer to [NUAA AnyKnew](https://anyknew.a2os.club/Schedule?from=github).  
+新增新版网页前端，支持在线查课表、导出 iCalendar 日历文件，详情请访问 [NUAA AnyKnew](https://anyknew.a2os.club/Schedule?from=github)，欢迎来试试呀！     
+[fix] ICS: Update course order for even units.   
+修正偶数节课开始时的课表导出bug。  
+
+
 ### `V0.18.0.20200831`
   
 [feat] Fit the different course time batches.  
@@ -9,6 +17,7 @@
 
 详见 [关于疫情期间错峰下课的通知](http://aao.nuaa.edu.cn/2020/0828/c11066a213716/page.htm)。  
 ![错峰时间批次](img/DifferentCourseBatches.png)  
+
 
 ### `V0.17.0.20200818`
 

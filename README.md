@@ -4,7 +4,7 @@
 
 此仓库为本地版本，欢迎尝试其他版本喵~👇
 
-**Web Version 在线版本：** [Website 网页端](https://nuaaical.herokuapp.com/)  （[GitHub repository](https://github.com/miaotony/NUAA_iCal_Web)）  
+**Web Version 在线版本：** [NUAA AnyKnew 网页端](https://anyknew.a2os.club/Schedule?from=github) （新增了查课表等功能）   
 
 **Telegram Bot:**  [@NUAA_iCal_bot](https://t.me/NUAA_iCal_bot)
 
@@ -52,7 +52,7 @@ NUAA_ClassSchedule
 ---
 ## Version
 
-**V0.18.0.20200831**  
+**V0.19.0.20200923**  
 
 **Change Log:**   
 Please refer to [CHANGELOG](CHANGELOG.md).
@@ -190,6 +190,34 @@ python main.py -i <your ID> -p <your password>
 
 ### **Screenshots 使用截图**
 
+**WEB 前端：**     
+
+![frontend](img/frontend.png)
+
+支持在线查课表、导出 icalendar 日历文件、保存课表到本地等功能。
+
+**详情请访问 [NUAA AnyKnew](https://anyknew.a2os.club/Schedule?from=github)！**
+
+[https://anyknew.a2os.club/Schedule](https://anyknew.a2os.club/Schedule?from=github)
+
+欢迎来尝试哈~  
+
+>**（不推荐使用旧版本了）**
+>
+>~~旧版 web 端版本部署在了 heroku 上，网址：[https://nuaaical.herokuapp.com/](https://nuaaical.herokuapp.com/)~~   
+>旧版本的源码请参考`NUAA_iCal_Web`仓库。   
+>https://github.com/miaotony/NUAA_iCal_Web
+
+**Telegram Bot:**
+
+![Telegram bot](README/tgbot.png)
+
+详情请使用 Telegram 搜索 [@NUAA_iCal_bot](https://t.me/NUAA_iCal_bot)。
+
+---
+
+以下为本地版本。
+
 **使用打包好的 `.exe` 程序执行：** （详见 [Release](https://github.com/miaotony/NUAA_ClassSchedule/releases)）   
 
 ![exe](img/exe.png)  
@@ -243,18 +271,6 @@ python main.py -i <your ID> -p <your password>
 
 ![Export_txt](img/Export_txt.png)
 
-
-
-**WEB 端部署：**（仍在测试中）     
-
-![web](img/Web.png)
-
-web 端版本目前已经部署在了 heroku 上，网址：[https://nuaaical.herokuapp.com/](https://nuaaical.herokuapp.com/)    
-
-欢迎来尝试一下哈~  
-
->在线版本的源码请参考`NUAA_iCal_Web`仓库。  
-https://github.com/miaotony/NUAA_iCal_Web
 
 ---
 
@@ -359,10 +375,11 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 1. 开源项目`NUAA-Open-Source/NUAA-iCal-Python`  
     >项目网址：[https://github.com/NUAA-Open-Source/NUAA-iCal-Python ](https://github.com/NUAA-Open-Source/NUAA-iCal-Python)     
     
+
 这是个（已经毕业了的）学长开发的小项目，但老接口随着新教务系统的启用而关闭，进而原脚本无法继续使用。
-   
+
    在开发本项目过程中，解析课表之后，受到了此项目的启发，参考其实现了 iCal 日历文件的生成。在此非常感谢原作者！  
-   
+
 2. ISCNU iCal 课表
     >网址：[https://i.scnu.edu.cn/ical/](https://i.scnu.edu.cn/ical/)   
     
