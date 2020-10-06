@@ -32,10 +32,10 @@ jobs:
         
     - name: Packing
       run: |
-        pyinstaller -i ./img/calendar.ico -n NUAA_iCal -F main.py
-    
-    - name: Test with pytest
+        pyinstaller -i ./img/calendar.ico -n NUAA_iCal_${{ matrix.os }} -F main.py
+  
+    - name: Upload to artifact
       uses: actions/upload-artifact@v2
       with:
-        name: NUAA_iCal
-        path: ./dist/
+        name: NUAA_iCal_${{ matrix.os }}
+        path: ./dist/NUAA_iCal_${{ matrix.os }}
