@@ -12,11 +12,10 @@ on:
 
 jobs:
   build:
-
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, macos-latest]
+        os: [windows-latest, ubuntu-18.04, macos-latest]
 
     steps:
     - uses: actions/checkout@v2
@@ -33,10 +32,10 @@ jobs:
         
     - name: Packing
       run: |
-        pyinstaller -i ./img/calendar.ico -n NUAA_iCal_${{ github.ref }} -F main.py
+        pyinstaller -i ./img/calendar.ico -n NUAA_iCal -F main.py
     
     - name: Test with pytest
       uses: actions/upload-artifact@v2
       with:
-        name: NUAA_iCal_${{ github.ref }}
+        name: NUAA_iCal
         path: ./dist/
