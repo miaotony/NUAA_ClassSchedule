@@ -5,10 +5,6 @@ name: Python package
 
 on:
   workflow_dispatch:
-  push:
-    # Sequence of patterns matched against refs/tags
-    tags:
-    - 'V*' # Push events to matching V*
 
 jobs:
   build:
@@ -16,14 +12,6 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, ubuntu-18.04, macos-latest]
-        os_name: [Windows, Ubuntu, MacOS]
-        exclude:
-        - os: windows-latest
-          os_name: Windows
-        - os: ubuntu-18.04
-          os_name: Ubuntu
-        - os: macos-latest
-          os_name: MacOS
 
     steps:
     - uses: actions/checkout@v2
@@ -40,7 +28,7 @@ jobs:
         
     - name: Packing
       run: |
-        pyinstaller -i ./img/calendar.ico -n NUAA_iCal_${{ matrix.os_name }} -F main.py
+        pyinstaller -i ./img/calendar.ico -n NUAA_iCal_${{ matrix.os }} -F main.py
         
     - name: Generate sha256sum
       id: vars
@@ -56,5 +44,5 @@ jobs:
     - name: Upload to artifact
       uses: actions/upload-artifact@v2
       with:
-        name: NUAA_iCal_${{ matrix.os_name }}
+        name: NUAA_iCal_${{ matrix.os }}
         path: ./dist/
