@@ -15,8 +15,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       
+    - name: Display files
+      run: ls -R
+
     - name: Python package
-      uses: ./.github/workflows/python_package  # use local workflow
+      uses: ./.github/actions/python_package  # use local workflow
       
     - name: Download artifact
       uses: actions/download-artifact@v2
