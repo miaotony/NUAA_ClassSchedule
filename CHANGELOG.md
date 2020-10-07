@@ -1,5 +1,13 @@
 ## Change log
 
+### `V0.19.1.20201007`
+  
+[feat] Add packing automatically based on GitHub Action.   
+新增基于 GitHub Action 自动打包可执行程序。  
+当 push tag 时自动调用 workflow 打包 Windows、MacOS、Ubuntu 环境下的可执行程序，
+并发布到 [Release 页面](https://github.com/miaotony/NUAA_ClassSchedule/releases/)。  
+
+
 ### `V0.19.0.20200923`
   
 [feat] Add new web frontend, refer to [NUAA AnyKnew](https://anyknew.a2os.club/Schedule?from=github).  

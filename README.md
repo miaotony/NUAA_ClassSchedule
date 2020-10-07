@@ -20,7 +20,7 @@ NUAA_ClassSchedule
 登录南京航空航天大学新教务系统，获取课表及考试信息，解析后生成 iCal 日历及 xlsx 表格文件，进而导入 Outlook 等日历。     
 
 >- 话说大家平常是怎么看课表的呀？  
->- **上教务系统** / **截图** / **小程序** / **手动建课表** / **问同学** / ...   
+>- **上教务系统** / **截图** / **手动建课表** / **问同学** / ...   
 >
 >- I have an idea! 大家有没有想过把课表导入到日历呀？！  
 >你看，这么做不仅可以**自定义课程**，和其他安排放在一起；  
@@ -56,7 +56,7 @@ NUAA_ClassSchedule
 ---
 ## Version
 
-**V0.19.0.20200923**  
+**V0.19.1.20201007**  
 
 **Change Log:**   
 Please refer to [CHANGELOG](CHANGELOG.md).
@@ -64,27 +64,32 @@ Please refer to [CHANGELOG](CHANGELOG.md).
 
 ---
 ## Usage
+
 **食用指南**  
 
 **请在 `Python >= 3.6` 环境下食用。**   
 
 
 >- 什么？你没有 Python 环境？ 或者 你不想折腾？  
->- 在 Windows 或 MacOS 下可以试试这个打包好的可执行程序啦！    
->（MacOS版本由 @ZegWe 提供）  
+>- **在 Windows / MacOS / Ubuntu 下可以试试打包好的可执行程序喵！**    
+>
+> 从 `V0.19.1.20201007` 版本起，已经实现了基于 GitHub Action 自动打包可执行程序啦！  
+>（Linux / MacOS 下有可能需要先给程序赋予可执行权限，即 `chmod +x <filename>`）  
 
 **下载地址在 [Release](https://github.com/miaotony/NUAA_ClassSchedule/releases) 下呢！**  
+
 欢迎来试试呀！  
 
->如果喜欢折腾，或者不放心的话，推荐还是用下面的方法呢！  
+> 如果喜欢折腾，或者不放心的话，推荐还是用下面的方法呢！  
 
 
 ### **Step**  
 
 #### Step 1   
-进入你喜欢的目录，将本仓库 clone 到本地，或直接下载`zip`文件（Download ZIP）。   
+进入你喜欢的目录，将本仓库 clone 到本地，或直接下载 `zip` 文件（Download ZIP）。   
+
 ```bash
-git clone --depth=1 https://github.com/miaotony/NUAA_ClassSchedule.git
+git clone -b master --depth=1 https://github.com/miaotony/NUAA_ClassSchedule.git
 ```
 
 *If you want to contribute, please delete `--depth=1` to clone the whole repository.*
@@ -158,6 +163,7 @@ optional arguments:
 ```
 
 示例：  
+
 ```bash
 python main.py -i <your ID> -p <your password> 
 ```
@@ -411,7 +417,7 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 The relevant technical content of this project is only for study and research, please use within the reasonable and legal scope!
 
 **License:**    
-**[GPL-3.0](LICENSE)**  
+**[GNU General Public License v3.0](LICENSE)**  
 
 未经允许不得商用！  
 Non-commercial use!    
