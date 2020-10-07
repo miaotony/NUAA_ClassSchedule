@@ -107,7 +107,7 @@ jobs:
         filename=$(find ./ -type f \( -iname NUAA_iCal\* \))
         sha256sum $filename > ./sha256sum.txt
         echo $filename
-        echo "::set-output name=shafilepath::./dist/sha256sum.txt"
+        echo "::set-output name=shafilepath::./sha256sum.txt"
 
     - name: Upload Release sha256sum Asset
       id: upload-release-sha256sum-asset
