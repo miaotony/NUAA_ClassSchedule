@@ -69,8 +69,8 @@ jobs:
       with:
         upload_url: ${{ needs.create.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
         asset_path: ./dist/NUAA_iCal_${{ matrix.os }}.exe
-        asset_name: NUAA_iCal_${{ matrix.os }}_${{ needs.create.outputs.tag }}
-        asset_content_type: application/zip
+        asset_name: NUAA_iCal_${{ matrix.os }}_${{ needs.create.outputs.tag }}.exe
+        asset_content_type: application/x-dosexec
         
     - name: Upload Release Asset else
       if: ${{ contains(matrix.os, 'ubuntu') || contains(matrix.os, 'macos') }}
@@ -81,7 +81,7 @@ jobs:
         upload_url: ${{ needs.create.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
         asset_path: ./dist/NUAA_iCal_${{ matrix.os }}
         asset_name: NUAA_iCal_${{ matrix.os }}_${{ needs.create.outputs.tag }}
-        asset_content_type: application/zip
+        asset_content_type: application/x-executable
 
   release:
     runs-on: ubuntu-latest
@@ -116,3 +116,4 @@ jobs:
         upload_url: ${{ needs.create.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
         asset_path: ${{ steps.vars.outputs.shafilepath }}
         asset_name: sha256sum.txt
+        asset_content_type: text/plain
