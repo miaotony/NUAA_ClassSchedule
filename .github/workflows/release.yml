@@ -62,7 +62,7 @@ jobs:
         path: ./dist/
       
     - name: Upload Release Asset Windows
-      if: ${{ contains(matrix.os, "windows") }}
+      if: ${{ contains(matrix.os, 'windows') }}
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -73,7 +73,7 @@ jobs:
         asset_content_type: application/zip
         
     - name: Upload Release Asset else
-      if: ${{ contains(matrix.os, "ubuntu") || contains(matrix.os, "macos") }}
+      if: ${{ contains(matrix.os, 'ubuntu') || contains(matrix.os, 'macos') }}
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
