@@ -36,7 +36,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-18.04, macos-latest]
+        os: [windows-latest, ubuntu-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v2
@@ -60,22 +60,26 @@ jobs:
       with:
         name: NUAA_iCal_${{ matrix.os }}
         path: ./dist/
-
-    - name: Set vars
-      id: vars
-      run: |
-        filename=$(find ./dist/ -type f \( -iname NUAA_iCal\* \))
-        echo $filename
-        echo "::set-output name=filepath::$filename"
       
-    - name: Upload Release Asset
-      id: upload-release-asset 
+    - name: Upload Release Asset Windows
+      if: ${{ contains(matrix.os, "windows") }}
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.create.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
-        asset_path: ${{ steps.vars.outputs.filepath }}
+        asset_path: ./dist/NUAA_iCal_${{ matrix.os }}.exe
+        asset_name: NUAA_iCal_${{ matrix.os }}_${{ needs.create.outputs.tag }}
+        asset_content_type: application/zip
+        
+    - name: Upload Release Asset else
+      if: ${{ contains(matrix.os, "ubuntu") || contains(matrix.os, "macos") }}
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
+        asset_path: ./dist/NUAA_iCal_${{ matrix.os }}
         asset_name: NUAA_iCal_${{ matrix.os }}_${{ needs.create.outputs.tag }}
         asset_content_type: application/zip
 
