@@ -9,26 +9,31 @@ on:
 jobs:
   create:
     runs-on: ubuntu-latest
-    env:
-      TAG: ${{echo ${{ github.ref }} | rev | cut -d/ -f1 | rev}}
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
+      tag: ${{ steps.get_tag.outputs.tag }}
+      
     steps:
+    - name: Get tag
+      id: get_tag
+      run: |
+        tag=$(echo ${{ github.ref }} | rev | cut -d/ -f1 | rev)
+        echo "::set-output name=tag::$tag"
+        
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.TAG }}
-        release_name: Release ${{ env.TAG }}
+        tag_name: ${{ steps.get_tag.outputs.tag }}
+        release_name: Release ${{ steps.get_tag.outputs.tag }}
         draft: true
         prerelease: false
 
   build:
+    needs: [create]
     runs-on: ${{ matrix.os }}
-    env:
-      TAG: ${{echo ${{ github.ref }} | rev | cut -d/ -f1 | rev}}
     strategy:
       matrix:
         os: [windows-latest, ubuntu-18.04, macos-latest]
@@ -71,7 +76,7 @@ jobs:
       with:
         upload_url: ${{ needs.create.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
         asset_path: ${{ steps.vars.outputs.filepath }}
-        asset_name: NUAA_iCal_${{ matrix.os }}_${{ env.TAG }}
+        asset_name: NUAA_iCal_${{ matrix.os }}_${{ needs.create.outputs.tag }}
         asset_content_type: application/zip
 
   release:
