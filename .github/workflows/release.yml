@@ -103,7 +103,7 @@ jobs:
     - name: Generate sha256sum
       id: vars
       run: |
-        cp ./dist/NUAA_iCal*/NUAA_iCal* ./
+        mv ./dist/NUAA_iCal*/NUAA_iCal* ./
         filename=$(find ./ -type f \( -iname NUAA_iCal\* \))
         sha256sum $filename > ./sha256sum.txt
         echo $filename
