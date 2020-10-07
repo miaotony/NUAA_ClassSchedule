@@ -8,7 +8,7 @@ on:
   push:
     # Sequence of patterns matched against refs/tags
     tags:
-    - 'V*' # Push events to matching V*, i.e. v1.0, v20.15.10
+    - 'V*' # Push events to matching V*
 
 jobs:
   build:
@@ -16,6 +16,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, ubuntu-18.04, macos-latest]
+        os_name: [Windows, Ubuntu, MacOS]
         exclude:
         - os: windows-latest
           os_name: Windows
