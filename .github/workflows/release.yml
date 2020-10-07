@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v2
       
     - name: Python package
-      uses: ./github/workflows/python_package.yml  # use local workflow
+      uses: ./.github/workflows/python_package.yml  # use local workflow
       
     - name: Download artifact
       uses: actions/download-artifact@v2
