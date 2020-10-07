@@ -18,6 +18,7 @@ jobs:
       id: get_tag
       run: |
         tag=$(echo ${{ github.ref }} | rev | cut -d/ -f1 | rev)
+        echo $tag
         echo "::set-output name=tag::$tag"
         
     - name: Create Release
@@ -27,7 +28,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.get_tag.outputs.tag }}
-        release_name: Release ${{ steps.get_tag.outputs.tag }}
+        release_name: ${{ steps.get_tag.outputs.tag }}
         draft: true
         prerelease: false
 
@@ -67,7 +68,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ needs.create.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
+        upload_url: ${{ needs.create.outputs.upload_url }}  # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
         asset_path: ./dist/NUAA_iCal_${{ matrix.os }}.exe
         asset_name: NUAA_iCal_${{ matrix.os }}_${{ needs.create.outputs.tag }}.exe
         asset_content_type: application/x-dosexec
@@ -78,7 +79,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ needs.create.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
+        upload_url: ${{ needs.create.outputs.upload_url }}  # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
         asset_path: ./dist/NUAA_iCal_${{ matrix.os }}
         asset_name: NUAA_iCal_${{ matrix.os }}_${{ needs.create.outputs.tag }}
         asset_content_type: application/x-executable
@@ -99,16 +100,17 @@ jobs:
       run: ls -aR
       working-directory: ./dist/
 
-    - name: Set vars
+    - name: Generate sha256sum
       id: vars
       run: |
-        filename=$(find ./dist/NUAA_iCal* -type f \( -iname NUAA_iCal\* \))
-        sha256sum $filename > ./dist/sha256sum.txt
+        cp ./dist/NUAA_iCal*/NUAA_iCal* ./
+        filename=$(find ./ -type f \( -iname NUAA_iCal\* \))
+        sha256sum $filename > ./sha256sum.txt
         echo $filename
         echo "::set-output name=shafilepath::./dist/sha256sum.txt"
 
     - name: Upload Release sha256sum Asset
-      id: upload-release-sha256sum-asset 
+      id: upload-release-sha256sum-asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
