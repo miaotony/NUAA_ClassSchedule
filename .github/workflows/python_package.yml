@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, ubuntu-18.04, macos-latest]
+        os_name: [Windows, Ubuntu1804, MacOS]
         exclude:
         - os: windows-latest
           os_name: Windows
