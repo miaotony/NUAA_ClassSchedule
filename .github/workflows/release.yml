@@ -9,10 +9,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [windows-latest, ubuntu-18.04, macos-latest]
-            
     env:
       TAG: $(echo ${{ github.ref }} | rev | cut -d/ -f1 | rev)
         
@@ -20,7 +16,7 @@ jobs:
     - uses: actions/checkout@v2
       
     - name: Python package
-      uses: ./github/workflows/python_package  # use local workflow
+      uses: ./github/workflows/python_package.yml  # use local workflow
       
     - name: Download artifact
       uses: actions/download-artifact@v2
