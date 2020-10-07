@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v2
       
     - name: Display files
-      run: ls -R
+      run: ls -aR
 
     - name: Python package
       uses: ./.github/actions/python_package  # use local workflow
@@ -27,19 +27,15 @@ jobs:
         path: ./dist/
 
     - name: Display structure of downloaded files
-      run: ls -R
+      run: ls -aR
       working-directory: ./dist/
 
     - name: Set vars
       id: vars
-      env:
-        SHA_EXT: sha256sum.txt
       run: |
         filename=$(find ./dist/ -type f \( -iname \*.zip \))
-        sha256sum $filename > $filename.$SHA_EXT
         echo $filename
         echo "::set-output name=filepath::$filename"
-        echo "::set-output name=shafilepath::$filename.$SHA_EXT"
 
     - name: Create Release
       id: create_release
@@ -62,13 +58,4 @@ jobs:
         asset_path: ${{ steps.vars.outputs.filepath }}
         asset_name: $(basename "${{ steps.vars.outputs.filepath }}")
         asset_content_type: application/zip
-        
-    - name: Upload Release sha256sum Asset
-      id: upload-release-sha256sum-asset 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
-        asset_path: ${{ steps.vars.outputs.shafilepath }}
-        asset_name: $(basename "${{ steps.vars.outputs.shafilepath }}")
+
