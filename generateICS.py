@@ -39,27 +39,46 @@ def create_ics(lessons, semester_start_date):
             batch1_mgg = ('18',)                # 明故宫校区
             batch2_jjl = ('2', '4', '5', 'D1', 'D3')
             batch2_mgg = ('7', '13')
+            batch1_tmh = ('T1', 'T2', 'T3')
 
             # Lesson start time
-            # 匹配天目湖校区时间表
-            # 潜在bug: roomName为空的情况默认为将军路明故宫的时间表
+# 匹配天目湖校区时间表
+# 潜在bug: roomName为空的情况默认为将军路明故宫的时间表
             if '天目湖' in lesson.roomName:
-                lesson_start_hour = {
-                    '1': 8,
-                    '3': 10,
-                    '5': 14,
-                    '7': 16,
-                    '9': 18,
-                    '11': 20,
-                }.get(lesson.course_unit[0])
-                lesson_start_minute = {
-                    '1': 30,
-                    '3': 30,
-                    '5': 0,
-                    '7': 0,
-                    '9': 45,
-                    '11': 35,
-                }.get(lesson.course_unit[0])
+                if lesson.roomName.startswith(batch1_tmh):
+                    lesson_start_hour = {
+                        '1': 8,
+                        '3': 10,
+                        '5': 14,
+                        '7': 16,
+                        '9': 18,
+                        '11': 20,
+                    }.get(lesson.course_unit[0])
+                    lesson_start_minute = {
+                        '1': 30,
+                        '3': 25,
+                        '5': 0,
+                        '7': 0,
+                        '9': 45,
+                        '11': 35,
+                    }.get(lesson.course_unit[0])
+                else:
+                    lesson_start_hour = {
+                        '1': 8,
+                        '3': 10,
+                        '5': 14,
+                        '7': 16,
+                        '9': 18,
+                        '11': 20,
+                    }.get(lesson.course_unit[0])
+                    lesson_start_minute = {
+                        '1': 30,
+                        '3': 40,
+                        '5': 0,
+                        '7': 0,
+                        '9': 45,
+                        '11': 35,
+                    }.get(lesson.course_unit[0])
             elif ('明故宫' in lesson.roomName and lesson.roomName.startswith(batch1_mgg)) or \
                     ('将军路' in lesson.roomName and lesson.roomName.startswith(batch1_jjl)):
                 # Batch 1
@@ -125,11 +144,11 @@ def create_ics(lessons, semester_start_date):
 
             lesson_end_time = lesson_start_time + timedelta(
                 minutes=50 * len(lesson.course_unit) + 5 * (len(lesson.course_unit) - 1))
-            # fix隐含bug：课程时间仅一节或超过两节（非连续两节课）的情况
+# fix隐含bug：课程时间仅一节或超过两节（非连续两节课）的情况
 
             event.add('dtstart', lesson_start_time)
             event.add('dtend', lesson_end_time)
-            # event.add('dtstamp', datetime.now(tz=timezone('Asia/Shanghai')))
+# event.add('dtstamp', datetime.now(tz=timezone('Asia/Shanghai')))
             event.add('location', lesson.roomName)
             try:
                 event.add('description', lesson.output_description(week=week))
@@ -162,7 +181,7 @@ def create_exam_ics(cal, exams):
             event.add('location', exam.examLocation)
             event.add('description', exam.description)
             cal.add_component(event)
-    return cal
+        return cal
 
 
 def export_ics(cal, semester_year, semester, stuID):
