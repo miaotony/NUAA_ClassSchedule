@@ -39,133 +39,192 @@ def create_ics(lessons, semester_start_date):
             batch1_mgg = ('18',)                # 明故宫校区
             batch2_jjl = ('2', '4', '5', 'D1', 'D3')
             batch2_mgg = ('7', '13')
+            batch1_tmh = ('T11', 'T12', 'T13')
+            batch2_tmh = ('T14', 'T15')
 
             # Lesson start time
-            # fix bug: 匹配天目湖校区时间表
             # 潜在bug: roomName为空的情况默认为将军路明故宫的时间表
             if '天目湖' in lesson.roomName:
-                lesson_start_hour = {
-                    '1': 8,
-                    '2': 9,
-                    '3': 10,
-                    '4': 11,
-                    '5': 14,
-                    '6': 14,
-                    '7': 16,
-                    '8': 16,
-                    '9': 18,
-                    '10': 19,
-                    '11': 20,
-                }.get(lesson.course_unit[0])
-                lesson_start_minute = {
-                    '1': 30, 
-                    '2': 25,
-                    '3': 30,
-                    '4': 25,
-                    '5': 0, 
-                    '6': 55, 
-                    '7': 0,
-                    '8': 55, 
-                    '9': 45,
-                    '10': 40,
-                    '11': 35,
-                }.get(lesson.course_unit[0])
+                if lesson.roomName.startswith(batch1_tmh):
+                    course_order = {
+                        '1': "08:30",
+                        '2': "09:25",
+                        '3': "10:25",
+                        '4': "11:20",
+                        '5': "14:00",
+                        '6': "14:55",
+                        '7': "16:00",
+                        '8': "16:55",
+                        '9': "18:45",
+                        '10': "19:40",
+                        '11': "20:35",
+                    }
+                    end_time = {
+                        '1': "09:20",
+                        '2': "10:15",
+                        '3': "11:15",
+                        '4': "12:10",
+                        '5': "14:50",
+                        '6': "15:45",
+                        '7': "16:50",
+                        '8': "17:45",
+                        '9': "19:35",
+                        '10': "20:30",
+                        '11': "21:25",
+                    }
+                elif lesson.roomName.startswith(batch2_tmh):
+                    course_order = {
+                        '1': "08:30",
+                        '2': "09:25",
+                        '3': "10:40",
+                        '4': "11:35",
+                        '5': "14:00",
+                        '6': "14:55",
+                        '7': "16:00",
+                        '8': "16:55",
+                        '9': "18:45",
+                        '10': "19:40",
+                        '11': "20:35",
+                    }
+                    end_time = {
+                        '1': "09:20",
+                        '2': "10:15",
+                        '3': "11:30",
+                        '4': "12:25",
+                        '5': "14:50",
+                        '6': "15:45",
+                        '7': "16:50",
+                        '8': "17:45",
+                        '9': "19:35",
+                        '10': "20:30",
+                        '11': "21:25",
+                    }
+                else:
+                    course_order = {
+                        '1': "08:30",
+                        '2': "09:25",
+                        '3': "10:30",
+                        '4': "11:25",
+                        '5': "14:00",
+                        '6': "14:55",
+                        '7': "16:00",
+                        '8': "16:55",
+                        '9': "18:45",
+                        '10': "19:40",
+                        '11': "20:35",
+                    }
+                    end_time = {
+                        '1': "09:20",
+                        '2': "10:15",
+                        '3': "11:20",
+                        '4': "12:15",
+                        '5': "14:50",
+                        '6': "15:45",
+                        '7': "16:50",
+                        '8': "17:45",
+                        '9': "19:35",
+                        '10': "20:30",
+                        '11': "21:25",
+                    }
             elif ('明故宫' in lesson.roomName and lesson.roomName.startswith(batch1_mgg)) or \
                     ('将军路' in lesson.roomName and lesson.roomName.startswith(batch1_jjl)):
                 # Batch 1
-                lesson_start_hour = {
-                    '1': 8,
-                    '2': 8,
-                    '3': 10,
-                    '4': 11,
-                    '5': 14,
-                    '6': 14,
-                    '7': 16,
-                    '8': 17,
-                    '9': 18,
-                    '10': 19,
-                    '11': 20,
-                }.get(lesson.course_unit[0])
-                lesson_start_minute = {
-                    '1': 0,
-                    '2': 55,
-                    '3': 5,  # <--
-                    '4': 0,
-                    '5': 0,
-                    '6': 55,
-                    '7': 15,
-                    '8': 10,
-                    '9': 45,
-                    '10': 40,
-                    '11': 35,
-                }.get(lesson.course_unit[0])
+                course_order = {
+                    '1': "08:00",
+                    '2': "08:55",
+                    '3': "10:05",
+                    '4': "11:00",
+                    '5': "14:00",
+                    '6': "14:55",
+                    '7': "16:15",
+                    '8': "17:10",
+                    '9': "18:45",
+                    '10': "19:40",
+                    '11': "20:35",
+                }
+                end_time = {
+                    '1': "08:50",
+                    '2': "09:45",
+                    '3': "10:55",
+                    '4': "11:50",
+                    '5': "14:50",
+                    '6': "15:45",
+                    '7': "17:05",
+                    '8': "18:00",
+                    '9': "19:35",
+                    '10': "20:30",
+                    '11': "21:25",
+                }
             elif ('明故宫' in lesson.roomName and lesson.roomName.startswith(batch2_mgg)) or \
                     ('将军路' in lesson.roomName and lesson.roomName.startswith(batch2_jjl)):
                 # Batch 2
-                lesson_start_hour = {
-                    '1': 8,
-                    '2': 8,
-                    '3': 10,
-                    '4': 11,
-                    '5': 14,
-                    '6': 14,
-                    '7': 16,
-                    '8': 17,
-                    '9': 18,
-                    '10': 19,
-                    '11': 20,
-                }.get(lesson.course_unit[0])
-                lesson_start_minute = {
-                    '1': 0,
-                    '2': 55,
-                    '3': 25,  # <--
-                    '4': 0,
-                    '5': 0,
-                    '6': 55,
-                    '7': 15,
-                    '8': 10,
-                    '9': 45,
-                    '10': 40,
-                    '11': 35,
-                }.get(lesson.course_unit[0])
+                course_order = {
+                    '1': "08:00",
+                    '2': "08:55",
+                    '3': "10:25",
+                    '4': "11:20",
+                    '5': "14:00",
+                    '6': "14:55",
+                    '7': "16:15",
+                    '8': "17:10",
+                    '9': "18:45",
+                    '10': "19:40",
+                    '11': "20:35",
+                }
+                end_time = {
+                    '1': "8:50",
+                    '2': "9:45",
+                    '3': "11:15",
+                    '4': "12:10",
+                    '5': "14:50",
+                    '6': "15:45",
+                    '7': "17:05",
+                    '8': "18:00",
+                    '9': "19:35",
+                    '10': "20:30",
+                    '11': "21:25",
+                }
             else:
-                lesson_start_hour = {
-                    '1': 8,
-                    '2': 8,
-                    '3': 10,
-                    '4': 11,
-                    '5': 14,
-                    '6': 14,
-                    '7': 16,
-                    '8': 17,
-                    '9': 18,
-                    '10': 19,
-                    '11': 20,
-                }.get(lesson.course_unit[0])
-                lesson_start_minute = {
-                    '1': 0,
-                    '2': 55,
-                    '3': 15,  # <--
-                    '4': 0,
-                    '5': 0,
-                    '6': 55,
-                    '7': 15,
-                    '8': 10,
-                    '9': 45,
-                    '10': 40,
-                    '11': 35,
-                }.get(lesson.course_unit[0])
+                course_order = {
+                    '1': "08:00",
+                    '2': "08:55",
+                    '3': "10:15",
+                    '4': "11:10",
+                    '5': "14:00",
+                    '6': "14:55",
+                    '7': "16:15",
+                    '8': "17:10",
+                    '9': "18:45",
+                    '10': "19:40",
+                    '11': "20:35",
+                }
+                end_time = {
+                    '1': "08:50",
+                    '2': "09:45",
+                    '3': "11:05",
+                    '4': "12:00",
+                    '5': "14:50",
+                    '6': "15:45",
+                    '7': "17:05",
+                    '8': "18:00",
+                    '9': "19:35",
+                    '10': "20:30",
+                    '11': "21:25",
+                }
 
+            lesson_start = course_order[lesson.course_unit[0]].split(":")
+            lesson_start_hour = int(lesson_start[0])
+            lesson_start_minute = int(lesson_start[1])
             lesson_start_time = semester_start_date + \
-                timedelta(weeks=week - 1, days=int(lesson.day_of_week) - 1,
-                          hours=lesson_start_hour - semester_start_date.hour,
-                          minutes=lesson_start_minute - semester_start_date.minute,
-                          seconds=-semester_start_date.second,
-                          milliseconds=-semester_start_date.microsecond)
+                                timedelta(weeks=week - 1, days=int(lesson.day_of_week) - 1,
+                                          hours=lesson_start_hour - semester_start_date.hour,
+                                          minutes=lesson_start_minute - semester_start_date.minute,
+                                          seconds=-semester_start_date.second,
+                                          milliseconds=-semester_start_date.microsecond)
 
-            lesson_end_time = lesson_start_time + timedelta(
-                minutes=50 * len(lesson.course_unit) + 5 * (len(lesson.course_unit) - 1))
-            # fix隐含bug：课程时间仅一节或超过两节（非连续两节课）的情况
+            elapsed_time = datetime.strptime(end_time[lesson.course_unit[len(lesson.course_unit) - 1]], "%H:%M") - \
+                           datetime.strptime(course_order[lesson.course_unit[0]], "%H:%M")
+            lesson_end_time = lesson_start_time + timedelta(minutes=(elapsed_time / 60).seconds)
 
             event.add('dtstart', lesson_start_time)
             event.add('dtend', lesson_end_time)
@@ -207,7 +266,7 @@ def create_exam_ics(cal, exams):
 
 def export_ics(cal, semester_year, semester, stuID):
     filename = 'NUAAiCal-Data/Schedule_' + stuID + \
-        '_' + semester_year + '-' + semester + '.ics'
+               '_' + semester_year + '-' + semester + '.ics'
 
     if os.path.exists('NUAAiCal-Data'):
         # print('Directory exists.')
