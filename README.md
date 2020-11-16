@@ -56,7 +56,7 @@ NUAA_ClassSchedule
 ---
 ## Version
 
-**V0.19.1.20201007**  
+**V0.20.0.20201116**  
 
 **Change Log:**   
 Please refer to [CHANGELOG](CHANGELOG.md).
@@ -75,6 +75,8 @@ Please refer to [CHANGELOG](CHANGELOG.md).
 >
 > 从 `V0.19.1.20201007` 版本起，已经实现了基于 GitHub Action 自动打包可执行程序啦！  
 >（Linux / MacOS 下有可能需要先给程序赋予可执行权限，即 `chmod +x <filename>`）  
+
+![Release](https://github.com/miaotony/NUAA_ClassSchedule/workflows/Release/badge.svg)
 
 **下载地址在 [Release](https://github.com/miaotony/NUAA_ClassSchedule/releases) 下呢！**  
 

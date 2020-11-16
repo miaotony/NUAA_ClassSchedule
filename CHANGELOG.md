@@ -1,5 +1,13 @@
 ## Change log
 
+### `V0.20.0.20201116`
+
+[feat] Fit the different course time batches for Tianmuhu Campus.   
+匹配天目湖校区分批上下课时间。  
+[fix] ICS: Fix the end time of lessons across the midday.   
+修正跨中午等超长课程结束时间错误的bug。
+
+
 ### `V0.19.1.20201007`
   
 [feat] Add packing automatically based on GitHub Action.   
