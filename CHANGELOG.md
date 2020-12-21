@@ -1,5 +1,21 @@
 ## Change log
 
+### `V0.21.0.20201221`
+
+**请注意，本版本修改了关键的课表查询接口！**  
+
+[fix] Fix the bug when parsing timetable.  
+修复教务系统课表查询界面修改导致的课表无法解析的问题。  
+[fix] Fix exam output format.  
+考试列表里多了一列考场校区，修复了一下输出的格式。  
+[fix] Update requirement version.    
+升级了依赖的版本，但还是建议在虚拟环境中运行。  
+
+**[Known Issue]**  
+Only personal timetable is supported, class timetable cannot be queried temporarily.  
+只支持个人课表，班级课表暂时无法查询。  
+
+
 ### `V0.20.0.20201116`
 
 [feat] Fit the different course time batches for Tianmuhu Campus.   
