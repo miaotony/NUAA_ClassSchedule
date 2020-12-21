@@ -100,6 +100,7 @@ if __name__ == "__main__":
                 os.startfile(img_path)
         except:
             from PIL import Image
+
             # captcha_img = Image.open(BytesIO(captcha_resp.content))
             captcha_img = Image.open(img_path)
             captcha_img.show()  # show the captcha
@@ -135,7 +136,7 @@ Please input the semester you want to query, e.g. `2020-2021-1`: (the current se
             {0: '个人', 1: '班级'}.get(choice)))
         temp_time = time.time()  # 计个时看看
         courseTable = getCourseTable(
-            choice=choice, semester_year=semester_year, semester=semester)
+            choice=choice, stuID=stuID, semester_year=semester_year, semester=semester)
         list_lessonObj = parseCourseTable(courseTable)
 
         print('## 下面开始获取考试信息啦！\n')

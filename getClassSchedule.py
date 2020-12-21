@@ -162,9 +162,10 @@ def aao_login(stuID, stuPwd, captcha_str):
     raise Exception("ERROR! 过一会儿再试试吧...")
 
 
-def getCourseTable(choice=0, semester_year="", semester=""):
+def getCourseTable(stuID, choice=0, semester_year="", semester=""):
     """
     获取课表
+    :param stuID: 学号
     :param choice: 0 for std, 1 for class.个人课表or班级课表，默认为个人课表。
     :param semester_year: `xxxx-xxxx` 学年 e.g. `2020-2021`
     :param semester: `x` 学期 {1, 2}
@@ -176,7 +177,7 @@ def getCourseTable(choice=0, semester_year="", semester=""):
         host + '/eams/dataQuery.action?dataType=semesterCalendar')
     # print(semesterCalendar.text)
     calendar = '{' + \
-        re.compile(r'semesters:.*}').findall(semesterCalendar.text)[0]
+               re.compile(r'semesters:.*}').findall(semesterCalendar.text)[0]
     # print(calendar)
     calendar = demjson.decode(calendar)['semesters']
     # print('decode succeeded')
@@ -189,50 +190,69 @@ def getCourseTable(choice=0, semester_year="", semester=""):
     # print(semester_id)
     if not semester_id:
         raise Exception("Can not find the semester you have entered!")
-    courseTableResponse = session.get(host + '/eams/courseTableForStd.action')
-    # logging.debug(courseTableResponse.text)
 
-    temp_ids_match = re.compile(
-        r"bg\.form\.addInput\(form,\"ids\",\"([0-9]*)\"")
-    temp_ids = temp_ids_match.findall(courseTableResponse.text)
-    if temp_ids:
-        logging.debug(temp_ids)  # [0] for std, [1] for class.
+    # query the `ids`/ get the course table url using stuID
+    query_payload = {
+        "std.code": stuID,
+        "semester.id": semester_id,
+        "courseTableType": "std"
+    }
+    query_response = session.post(host + '/eams/courseTableStudent!search.action', params=query_payload)
+    query_response.encoding = 'utf-8'
+    soup = BeautifulSoup(query_response.text, 'lxml')
+    tr = soup.select(".gridtable tbody tr")
+    courseTable_url = ""
+    for row in tr:
+        # process multiple student ids
+        stdCode = row.select('td.stdCode')[0]
+        stdCode = stdCode.text.strip()
+        if stdCode == stuID:
+            courseTable_url = row.select('td.stdName a')[0].get('href')
+            logging.debug(courseTable_url)
+    if not courseTable_url:
+        raise Exception("Can not find the course table url!")
 
-        # postData_course = {
-        #     "ignoreHead": "1",
-        #     "setting.kind": "std",
-        #     "startWeek": "",
-        #     "project.id": "1",
-        #     "semester.id": "62",
-        #     "ids": "xxxxx"
+        # temp_ids_match = re.compile(
+        #     r"bg\.form\.addInput\(form,\"ids\",\"([0-9]*)\"")
+        # temp_ids = temp_ids_match.findall(courseTableResponse.text)
+        # if temp_ids:
+        #     logging.debug(temp_ids)  # [0] for std, [1] for class.
+        #
+        #     # postData_course = {
+        #     #     "ignoreHead": "1",
+        #     #     "setting.kind": "std",
+        #     #     "startWeek": "",
+        #     #     "project.id": "1",
+        #     #     "semester.id": "62",
+        #     #     "ids": "xxxxx"
+        #     # }
+        #
+        #     if choice == 1:  # 班级课表
+        #         ids = temp_ids[1]
+        #         kind = "class"
+        #     else:  # 个人课表   choice == 0
+        #         ids = temp_ids[0]
+        #         kind = "std"
+
+        # courseTable_postData = {
+        #     # "ignoreHead": "1",
+        #     "setting.kind": kind,
+        #     # "startWeek": "",  # None for all weeks
+        #     # "project.id": "1",
+        #     "semester.id": semester_id,
+        #     "ids": ids
         # }
-
-        if choice == 1:  # 班级课表
-            ids = temp_ids[1]
-            kind = "class"
-        else:  # 个人课表   choice == 0
-            ids = temp_ids[0]
-            kind = "std"
-
-        courseTable_postData = {
-            # "ignoreHead": "1",
-            "setting.kind": kind,
-            # "startWeek": "",  # None for all weeks
-            # "project.id": "1",
-            "semester.id": semester_id,
-            "ids": ids
-        }
-        courseTable = session.get(host + r'/eams/courseTableForStd!courseTable.action',
-                                  params=courseTable_postData)
+        # courseTable = session.get(host + r'/eams/courseTableStudent!courseTable.action',
+        #                           params=courseTable_postData)
         # courseTable = session.post(host + '/eams/courseTableForStd!courseTable.action',
         #                            data=courseTable_postData)
 
-        # logging.debug(courseTable.text)
-        # logging.debug(session.cookies.get_dict())
-        return courseTable
-    else:
-        # print("Get ids ERROR!")
-        raise Exception("Get ids ERROR!")
+    courseTable = session.get(host + courseTable_url)
+    # logging.debug(courseTable.text)
+    # logging.debug(session.cookies.get_dict())
+    return courseTable
+    # else:
+    #     raise Exception("Get ids ERROR!")
 
 
 def parseCourseTable(courseTable):
@@ -253,7 +273,7 @@ def parseCourseTable(courseTable):
     practiceWeek = "".join(practiceWeek.split())
     print('实践周:' + practiceWeek)
 
-    courseTable_JS = soup.select('div#ExportA > script')[0].get_text()
+    courseTable_JS = soup.select('div#ExportA > script')[0].decode()
     # logging.debug(courseTable_JS)
     list_courses = courseTable_JS.split('var teachers =')
 
@@ -363,7 +383,7 @@ def exportCourseTable(list_lessonObj, list_examObj, semester_year, semester, stu
     :return: None
     """
     filename = 'NUAAiCal-Data/Schedule_' + stuID + \
-        '_' + semester_year + '-' + semester + '.txt'
+               '_' + semester_year + '-' + semester + '.txt'
     with open(filename, 'w', encoding='utf-8') as output_file:
         try:
             course_cnt = 1
