@@ -4,7 +4,7 @@
 
 **请注意，本版本修改了关键的课表查询接口！**  
 
-[fix] Fix the bug when parsing timetable.  
+[fix] Fix Issues #19 the bug when parsing timetable.  
 修复教务系统课表查询界面修改导致的课表无法解析的问题。  
 [fix] Fix exam output format.  
 考试列表里多了一列考场校区，修复了一下输出的格式。  
