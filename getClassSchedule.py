@@ -122,15 +122,12 @@ def aao_login(stuID, stuPwd, captcha_str):
             temp_key = temp_token_match.search(r2.text)
             if temp_key:  # 找到密钥说明没有登录成功，需要重试
                 if '验证码不正确' in r2.text:
-                    # print("Captcha ERROR! Login ERROR!\n")
                     raise Exception("Captcha ERROR! Login ERROR!")
                 else:
-                    # print("ID or Password ERROR! Login ERROR!\n")
                     temp_key = temp_key.group(1)
                     logging.debug(temp_key)
                     raise Exception("ID or Password ERROR! Login ERROR!")
             elif re.search(r"ui-state-error", r2.text):  # 过快点击
-                # print("ERROR! 请不要过快点击!\n")
                 raise Exception("ERROR! 请不要过快点击!")
             else:
                 temp_soup = BeautifulSoup(r2.text.encode('utf-8'), 'lxml')
@@ -150,16 +147,11 @@ def aao_login(stuID, stuPwd, captcha_str):
         else:
             print(r2.text)
             if '连接已重置' in r2.text:
-                # print("Login ERROR! 连接已重置!\n")
                 raise Exception("Login ERROR! 教务系统连接已重置，请重试！")
             else:
-                # print("Login ERROR!\n")
                 raise Exception("Login ERROR!")
     else:
-        # print('Search token ERROR!\n')
         raise Exception("Search token ERROR!")
-    # print("ERROR! 过一会儿再试试吧...\n")
-    raise Exception("ERROR! 过一会儿再试试吧...")
 
 
 def getCourseTable(stuID, choice=0, semester_year="", semester=""):
@@ -180,7 +172,7 @@ def getCourseTable(stuID, choice=0, semester_year="", semester=""):
                re.compile(r'semesters:.*}').findall(semesterCalendar.text)[0]
     # print(calendar)
     calendar = demjson.decode(calendar)['semesters']
-    # print('decode succeeded')
+
     semester_id = ''
     for y in calendar:
         for s in calendar[y]:
@@ -191,7 +183,7 @@ def getCourseTable(stuID, choice=0, semester_year="", semester=""):
     if not semester_id:
         raise Exception("Can not find the semester you have entered!")
 
-    # query the `ids`/ get the course table url using stuID
+    # query the `ids` / get the course table url using stuID
     query_payload = {
         "std.code": stuID,
         "semester.id": semester_id,
@@ -244,15 +236,11 @@ def getCourseTable(stuID, choice=0, semester_year="", semester=""):
         # }
         # courseTable = session.get(host + r'/eams/courseTableStudent!courseTable.action',
         #                           params=courseTable_postData)
-        # courseTable = session.post(host + '/eams/courseTableForStd!courseTable.action',
-        #                            data=courseTable_postData)
 
     courseTable = session.get(host + courseTable_url)
     # logging.debug(courseTable.text)
     # logging.debug(session.cookies.get_dict())
     return courseTable
-    # else:
-    #     raise Exception("Get ids ERROR!")
 
 
 def parseCourseTable(courseTable):
@@ -365,6 +353,7 @@ def parseExamSchedule(exams):
         for exam in exams:
             temp_ExamObj = Exam(exam)
             print(temp_ExamObj.str_for_print)  # print the exam info
+            print()
             list_examObj.append(Exam(exam))
     else:
         print('暂无考试安排！')

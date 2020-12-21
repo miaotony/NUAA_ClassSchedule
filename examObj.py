@@ -14,11 +14,12 @@ class Exam:
         Initialization 在初始化同时解析考试的具体信息
         :param exam: 考试信息列表
         """
-        self.courseName = exam[1]
+        self.courseName = exam[1].replace(' ', '').replace('\t', '')
         self.examType = exam[2]
         self.examLocation = exam[5]
-        self.examStatue = exam[7]
-        self.others = exam[8]
+        self.examCampus = exam[6]
+        self.examStatue = exam[8]
+        self.others = exam[9]
         temp = re.findall(r'(\d*)-(\d*)-(\d*)', exam[3])
         if temp:  # Fix issue #14 `list index out of range`
             list_inter = list(temp[0])
@@ -35,6 +36,6 @@ class Exam:
             self.examDate = list(map(int, self.examDate))
             self.examTime = list(map(int, self.examTime))
 
-        self.description = '状态：' + self.examStatue + '\n' + self.others
-        self.str_for_print = self.courseName + '_' + self.examType + '\n' + exam[3] + ' ' + exam[4] \
-                             + '\n' + self.examLocation + '\n' + self.description
+        self.description = '状态：' + self.examStatue + ' ' + self.others
+        self.str_for_print = self.courseName + '_' + self.examType + '\n' + exam[3] + ' ' + exam[4] + '\n' + (
+            self.examCampus if self.examCampus else '') + ' ' + self.examLocation + '\n' + self.description
