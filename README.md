@@ -405,6 +405,10 @@ function TaskActivity(teacherId,teacherName,courseId,courseName,roomId,roomName,
 
 <img src="img/Sponsorship2.png" style="max-width:40%;" />
 
+爱发电 afdian:  
+
+[https://afdian.net/@miaotony](https://afdian.net/@miaotony)  
+
 
 非常感谢啦！  
 
@@ -428,5 +432,5 @@ Non-commercial use!
 The final interpretation right belongs to the developers of the project.  
 
 
-Copyright © 2019-2020 [MiaoTony](https://github.com/miaotony)  & other developers.  
+Copyright © 2019-2021 [MiaoTony](https://github.com/miaotony)  & other developers.  
 
