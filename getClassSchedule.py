@@ -62,7 +62,8 @@ def getSemesterFirstDay(semester_str: str):
     # print(years, term)
     requestData = {'schoolYear': '-'.join(years),
                    'term': term}
-    r = session.post(host + '/eams/calendarView!search.action', requestData)
+    r = session.post(host + '/eams/calendarView!search.action',
+                     requestData, timeout=10)
     if re.search(r'当前学期不存在', r.text) != None:
         raise Exception('ERROR! The current semester does not exist!')
     # print(r.text)
@@ -91,7 +92,7 @@ def aao_login(stuID, stuPwd, captcha_str):
     :return semester_info: {str} 学期信息，如 `2020-2021-1`
     """
     # session.cookies.clear()  # 先清一下cookie
-    r1 = session.get(host + '/eams/login.action')
+    r1 = session.get(host + '/eams/login.action', timeout=10)
     r1.encoding = 'utf-8'
     # logging.debug(r1.text)
 
@@ -115,7 +116,8 @@ def aao_login(stuID, stuPwd, captcha_str):
                     'captcha_response': captcha_str}
         # fix Issue #2 `Too Quick Click` bug, sleep for longer time for a new trial
         time.sleep(random.uniform(0.7, 1))  # 更改为随机延时
-        r2 = session.post(host + '/eams/login.action', data=postData)
+        r2 = session.post(host + '/eams/login.action',
+                          data=postData, timeout=10)
         r2.encoding = 'utf-8'
         if r2.status_code == 200 or r2.status_code == 302:
             logging.debug(r2.text)
@@ -154,7 +156,7 @@ def aao_login(stuID, stuPwd, captcha_str):
         raise Exception("Search token ERROR!")
 
 
-def getCourseTable(stuID, choice=0, semester_year="", semester=""):
+def getCourseTable2(stuID, choice=0, semester_year="", semester=""):
     """
     获取课表
     :param stuID: 学号
@@ -166,7 +168,7 @@ def getCourseTable(stuID, choice=0, semester_year="", semester=""):
     # fix Issue #2 `Too Quick Click` bug
     time.sleep(random.uniform(0.6, 1))  # 随机延时
     semesterCalendar = session.get(
-        host + '/eams/dataQuery.action?dataType=semesterCalendar')
+        host + '/eams/dataQuery.action?dataType=semesterCalendar', timeout=10)
     # print(semesterCalendar.text)
     calendar = '{' + \
                re.compile(r'semesters:.*}').findall(semesterCalendar.text)[0]
@@ -189,7 +191,8 @@ def getCourseTable(stuID, choice=0, semester_year="", semester=""):
         "semester.id": semester_id,
         "courseTableType": "std"
     }
-    query_response = session.post(host + '/eams/courseTableStudent!search.action', params=query_payload)
+    query_response = session.post(
+        host + '/eams/courseTableStudent!search.action', params=query_payload, timeout=10)
     query_response.encoding = 'utf-8'
     soup = BeautifulSoup(query_response.text, 'lxml')
     tr = soup.select(".gridtable tbody tr")
@@ -237,10 +240,71 @@ def getCourseTable(stuID, choice=0, semester_year="", semester=""):
         # courseTable = session.get(host + r'/eams/courseTableStudent!courseTable.action',
         #                           params=courseTable_postData)
 
-    courseTable = session.get(host + courseTable_url)
+    courseTable = session.get(host + courseTable_url, timeout=10)
     # logging.debug(courseTable.text)
     # logging.debug(session.cookies.get_dict())
     return courseTable
+
+
+def getCourseTable(stuID, choice=0, semester_year="", semester=""):
+    """
+    获取课表
+    :param stuID: 学号
+    :param choice: 0 for std, 1 for class.个人课表or班级课表，默认为个人课表。
+    :param semester_year: `xxxx-xxxx` 学年 e.g. `2020-2021`
+    :param semester: `x` 学期 {1, 2}
+    :return:courseTable: {Response} 课表html响应
+    """
+    # fix Issue #2 `Too Quick Click` bug
+    time.sleep(random.uniform(0.6, 1))  # 随机延时
+    semesterCalendar = session.get(
+        host + '/eams/dataQuery.action?dataType=semesterCalendar', timeout=10)
+    # print(semesterCalendar.text)
+    calendar = '{' + \
+               re.compile(r'semesters:.*}').findall(semesterCalendar.text)[0]
+    # print(calendar)
+    calendar = demjson.decode(calendar)['semesters']
+
+    semester_id = ''
+    for y in calendar:
+        for s in calendar[y]:
+            if s['schoolYear'] == semester_year and s['name'] == str(semester):
+                semester_id = s['id']
+                break
+    # print(semester_id)
+    if not semester_id:
+        raise Exception("Can not find the semester you have entered!")
+
+    courseTableResponse = session.get(
+        host + '/eams/courseTableForStd.action', timeout=10)
+    # logging.debug(courseTableResponse.text)
+
+    temp_ids_match = re.compile(
+        r"bg\.form\.addInput\(form,\"ids\",\"([0-9]*)\"")
+    temp_ids = temp_ids_match.findall(courseTableResponse.text)
+    if temp_ids:
+        logging.debug(temp_ids)  # [0] for std, [1] for class.
+
+        if choice == 1:  # 班级课表
+            ids = temp_ids[1]
+            kind = "class"
+        else:  # 个人课表   choice == 0
+            ids = temp_ids[0]
+            kind = "std"
+
+        courseTable_postData = {
+            # "ignoreHead": "1",
+            "setting.kind": kind,
+            # "startWeek": "",  # None for all weeks
+            # "project.id": "1",
+            "semester.id": semester_id,
+            "ids": ids
+        }
+        courseTable = session.get(host + r'/eams/courseTableForStd!courseTable.action',
+                                  params=courseTable_postData, timeout=10)
+        return courseTable
+    else:
+        raise Exception("Get ids ERROR!")
 
 
 def parseCourseTable(courseTable):
@@ -324,7 +388,7 @@ def getExamSchedule():
     """
     time.sleep(random.uniform(0.6, 1))  # 随机延时
     examSchedule = session.get(
-        host + r'/eams/examSearchForStd!examTable.action')
+        host + r'/eams/examSearchForStd!examTable.action', timeout=10)
 
     soup = BeautifulSoup(examSchedule.text.encode('utf-8'), 'lxml')
     '''exam Schedule'''
