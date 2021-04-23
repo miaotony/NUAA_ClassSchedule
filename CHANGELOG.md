@@ -1,5 +1,16 @@
 ## Change log
 
+
+### `V0.22.0.20210423`
+
+**本版本修改了关键的课表查询接口！**  
+
+[fix] Fix `can not find the course table url` bug.   
+从2021年4月8日下午开始，教务系统又改回个人课表的界面了。于是把 `getCourseTable` 函数接口又改回去了。   
+[fix] Update requirement version.    
+升级了依赖的版本。  
+
+
 ### `V0.21.0.20201221`
 
 **请注意，本版本修改了关键的课表查询接口！**  
