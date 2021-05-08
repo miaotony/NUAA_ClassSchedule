@@ -56,7 +56,7 @@ NUAA_ClassSchedule
 ---
 ## Version
 
-**V0.22.0.20210423**  
+**V0.23.0.20210509**  
 
 **Change Log:**   
 Please refer to [CHANGELOG](CHANGELOG.md).
@@ -146,7 +146,7 @@ chmod +x *
 **命令行参数说明：**  
 ```
 usage: main.py [-h] [-i ID] [-p PWD] [-s SEMESTER] [-c {0,1}] [--noexam]
-               [--notxt] [--noxlsx]
+               [--weeknum] [--notxt] [--noxlsx]
 
 Get NUAA class schedule at ease! 一个小jio本，让你获取课表更加便捷而实在~
 
@@ -160,6 +160,7 @@ optional arguments:
                         Input `0` for personal curriculum(default), `1` for
                         class curriculum. 输入`0`获取个人课表(无此参数默认为个人课表)，输入`1`获取班级课表
   --noexam              Don't export exam schedule. 加入此选项则不导出考试安排
+  --weeknum             Export week-number events. 加入此选项则导出周次事件
   --notxt               Don't export `.txt` file. 加入此选项则不导出`.txt`文件
   --noxlsx              Don't export `.xlsx` file. 加入此选项则不导出`.xlsx`表格
 ```
