@@ -216,15 +216,16 @@ def create_ics(lessons, semester_start_date):
             lesson_start_hour = int(lesson_start[0])
             lesson_start_minute = int(lesson_start[1])
             lesson_start_time = semester_start_date + \
-                                timedelta(weeks=week - 1, days=int(lesson.day_of_week) - 1,
-                                          hours=lesson_start_hour - semester_start_date.hour,
-                                          minutes=lesson_start_minute - semester_start_date.minute,
-                                          seconds=-semester_start_date.second,
-                                          milliseconds=-semester_start_date.microsecond)
+                timedelta(weeks=week - 1, days=int(lesson.day_of_week) - 1,
+                          hours=lesson_start_hour - semester_start_date.hour,
+                          minutes=lesson_start_minute - semester_start_date.minute,
+                          seconds=-semester_start_date.second,
+                          milliseconds=-semester_start_date.microsecond)
 
             elapsed_time = datetime.strptime(end_time[lesson.course_unit[len(lesson.course_unit) - 1]], "%H:%M") - \
-                           datetime.strptime(course_order[lesson.course_unit[0]], "%H:%M")
-            lesson_end_time = lesson_start_time + timedelta(minutes=(elapsed_time / 60).seconds)
+                datetime.strptime(course_order[lesson.course_unit[0]], "%H:%M")
+            lesson_end_time = lesson_start_time + \
+                timedelta(minutes=(elapsed_time / 60).seconds)
 
             event.add('dtstart', lesson_start_time)
             event.add('dtend', lesson_end_time)
@@ -261,6 +262,32 @@ def create_exam_ics(cal, exams):
             event.add('location', exam.examLocation)
             event.add('description', exam.description)
             cal.add_component(event)
+    return cal
+
+
+def create_weeknum_ics(cal, semester_start_date):
+    """
+    给ical生成周数事件（持续一周的`第x周`事件）
+    :param cal: 加入了课表后的cal
+    :param semester_start_date: {datatime}学期开始日期):
+    :return: cal {Calendar}
+    """
+    for week_num in range(1, 21):
+        # 20 weeks
+        event = Event()
+        event.add('summary', '第 ' + str(week_num) + ' 周')
+        weekStartTime = semester_start_date + \
+            timedelta(weeks=week_num - 1, days=0, hours=0,
+                      minutes=0, seconds=0, milliseconds=0)
+
+        weekEndTime = semester_start_date + \
+            timedelta(weeks=week_num - 1, days=7, hours=0,
+                      minutes=0, seconds=0, milliseconds=0)
+        event.add('dtstart', weekStartTime)
+        event.add('dtend', weekEndTime)
+        event.add('location', 'NUAA')
+        event.add('description', '第 ' + str(week_num) + ' 周')
+        cal.add_component(event)
     return cal
 
 

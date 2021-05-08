@@ -8,4 +8,4 @@ settings  相关设置
 
 DEBUG = False
 
-VERSION = "V0.22.0.20210423"
+VERSION = "V0.23.0.20210509"

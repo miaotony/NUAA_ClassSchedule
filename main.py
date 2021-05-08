@@ -22,7 +22,7 @@ from getpass import getpass
 from datetime import datetime, timedelta
 from pytz import timezone
 # from io import BytesIO
-from generateICS import create_ics, export_ics, create_exam_ics
+from generateICS import create_ics, export_ics, create_exam_ics, create_weeknum_ics
 from getClassSchedule import *
 from generateXLSX import *
 from settings import VERSION, DEBUG
@@ -59,6 +59,8 @@ if __name__ == "__main__":
                         输入`0`获取个人课表(无此参数默认为个人课表)，输入`1`获取班级课表", type=int, choices=[0, 1])  # , default=0
     parser.add_argument(
         "--noexam", help="Don't export exam schedule. 加入此选项则不导出考试安排", action="store_true")
+    parser.add_argument(
+        "--weeknum", help="Export week-number events. 加入此选项则导出周次事件", action="store_true")
     parser.add_argument(
         "--notxt", help="Don't export `.txt` file. 加入此选项则不导出`.txt`文件", action="store_true")
     parser.add_argument(
@@ -147,6 +149,8 @@ Please input the semester you want to query, e.g. `2020-2021-1`: (the current se
         cal = create_ics(list_lessonObj, semester_start_date)
         if not args.noexam:  # 若命令行参数含`--noexam`则不导出
             cal = create_exam_ics(cal, list_examObj)
+        if args.weeknum:  # 若命令行参数含`--weeknum`则导出周次事件
+            cal = create_weeknum_ics(cal, semester_start_date)
 
         print('## 日历生成完成，下面开始导出啦！')
         export_ics(cal, semester_year, semester, stuID)  # Export `.ics` file
