@@ -2,7 +2,7 @@ requests==2.25.0
 beautifulsoup4==4.9.3
 bs4==0.0.1
 certifi==2020.12.5
-lxml==4.6.3
+lxml==4.6.5
 pytz==2020.4
 icalendar==4.0.7
 openpyxl==3.0.5
