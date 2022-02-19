@@ -41,7 +41,7 @@ headers = {
 }
 # 设置session的请求头信息
 session.headers = headers
-host = r'http://aao-eas.nuaa.edu.cn'
+host = r'https://aao-eas.nuaa.edu.cn'
 
 
 def getSemesterFirstDay(semester_str: str):
