@@ -56,7 +56,7 @@ NUAA_ClassSchedule
 ---
 ## Version
 
-**V0.23.0.20210509**  
+**V0.24.0.20220220**  
 
 **Change Log:**   
 Please refer to [CHANGELOG](CHANGELOG.md).

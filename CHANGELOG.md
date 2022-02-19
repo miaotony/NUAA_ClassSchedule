@@ -1,5 +1,10 @@
 ## Change log
 
+### `V0.24.0.20220220`
+
+[fix] Change HTTP to HTTPS to fix the error due to WAF in HTTP.   
+修复 HTTP 访问存在防火墙而导致的错误，更改为通过 HTTPS 进行请求，同时也更安全。  
+
 
 ### `V0.23.0.20210509`
 
