@@ -1,5 +1,13 @@
 ## Change log
 
+### `V0.25.0.20230807`
+
+[fix] Fix Issue#30 login error due to adjusting login method and requiring the use of mobile verification code as 2FA.   
+Issue#30，修复了教务系统登录方式调整，新增了手机验证码作为 2FA 而导致无法成功登录的 bug。在本版本中根据提示输入手机验证码即可。   
+[chore] Update the version of requirements.   
+更新了依赖的版本，修复一些供应链带来的漏洞。  
+
+
 ### `V0.24.0.20220220`
 
 [fix] Change HTTP to HTTPS to fix the error due to WAF in HTTP.   
