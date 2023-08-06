@@ -13,7 +13,7 @@ from hashlib import sha1
 import time
 import random
 import json
-import demjson
+import demjson3
 import logging
 from lessonObj import Lesson
 from examObj import Exam
@@ -110,7 +110,8 @@ def aao_login(stuID, stuPwd, captcha_str):
         s1.update(postPwd.encode())  # 对s1进行更新
         postPwd = s1.hexdigest()  # 加密处理
         # logging.debug(postPwd)  # 结果是40位字符串
-        postData = {'captcha': captcha_str, 'username': stuID, 'password': postPwd}
+        postData = {'captcha': captcha_str,
+                    'username': stuID, 'password': postPwd}
         # fix Issue #2 `Too Quick Click` bug, sleep for longer time for a new trial
         time.sleep(random.uniform(0.7, 1))  # 更改为随机延时
         r2 = session.post(host + '/eams/login!sendPhoneCaptcha.action',
@@ -180,7 +181,7 @@ def getCourseTable2(stuID, choice=0, semester_year="", semester=""):
     calendar = '{' + \
                re.compile(r'semesters:.*}').findall(semesterCalendar.text)[0]
     # print(calendar)
-    calendar = demjson.decode(calendar)['semesters']
+    calendar = demjson3.decode(calendar)['semesters']
 
     semester_id = ''
     for y in calendar:
@@ -270,7 +271,7 @@ def getCourseTable(stuID, choice=0, semester_year="", semester=""):
     calendar = '{' + \
                re.compile(r'semesters:.*}').findall(semesterCalendar.text)[0]
     # print(calendar)
-    calendar = demjson.decode(calendar)['semesters']
+    calendar = demjson3.decode(calendar)['semesters']
 
     semester_id = ''
     for y in calendar:
