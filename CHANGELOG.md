@@ -1,5 +1,14 @@
 ## Change log
 
+### `V0.25.1.20230807`
+
+[fix] requirement: Using `demjson3` instead of `demjson` to support Python3 only.   
+依赖中的 `demjson` 修改为 `demjson3`，只考虑支持 Python3.   
+*（`demjson` 打包的时候与 `setuptools` 版本冲突，会报错 `error in demjson setup command: use_2to3 is invalid.`，Python 2 与 3 的兼容性问题老大难了）*     
+[chore] Update the version of some requirements.   
+更新了部分依赖的版本。
+
+
 ### `V0.25.0.20230807`
 
 [fix] Fix Issue#30 login error due to adjusting login method and requiring the use of mobile verification code as 2FA.   
