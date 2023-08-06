@@ -110,11 +110,18 @@ def aao_login(stuID, stuPwd, captcha_str):
         s1.update(postPwd.encode())  # 对s1进行更新
         postPwd = s1.hexdigest()  # 加密处理
         # logging.debug(postPwd)  # 结果是40位字符串
+        postData = {'captcha': captcha_str, 'username': stuID, 'password': postPwd}
+        # fix Issue #2 `Too Quick Click` bug, sleep for longer time for a new trial
+        time.sleep(random.uniform(0.7, 1))  # 更改为随机延时
+        r2 = session.post(host + '/eams/login!sendPhoneCaptcha.action',
+                          data=postData, timeout=10)
+
+        print("请等待短信验证码，或者在微信我的消息栏目中的验证码，并输入：")
+        captcha_phone = input()
 
         # 开始登录啦
-        postData = {'username': stuID, 'password': postPwd,
-                    'captcha_response': captcha_str}
-        # fix Issue #2 `Too Quick Click` bug, sleep for longer time for a new trial
+        postData = {'ekingstar': 2, 'username': stuID, 'password': postPwd,
+                    'captcha_response': captcha_str, 'captcha_phone': captcha_phone}
         time.sleep(random.uniform(0.7, 1))  # 更改为随机延时
         r2 = session.post(host + '/eams/login.action',
                           data=postData, timeout=10)
