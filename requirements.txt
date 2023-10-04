@@ -6,5 +6,5 @@ lxml==4.9.3
 pytz==2020.4
 icalendar==4.0.7
 openpyxl==3.1.2
-Pillow==9.3.0
+Pillow==10.0.1
 demjson3==3.0.6
