@@ -433,5 +433,5 @@ Non-commercial use!
 The final interpretation right belongs to the developers of the project.  
 
 
-Copyright © 2019-2023 [MiaoTony](https://github.com/miaotony)  & other developers.  
+Copyright © 2019-2024 [MiaoTony](https://github.com/miaotony)  & other developers.  
 
